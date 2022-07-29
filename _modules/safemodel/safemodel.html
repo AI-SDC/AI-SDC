@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>safemodel.safemodel &mdash; GRAIMATTER 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> GRAIMATTER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../attacks.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safemodel.html">Base Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safedecisiontree.html">SafeDecisionTree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../saferandomforest.html">SafeRandomForest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safesvc.html">SafeSVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safekeras.html">SafeKerasModel</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GRAIMATTER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>safemodel.safemodel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for safemodel.safemodel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains prototypes of privacy safe model wrappers.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">from</span> <span class="nn">dictdiffer</span> <span class="kn">import</span> <span class="n">diff</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+
+<div class="viewcode-block" id="check_min"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.check_min">[docs]</a><span class="k">def</span> <span class="nf">check_min</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Checks minimum value constraint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    key: string</span>
+<span class="sd">         The dictionary key to examine.</span>
+<span class="sd">    val: Any Type</span>
+<span class="sd">         The expected value of the key.</span>
+<span class="sd">    cur_val: Any Type</span>
+<span class="sd">         The current value of the key.</span>
+<span class="sd">    ..</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    msg: string</span>
+<span class="sd">         A message string.</span>
+<span class="sd">    disclosive: bool</span>
+<span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cur_val</span> <span class="o">&lt;</span> <span class="n">val</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;- parameter </span><span class="si">{key}</span><span class="s2"> = </span><span class="si">{cur_val}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; identified as less than the recommended min value of </span><span class="si">{val}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+
+<div class="viewcode-block" id="check_max"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.check_max">[docs]</a><span class="k">def</span> <span class="nf">check_max</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Checks maximum value constraint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    key: string</span>
+<span class="sd">         The dictionary key to examine.</span>
+<span class="sd">    val: Any Type</span>
+<span class="sd">         The expected value of the key.</span>
+<span class="sd">    cur_val: Any Type</span>
+<span class="sd">         The current value of the key.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    msg: string</span>
+<span class="sd">         A message string.</span>
+<span class="sd">    disclosive: bool</span>
+<span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cur_val</span> <span class="o">&gt;</span> <span class="n">val</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;- parameter </span><span class="si">{key}</span><span class="s2"> = </span><span class="si">{cur_val}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; identified as greater than the recommended max value of </span><span class="si">{val}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+
+<div class="viewcode-block" id="check_equal"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.check_equal">[docs]</a><span class="k">def</span> <span class="nf">check_equal</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Checks equality value constraint.</span>
+
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    key: string</span>
+<span class="sd">         The dictionary key to examine.</span>
+<span class="sd">    val: Any Type</span>
+<span class="sd">         The expected value of the key.</span>
+<span class="sd">    cur_val: Any Type</span>
+<span class="sd">         The current value of the key.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    msg: string</span>
+<span class="sd">         A message string.</span>
+<span class="sd">    disclosive: bool</span>
+<span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cur_val</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;- parameter </span><span class="si">{key}</span><span class="s2"> = </span><span class="si">{cur_val}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; identified as different than the recommended fixed value of </span><span class="si">{val}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+
+<div class="viewcode-block" id="check_type"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.check_type">[docs]</a><span class="k">def</span> <span class="nf">check_type</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Checks the type of a value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    key: string</span>
+<span class="sd">         The dictionary key to examine.</span>
+<span class="sd">    val: Any Type</span>
+<span class="sd">         The expected value of the key.</span>
+<span class="sd">    cur_val: Any Type</span>
+<span class="sd">         The current value of the key.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    msg: string</span>
+<span class="sd">         A message string.</span>
+<span class="sd">    disclosive: bool</span>
+<span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cur_val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;- parameter </span><span class="si">{key}</span><span class="s2"> = </span><span class="si">{cur_val}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; identified as different type to recommendation of </span><span class="si">{val}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+
+<div class="viewcode-block" id="SafeModel"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel">[docs]</a><span class="k">class</span> <span class="nc">SafeModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Privacy protected model base class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    model_type: string</span>
+<span class="sd">          A string describing the type of model. Default is &quot;None&quot;.</span>
+<span class="sd">    model:</span>
+<span class="sd">          The Machine Learning Model. </span>
+<span class="sd">    saved_model:</span>
+<span class="sd">          A saved copy of the Machine Learning Model used for comparisson.</span>
+<span class="sd">    ignore_items: list</span>
+<span class="sd">          A list of items to ignore when comparing the model with the </span>
+<span class="sd">          saved_model.</span>
+<span class="sd">    examine_separately_items: list</span>
+<span class="sd">          A list of items to examine separately. These items are more </span>
+<span class="sd">          complex datastructures that cannot be compared directly.</span>
+<span class="sd">    filename: string</span>
+<span class="sd">          A filename to save the model. </span>
+<span class="sd">    researcher: string</span>
+<span class="sd">          The researcher user-id used for logging </span>
+
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel = SafeRandomForestClassifier()</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel.fit(X, y)</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel.save(name=&quot;safe.pkl&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel.preliminary_check()</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel.request_release(filename=&quot;safe.pkl&quot;)</span>
+<span class="sd">    WARNING: model parameters may present a disclosure risk:</span>
+<span class="sd">    - parameter min_samples_leaf = 1 identified as less than the recommended min value of 5.</span>
+<span class="sd">    Changed parameter min_samples_leaf = 5.</span>
+
+<span class="sd">    Model parameters are within recommended ranges.</span>
+
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SafeModel.__init__"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Super class constructor, gets researcher name.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span></div>
+
+<div class="viewcode-block" id="SafeModel.save"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        name: string</span>
+<span class="sd">             The name of the file to save</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        No return value </span>
+
+<span class="sd">        </span>
+<span class="sd">        Optimizer is deliberately excluded.</span>
+<span class="sd">        To prevent possible to restart training and thus</span>
+<span class="sd">        possible back door into attacks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                <span class="s2">&quot;Please input a name with extension for the model to be saved.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">thename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="c1"># print(f&#39;in save(), parsed filename is {thename}&#39;)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;file name must indicate type as a suffix&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span><span class="p">:</span>  <span class="c1"># save to pickle</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">Typerror</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;saving as a .pkl file is not supported for models of type </span><span class="si">{self.model_type}</span><span class="s2">.&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;Error message was </span><span class="si">{er}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;sav&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span><span class="p">:</span>  <span class="c1"># save to joblib</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">Typerror</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;saving as a .sav (joblib) file is not supported &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;for models of type </span><span class="si">{self.model_type}</span><span class="s2">.&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Error message was </span><span class="si">{er}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;h5&quot;</span><span class="p">,</span> <span class="s2">&quot;tf&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;KerasModel&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span>
+                        <span class="n">include_optimizer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="c1"># save_traces=False,</span>
+                        <span class="n">save_format</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;saving as a </span><span class="si">{suffix}</span><span class="s2"> file gave this error message:  </span><span class="si">{er}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{suffix}</span><span class="s2"> file suffix currently not supported &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for models of type </span><span class="si">{self.model_type}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SafeModel.load"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;reads model from file in appropriate format.</span>
+<span class="sd">        Optimizer is deliberately excluded in the save</span>
+<span class="sd">        To prevent possible to restart training and thus</span>
+<span class="sd">        possible back door into attacks.</span>
+<span class="sd">        Thus optimizer cannot be loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                <span class="s2">&quot;Please input a name with extension for the model to load.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.pkl&quot;</span><span class="p">:</span>  <span class="c1"># load from pickle</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loadf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.sav&quot;</span><span class="p">:</span>  <span class="c1"># load from joblib</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.h5&quot;</span><span class="p">:</span>
+            <span class="c1"># load from .h5</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Safe_KerasModel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.tf&quot;</span><span class="p">:</span>
+            <span class="c1"># load from tf</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Safe_KerasModel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;loading from a </span><span class="si">{suffix}</span><span class="s2"> file is currently not supported&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">f</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Gets constraints relevant to the model type from the master read-only file.&quot;&quot;&quot;</span>
+        <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">rule_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;rules.json&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">rule_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+            <span class="n">rules</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">rules</span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__apply_constraints</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Applies a safe rule for a given parameter.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;is_type&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cur_val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;float&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Changed parameter type for </span><span class="si">{key}</span><span class="s2"> to </span><span class="si">{val}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;float&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cur_val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;int&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Changed parameter type for </span><span class="si">{key}</span><span class="s2"> to </span><span class="si">{val}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Nothing currently implemented to change type of parameter </span><span class="si">{key}</span><span class="s2"> &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;from {type(cur_val).__name__} to </span><span class="si">{val}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Changed parameter </span><span class="si">{key}</span><span class="s2"> = </span><span class="si">{val}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+    <span class="k">def</span> <span class="nf">__check_model_param</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether a current model parameter violates a safe rule.</span>
+<span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
+        <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;operator&quot;</span><span class="p">]</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;keyword&quot;</span><span class="p">]</span>
+        <span class="n">val</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+        <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="n">check_min</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="n">check_max</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;equals&quot;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="n">check_equal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;is_type&quot;</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;- unknown operator in parameter specification </span><span class="si">{operator}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">apply_constraints</span> <span class="ow">and</span> <span class="n">disclosive</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__apply_constraints</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span>
+
+    <span class="k">def</span> <span class="nf">__check_model_param_and</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical AND rule.</span>
+<span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
+        <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;subexpr&quot;</span><span class="p">]:</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_model_param</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">m</span>
+            <span class="k">if</span> <span class="n">d</span><span class="p">:</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span>
+
+    <span class="k">def</span> <span class="nf">__check_model_param_or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical OR rule.&quot;&quot;&quot;</span>
+        <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;subexpr&quot;</span><span class="p">]:</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_model_param</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">m</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="p">:</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span>
+
+<div class="viewcode-block" id="SafeModel.preliminary_check"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.preliminary_check">[docs]</a>    <span class="k">def</span> <span class="nf">preliminary_check</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate the safe rules.</span>
+<span class="sd">        Optionally fixes violations.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        verbose: bool</span>
+<span class="sd">             A boolean value to determine increased output level.</span>
+
+<span class="sd">        apply_constraints: bool</span>
+<span class="sd">             A boolean to determine whether identified constraints are</span>
+<span class="sd">             to be upheld and applied.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        msg: string</span>
+<span class="sd">           A message string</span>
+<span class="sd">        disclosive: bool</span>
+<span class="sd">           A boolean value indicating whether the model is potentially </span>
+<span class="sd">           disclosive.</span>
+<span class="sd">        </span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_constraints</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+            <span class="n">operator</span> <span class="o">=</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;operator&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;and&quot;</span><span class="p">:</span>
+                <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_model_param_and</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;or&quot;</span><span class="p">:</span>
+                <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_model_param_or</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_model_param</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">m</span>
+            <span class="k">if</span> <span class="n">d</span><span class="p">:</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">disclosive</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;WARNING: model parameters may present a disclosure risk:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">msg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Model parameters are within recommended ranges.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">msg</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+<div class="viewcode-block" id="SafeModel.get_current_and_saved_models"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.get_current_and_saved_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_and_saved_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Makes a copy of self.__dict__</span>
+<span class="sd">        and splits it into dicts for the current and saved versions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_model</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">attribute_names_as_list</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">attribute_names_as_list</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span><span class="p">:</span>
+                <span class="c1"># logger.debug(f&#39;copying {key}&#39;)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>  <span class="c1"># jim added</span>
+                    <span class="n">current_model</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{key}</span><span class="s2"> cannot be copied&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;...{type(t)} error; </span><span class="si">{t}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># logger.debug(&#39;...done&#39;)</span>
+        <span class="c1"># logger.info(&#39;copied&#39;)</span>
+
+        <span class="n">saved_model</span> <span class="o">=</span> <span class="n">current_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;saved_model&quot;</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+
+        <span class="c1"># return empty dict if necessary</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">saved_model</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span>
+            <span class="ow">or</span> <span class="n">saved_model</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">saved_model</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">saved_model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># final check in case fit has been called twice</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">saved_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;saved_model&quot;</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+
+            <span class="c1"># rename keys to get rid of the &quot;a_&quot; suffix</span>
+        <span class="c1">#             keyscopy= copy(saved_model.keys())</span>
+        <span class="c1">#             for oldkey in keyscopy:</span>
+        <span class="c1">#                 newkey=oldkey[2:]</span>
+        <span class="c1">#                 print(f&#39; {oldkey} -&gt; {newkey}&#39;)</span>
+        <span class="c1">#                 saved_model[newkey]= saved_model.pop(oldkey)</span>
+        <span class="k">return</span> <span class="n">current_model</span><span class="p">,</span> <span class="n">saved_model</span></div>
+
+<div class="viewcode-block" id="SafeModel.examine_seperate_items"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.examine_seperate_items">[docs]</a>    <span class="k">def</span> <span class="nf">examine_seperate_items</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">curr_vals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_vals</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;comparison of more complex structures</span>
+<span class="sd">        in the super class we just check these model-specific items exist</span>
+<span class="sd">        in both current and saved copies&quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+                <span class="c1"># not sure if this is necessarily disclosive</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Note that item </span><span class="si">{item}</span><span class="s2"> missing from both versions&quot;</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">):</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Error, item </span><span class="si">{item}</span><span class="s2"> present in  saved but not current model&quot;</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">):</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Error, item </span><span class="si">{item}</span><span class="s2"> present in current but not saved model&quot;</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># ok, so can call mode-specific extra checks</span>
+                <span class="n">msg2</span><span class="p">,</span> <span class="n">disclosive2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_checks</span><span class="p">(</span><span class="n">curr_vals</span><span class="p">,</span> <span class="n">saved_vals</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="n">msg2</span>
+                <span class="k">if</span> <span class="n">disclosive2</span><span class="p">:</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+<div class="viewcode-block" id="SafeModel.posthoc_check"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.posthoc_check">[docs]</a>    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run&quot;&quot;&quot;</span>
+
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">current_model</span><span class="p">,</span> <span class="n">saved_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_and_saved_models</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">saved_model</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Error: user has not called fit() method or has deleted saved values.&quot;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Recommendation: Do not release.&quot;</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># remove things we don&#39;t care about</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span><span class="p">:</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">current_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">saved_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+
+            <span class="c1"># break out things that need to be handled/examined in more depth</span>
+            <span class="n">curr_separate</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">saved_separate</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
+                <span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+                <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">saved_model</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;Absent&quot;</span><span class="p">)</span>
+
+            <span class="c1"># comparison on list of &quot;simple&quot; parameters</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">current_model</span><span class="p">,</span> <span class="n">saved_model</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Warning: basic parameters differ in {len(match)} places:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;change&quot;</span><span class="p">:</span>
+                        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;parameter </span><span class="si">{match[i][1]}</span><span class="s2"> changed from </span><span class="si">{match[i][2][1]}</span><span class="s2"> &quot;</span>
+                        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;to </span><span class="si">{match[i][2][0]}</span><span class="s2"> after model was fitted.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{match[i]}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># comparison on model-specific attributes</span>
+            <span class="n">extra_msg</span><span class="p">,</span> <span class="n">extra_disclosive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperate_items</span><span class="p">(</span>
+                <span class="n">curr_separate</span><span class="p">,</span> <span class="n">saved_separate</span>
+            <span class="p">)</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">extra_msg</span>
+            <span class="k">if</span> <span class="n">extra_disclosive</span><span class="p">:</span>
+                <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+<div class="viewcode-block" id="SafeModel.additional_checks"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.additional_checks">[docs]</a>    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+
+        <span class="sd">&quot;&quot;&quot;Placeholder function for additional posthoc checks e.g. keras this</span>
+<span class="sd">        version just checks that any lists have the same contents</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        curr_separate: python dictionary</span>
+
+<span class="sd">        saved_separate: python dictionary</span>
+<span class="sd">           </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        msg: string</span>
+<span class="sd">        A message string</span>
+<span class="sd">        disclosive: bool</span>
+<span class="sd">        A boolean value to indicate whether the model is potentailly disclosive.</span>
+<span class="sd">        </span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        posthoc checking makes sure that the two dicts have the same set of</span>
+<span class="sd">        keys as defined in the list self.examine_separately</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Error: Saved copy is missing attribute </span><span class="si">{item}</span><span class="s2">&quot;</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]):</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Warning: different counts of values for parameter </span><span class="si">{item}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">])):</span>
+                        <span class="n">difference</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                            <span class="n">diff</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">difference</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Warning: at least one non-matching value &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;for parameter list </span><span class="si">{item}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">break</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>  <span class="c1"># + msg2</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+<div class="viewcode-block" id="SafeModel.request_release"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.request_release">[docs]</a>    <span class="k">def</span> <span class="nf">request_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Saves model to filename specified and creates a report for the TRE</span>
+<span class="sd">        output checkers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        filename: string</span>
+<span class="sd">        The filename used to save the model </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You must provide the name of the file you want to save your model&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For security reasons, this will overwrite previous versions&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">msg_prel</span><span class="p">,</span> <span class="n">disclosive_prel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">msg_post</span><span class="p">,</span> <span class="n">disclosive_post</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posthoc_check</span><span class="p">()</span>
+
+            <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;researcher&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span><span class="p">,</span>
+                <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+                <span class="s2">&quot;model_save_file&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span>
+                <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">msg_prel</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;k_anonymity&quot;</span><span class="p">):</span>
+                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;k_anonymity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self.k_anonymity}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">disclosive_prel</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">disclosive_post</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span>
+                    <span class="s2">&quot;recommendation&quot;</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Run file </span><span class="si">{filename}</span><span class="s2"> through next step of checking procedure&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Do not allow release&quot;</span>
+                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg_prel</span> <span class="o">+</span> <span class="n">msg_post</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">outputfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">+</span> <span class="s2">&quot;_checkfile.json&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputfilename</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SafeModel.__str__"><a class="viewcode-back" href="../../safemodel.html#safemodel.safemodel.SafeModel.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns string with model description.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">+</span> <span class="s2">&quot; with parameters: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, GRAIMATTER Project Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

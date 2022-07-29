@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>safemodel.classifiers.saferandomforestclassifier &mdash; GRAIMATTER 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> GRAIMATTER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../attacks.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safemodel.html">Base Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safedecisiontree.html">SafeDecisionTree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../saferandomforest.html">SafeRandomForest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safesvc.html">SafeSVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safekeras.html">SafeKerasModel</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">GRAIMATTER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>safemodel.classifiers.saferandomforestclassifier</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for safemodel.classifiers.saferandomforestclassifier</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Privacy protected Random Forest classifier.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">dictdiffer</span> <span class="kn">import</span> <span class="n">diff</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="kn">from</span> <span class="nn">..safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
+<span class="kn">from</span> <span class="nn">.safedecisiontreeclassifier</span> <span class="kn">import</span> <span class="n">decision_trees_are_equal</span>
+
+
+<div class="viewcode-block" id="SafeRandomForestClassifier"><a class="viewcode-back" href="../../../saferandomforest.html#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier">[docs]</a><span class="k">class</span> <span class="nc">SafeRandomForestClassifier</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Privacy protected Random Forest classifier.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
+        <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">RandomForestClassifier</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RandomForestClassifier&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">(</span><span class="n">apply_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;model_save_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ignore_items&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;base_estimator_&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;base_estimator&quot;</span><span class="p">,</span> <span class="s2">&quot;estimators_&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SafeRandomForestClassifier.additional_checks"><a class="viewcode-back" href="../../../saferandomforest.html#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks">[docs]</a>    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Random Forest-specific checks&quot;&quot;&quot;</span>
+
+        <span class="c1"># call the super function to deal with any items that are lists</span>
+        <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">additional_checks</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">)</span>
+        <span class="c1"># now the relevant random-forest specific things</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;base_estimator&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">the_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span><span class="p">[</span><span class="s2">&quot;base_estimator_&quot;</span><span class="p">],</span> <span class="n">the_type</span><span class="p">):</span>
+                        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Warning: model was fitted with different base estimator type.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Error: model has not been fitted to data.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">elif</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;estimators_&quot;</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Error: model has not been fitted to data.</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+                <span class="k">elif</span> <span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Error: current version of model has had trees removed after fitting.</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+                <span class="k">elif</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Error: current version of model has had trees manually edited.</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">num1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+                        <span class="n">num2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">num1</span> <span class="o">!=</span> <span class="n">num2</span><span class="p">:</span>
+                            <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Fitted model has </span><span class="si">{num2}</span><span class="s2"> estimators &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;but requested version has </span><span class="si">{num1}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num1</span><span class="p">):</span>
+                                <span class="n">same</span><span class="p">,</span> <span class="n">msg2</span><span class="p">,</span> <span class="o">=</span> <span class="n">decision_trees_are_equal</span><span class="p">(</span>
+                                    <span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                                <span class="p">)</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">same</span><span class="p">:</span>
+                                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Forest base estimators </span><span class="si">{idx}</span><span class="s2"> differ.&quot;</span>
+                                    <span class="n">msg</span> <span class="o">+=</span> <span class="n">msg2</span>
+
+                    <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                        <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                            <span class="s2">&quot;In SafeRandomForest.additional_checks: &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;Unable to check </span><span class="si">{item}</span><span class="s2"> as an exception occurred: </span><span class="si">{error}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">DecisionTreeClassifier</span><span class="p">):</span>
+                <span class="n">diffs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;structure </span><span class="si">{item}</span><span class="s2"> has {len(diffs_list)} differences: </span><span class="si">{diffs_list}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
+
+<div class="viewcode-block" id="SafeRandomForestClassifier.fit"><a class="viewcode-back" href="../../../saferandomforest.html#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Do fit and then store model dict&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k_anonymity</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SafeRandomForestClassifier.get_k_anonymity"><a class="viewcode-back" href="../../../saferandomforest.html#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.get_k_anonymity">[docs]</a>    <span class="k">def</span> <span class="nf">get_k_anonymity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;calculates the k-anonymity of a random forest model</span>
+<span class="sd">        as the minimum of the anonymity for each record.</span>
+<span class="sd">        That is defined as the size of the set of records which</span>
+<span class="sd">        appear in the same leaf as the record in every tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># dataset must be 2-D</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+        <span class="n">num_records</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">num_trees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span>
+        <span class="n">k_anon_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_records</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># ending leaf node by record(row) and tree (column)</span>
+        <span class="n">all_leaves</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_records</span><span class="p">,</span> <span class="n">num_trees</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">this_tree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trees</span><span class="p">):</span>
+            <span class="n">this_leaves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">this_tree</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_records</span><span class="p">):</span>
+                <span class="n">all_leaves</span><span class="p">[</span><span class="n">record</span><span class="p">][</span><span class="n">this_tree</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_leaves</span><span class="p">[</span><span class="n">record</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_records</span><span class="p">):</span>
+            <span class="c1"># start by assuming everything co-occurs</span>
+            <span class="n">appears_together</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_records</span><span class="p">))</span>
+            <span class="c1"># iterate through trees</span>
+            <span class="k">for</span> <span class="n">this_tree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trees</span><span class="p">):</span>
+                <span class="n">this_leaf</span> <span class="o">=</span> <span class="n">all_leaves</span><span class="p">[</span><span class="n">record</span><span class="p">][</span><span class="n">this_tree</span><span class="p">]</span>
+
+                <span class="n">together</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">appears_together</span><span class="p">)</span>
+                <span class="c1"># removing records which go to other leaves</span>
+                <span class="k">for</span> <span class="n">other_record</span> <span class="ow">in</span> <span class="n">together</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">all_leaves</span><span class="p">[</span><span class="n">other_record</span><span class="p">][</span><span class="n">this_tree</span><span class="p">]</span> <span class="o">!=</span> <span class="n">this_leaf</span><span class="p">:</span>
+                        <span class="n">appears_together</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">other_record</span><span class="p">)</span>
+
+            <span class="n">k_anon_val</span><span class="p">[</span><span class="n">record</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">appears_together</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">k_anon_val</span><span class="o">.</span><span class="n">min</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, GRAIMATTER Project Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
