@@ -42,7 +42,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datainterface.html">Data Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attacks.html">Attacks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="safemodel.html">Base Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="safedecisiontree.html">SafeDecisionTree</a></li>
@@ -129,6 +129,22 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    attacks.metrics
+
+      <ul>
+        <li><a href="attacks.html#module-attacks.metrics">module</a>
+</li>
+      </ul></li>
+      <li>
+    attacks.mia_extremecase
+
+      <ul>
+        <li><a href="attacks.html#module-attacks.mia_extremecase">module</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
@@ -154,20 +170,15 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    data_preprocessing.data_interface
-
-      <ul>
-        <li><a href="datainterface.html#module-data_preprocessing.data_interface">module</a>
+      <li><a href="preprocessing.html#preprocessing.loaders.DataNotAvailable">DataNotAvailable</a>
 </li>
-      </ul></li>
-      <li><a href="datainterface.html#data_preprocessing.data_interface.DataNotAvailable">DataNotAvailable</a>
+      <li><a href="safedecisiontree.html#safemodel.classifiers.safedecisiontreeclassifier.decision_tree_internal_trees_are_equal">decision_tree_internal_trees_are_equal() (in module safemodel.classifiers.safedecisiontreeclassifier)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="safedecisiontree.html#safemodel.classifiers.safedecisiontreeclassifier.decision_tree_internal_trees_are_equal">decision_tree_internal_trees_are_equal() (in module safemodel.classifiers.safedecisiontreeclassifier)</a>
-</li>
       <li><a href="safedecisiontree.html#safemodel.classifiers.safedecisiontreeclassifier.decision_trees_are_equal">decision_trees_are_equal() (in module safemodel.classifiers.safedecisiontreeclassifier)</a>
+</li>
+      <li><a href="attacks.html#attacks.metrics.div">div() (in module attacks.metrics)</a>
 </li>
       <li><a href="safekeras.html#safemodel.classifiers.safekeras.Safe_KerasModel.dp_epsilon_met">dp_epsilon_met() (safemodel.classifiers.safekeras.Safe_KerasModel method)</a>
 </li>
@@ -178,6 +189,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="safemodel.html#safemodel.safemodel.SafeModel.examine_seperate_items">examine_seperate_items() (safemodel.safemodel.SafeModel method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="attacks.html#attacks.metrics.expected_auc_var">expected_auc_var() (in module attacks.metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -201,11 +216,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="safemodel.html#safemodel.safemodel.SafeModel.get_current_and_saved_models">get_current_and_saved_models() (safemodel.safemodel.SafeModel method)</a>
 </li>
+      <li><a href="preprocessing.html#preprocessing.loaders.get_data_sklearn">get_data_sklearn() (in module preprocessing.loaders)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="datainterface.html#data_preprocessing.data_interface.get_data_sklearn">get_data_sklearn() (in module data_preprocessing.data_interface)</a>
-</li>
       <li><a href="saferandomforest.html#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.get_k_anonymity">get_k_anonymity() (safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier method)</a>
+</li>
+      <li><a href="attacks.html#attacks.metrics.get_metrics">get_metrics() (in module attacks.metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -225,11 +242,17 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="attacks.html#attacks.mia_extremecase.min_max_disc">min_max_disc() (in module attacks.mia_extremecase)</a>
+</li>
       <li>
     module
 
       <ul>
-        <li><a href="datainterface.html#module-data_preprocessing.data_interface">data_preprocessing.data_interface</a>
+        <li><a href="attacks.html#module-attacks.metrics">attacks.metrics</a>
+</li>
+        <li><a href="attacks.html#module-attacks.mia_extremecase">attacks.mia_extremecase</a>
+</li>
+        <li><a href="preprocessing.html#module-preprocessing.loaders">preprocessing.loaders</a>
 </li>
         <li><a href="safedecisiontree.html#module-safemodel.classifiers.safedecisiontreeclassifier">safemodel.classifiers.safedecisiontreeclassifier</a>
 </li>
@@ -256,6 +279,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="safemodel.html#safemodel.safemodel.SafeModel.preliminary_check">preliminary_check() (safemodel.safemodel.SafeModel method)</a>
 </li>
+      <li>
+    preprocessing.loaders
+
+      <ul>
+        <li><a href="preprocessing.html#module-preprocessing.loaders">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -323,12 +353,16 @@
       <li><a href="safekeras.html#safemodel.classifiers.safekeras.test_checkpoint_equality">test_checkpoint_equality() (in module safemodel.classifiers.safekeras)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="attacks.html#attacks.metrics.tpr_at_fpr">tpr_at_fpr() (in module attacks.metrics)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="datainterface.html#data_preprocessing.data_interface.UnknownDataset">UnknownDataset</a>
+      <li><a href="preprocessing.html#preprocessing.loaders.UnknownDataset">UnknownDataset</a>
 </li>
   </ul></td>
 </tr></table>
