@@ -76,9 +76,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-attacks.metrics">
-<span id="attacks"></span><h1>Attacks<a class="headerlink" href="#module-attacks.metrics" title="Permalink to this heading"></a></h1>
-<p>Calculate metrics.</p>
+  <div class="section" id="attacks">
+<h1>Attacks<a class="headerlink" href="#attacks" title="Permalink to this heading"></a></h1>
+<p>Examples showing how to run the code can be found in the examples folder.</p>
+<span class="target" id="module-attacks.metrics"></span><p>Calculate metrics.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="attacks.metrics.auc_p_val">
+<span class="sig-prename descclassname"><span class="pre">attacks.metrics.</span></span><span class="sig-name descname"><span class="pre">auc_p_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/attacks/metrics.html#auc_p_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#attacks.metrics.auc_p_val" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the p-value for a given AUC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>auc: float</strong></dt><dd><p>Observed AUC value</p>
+</dd>
+<dt><strong>n_pos: int</strong></dt><dd><p>Number of positive examples</p>
+</dd>
+<dt><strong>n_neg: int</strong></dt><dd><p>Number of negative examples</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>auc_p: float</dt><dd><p>p-value of observing an AUC &gt; auc by chance</p>
+</dd>
+<dt>auc_std: float</dt><dd><p>standard deviation of the NULL AUC diustribution (mean = 0.5)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="attacks.metrics.div">
 <span class="sig-prename descclassname"><span class="pre">attacks.metrics.</span></span><span class="sig-name descname"><span class="pre">div</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/attacks/metrics.html#div"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#attacks.metrics.div" title="Permalink to this definition"></a></dt>

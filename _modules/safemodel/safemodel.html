@@ -262,19 +262,19 @@
 <span class="sd">    model_type: string</span>
 <span class="sd">          A string describing the type of model. Default is &quot;None&quot;.</span>
 <span class="sd">    model:</span>
-<span class="sd">          The Machine Learning Model. </span>
+<span class="sd">          The Machine Learning Model.</span>
 <span class="sd">    saved_model:</span>
-<span class="sd">          A saved copy of the Machine Learning Model used for comparisson.</span>
+<span class="sd">          A saved copy of the Machine Learning Model used for comparison.</span>
 <span class="sd">    ignore_items: list</span>
-<span class="sd">          A list of items to ignore when comparing the model with the </span>
+<span class="sd">          A list of items to ignore when comparing the model with the</span>
 <span class="sd">          saved_model.</span>
 <span class="sd">    examine_separately_items: list</span>
-<span class="sd">          A list of items to examine separately. These items are more </span>
+<span class="sd">          A list of items to examine separately. These items are more</span>
 <span class="sd">          complex datastructures that cannot be compared directly.</span>
 <span class="sd">    filename: string</span>
-<span class="sd">          A filename to save the model. </span>
+<span class="sd">          A filename to save the model.</span>
 <span class="sd">    researcher: string</span>
-<span class="sd">          The researcher user-id used for logging </span>
+<span class="sd">          The researcher user-id used for logging</span>
 
 
 
@@ -322,16 +322,16 @@
 
 <span class="sd">        name: string</span>
 <span class="sd">             The name of the file to save</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 
-<span class="sd">        No return value </span>
+<span class="sd">        No return value</span>
 
-<span class="sd">        </span>
+
 <span class="sd">        Optimizer is deliberately excluded.</span>
 <span class="sd">        To prevent possible to restart training and thus</span>
 <span class="sd">        possible back door into attacks.</span>
@@ -527,9 +527,9 @@
 <span class="sd">        msg: string</span>
 <span class="sd">           A message string</span>
 <span class="sd">        disclosive: bool</span>
-<span class="sd">           A boolean value indicating whether the model is potentially </span>
+<span class="sd">           A boolean value indicating whether the model is potentially</span>
 <span class="sd">           disclosive.</span>
-<span class="sd">        </span>
+
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -688,7 +688,7 @@
 <span class="sd">        curr_separate: python dictionary</span>
 
 <span class="sd">        saved_separate: python dictionary</span>
-<span class="sd">           </span>
+
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -696,17 +696,17 @@
 <span class="sd">        msg: string</span>
 <span class="sd">        A message string</span>
 <span class="sd">        disclosive: bool</span>
-<span class="sd">        A boolean value to indicate whether the model is potentailly disclosive.</span>
-<span class="sd">        </span>
+<span class="sd">        A boolean value to indicate whether the model is potentially disclosive.</span>
+
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 
 <span class="sd">        posthoc checking makes sure that the two dicts have the same set of</span>
 <span class="sd">        keys as defined in the list self.examine_separately</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
 
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
@@ -745,7 +745,7 @@
 <span class="sd">        ----------</span>
 
 <span class="sd">        filename: string</span>
-<span class="sd">        The filename used to save the model </span>
+<span class="sd">        The filename used to save the model</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
