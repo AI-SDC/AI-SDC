@@ -111,9 +111,10 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Random Forest-specific checks&quot;&quot;&quot;</span>
-
-        <span class="c1"># call the super function to deal with any items that are lists</span>
-        <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">additional_checks</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">disclosive</span><span class="o">=</span><span class="kc">False</span>
+        <span class="c1">## call the super function to deal with any items that are lists</span>
+        <span class="c1">#msg, disclosive = super().additional_checks(curr_separate, saved_separate)</span>
         <span class="c1"># now the relevant random-forest specific things</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;base_estimator&quot;</span><span class="p">:</span>
