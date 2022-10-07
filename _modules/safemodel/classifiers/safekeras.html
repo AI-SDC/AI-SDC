@@ -6,10 +6,6 @@
   <title>safemodel.classifiers.safekeras &mdash; GRAIMATTER 1.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -19,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../safedecisiontree.html">SafeDecisionTree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../saferandomforest.html">SafeRandomForest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../safekeras.html">SafeKerasModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending.html">Extending SafeModel</a></li>
 </ul>
 
         </div>
@@ -75,7 +74,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for safemodel.classifiers.safekeras</h1><div class="highlight"><pre>
-<span></span><span class="c1"># safekaeras.py:</span>
+<span></span><span class="c1"># safekeras.py:</span>
 <span class="c1"># UWE 2022</span>
 
 <span class="c1"># general imports</span>
@@ -97,6 +96,7 @@
 
 <span class="c1"># safemodel superclass</span>
 <span class="kn">from</span> <span class="nn">safemodel.safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
+<span class="kn">from</span> <span class="nn">safemodel.reporting</span> <span class="kn">import</span> <span class="n">get_reporting_string</span>
 
 
 <span class="k">def</span> <span class="nf">same_configs</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -108,13 +108,14 @@
         <span class="n">match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">m1_layer_config</span><span class="p">,</span> <span class="n">m2_layer_config</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{layer}</span><span class="s2"> configs differ in {len(match)} places:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;layer_configs_differ&quot;</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">match</span><span class="p">)</span>
+            <span class="c1">#f&quot;Layer {layer} configs differ in {len(match)} places:\n&quot;</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;change&quot;</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;parameter </span><span class="si">{match[i][1]}</span><span class="s2"> changed from </span><span class="si">{match[i][2][1]}</span><span class="s2"> &quot;</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;to </span><span class="si">{match[i][2][0]}</span><span class="s2"> after model was fitted.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;parameter </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> changed from </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;to </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> after model was fitted.</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{match[i]}</span><span class="s2">&quot;</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
 
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;configurations match&quot;</span>
@@ -128,13 +129,13 @@
         <span class="n">m1layer</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
         <span class="n">m2layer</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2layer</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;layer </span><span class="si">{layer}</span><span class="s2"> not the same size.&quot;</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2"> not the same size.&quot;</span>
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)):</span>
             <span class="n">m1d</span> <span class="o">=</span> <span class="n">m2layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
             <span class="n">m2d</span> <span class="o">=</span> <span class="n">m2layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
             <span class="c1"># print(type(m1d), m1d.shape)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">m1d</span><span class="p">,</span> <span class="n">m2d</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;dimension </span><span class="si">{dim}</span><span class="s2"> of layer </span><span class="si">{layer}</span><span class="s2"> differs&quot;</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> of layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2"> differs&quot;</span>
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;weights match&quot;</span>
 
 
@@ -150,12 +151,14 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">model1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error re-loading  model from </span><span class="si">{v1}</span><span class="s2">:  </span><span class="si">{e}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_reloading_model_v1&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+        <span class="c1">#f&quot;Error re-loading  model from {v1}:  {e}&quot;</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">model2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error re-loading  model from </span><span class="si">{v2}</span><span class="s2">: </span><span class="si">{e}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_reloading_model_v2&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+        <span class="c1">#f&quot;Error re-loading  model from {v2}: {e}&quot;</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
 
     <span class="n">same_config</span><span class="p">,</span> <span class="n">config_message</span> <span class="o">=</span> <span class="n">same_configs</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">)</span>
@@ -252,7 +255,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Division by zero setting batch_size =1&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;division_by_zero&quot;</span><span class="p">))</span>
+            <span class="c1">#(&quot;Division by zero setting batch_size =1&quot;)</span>
             <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="n">ok</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dp_epsilon_met</span><span class="p">(</span>
@@ -260,22 +264,32 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;The requirements for DP are met, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;current epsilon is: </span><span class="si">{self.current_epsilon}</span><span class="s2">.&quot;</span>
-                <span class="s2">&quot;Calculated from the parameters:  &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Num Samples = </span><span class="si">{num_samples}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;batch_size = </span><span class="si">{batch_size}</span><span class="s2">, epochs = </span><span class="si">{epochs}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dp_requirements_met&quot;</span><span class="p">,</span>
+                                       <span class="n">current_epsilon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_epsilon</span><span class="p">,</span>
+                                       <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                       <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">)</span>
+
+            <span class="c1">#(</span>
+            <span class="c1">#    &quot;The requirements for DP are met, &quot;</span>
+            <span class="c1">#    f&quot;current epsilon is: {self.current_epsilon}.&quot;</span>
+            <span class="c1">#    &quot;Calculated from the parameters:  &quot;</span>
+            <span class="c1">#    f&quot;Num Samples = {num_samples}, &quot;</span>
+            <span class="c1">#    f&quot;batch_size = {batch_size}, epochs = {epochs}.\n&quot;</span>
+            <span class="c1">#)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The requirements for DP are not met, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;current epsilon is: </span><span class="si">{self.current_epsilon}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;To attain recommended DP the following parameters can be changed:  &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Num Samples = </span><span class="si">{num_samples}</span><span class="s2">,&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;batch_size = </span><span class="si">{batch_size}</span><span class="s2">,&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;epochs = </span><span class="si">{epochs}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dp_requirements_not_met&quot;</span><span class="p">,</span>
+                                       <span class="n">current_epsilon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_epsilon</span><span class="p">,</span>
+                                       <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
+                                       <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                       <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#    f&quot;The requirements for DP are not met, &quot;</span>
+            <span class="c1">#    f&quot;current epsilon is: {self.current_epsilon}.\n&quot;</span>
+            <span class="c1">#    f&quot;To attain recommended DP the following parameters can be changed:  &quot;</span>
+            <span class="c1">#    f&quot;Num Samples = {num_samples},&quot;</span>
+            <span class="c1">#    f&quot;batch_size = {batch_size},&quot;</span>
+            <span class="c1">#    f&quot;epochs = {epochs}.\n&quot;</span>
+            <span class="c1">#)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ok</span><span class="p">,</span> <span class="n">msg</span></div>
 
@@ -283,16 +297,18 @@
         <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;_was_dp_gradients_called&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;optimizer does not contain key _was_dp_gradients_called&quot;</span>
-                <span class="s2">&quot; so is not DP.&quot;</span>
-            <span class="p">)</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;no_dp_gradients_key&quot;</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#    &quot;optimizer does not contain key _was_dp_gradients_called&quot;</span>
+            <span class="c1">#    &quot; so is not DP.&quot;</span>
+            <span class="c1">#)</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;optimizer does  contain key _was_dp_gradients_called&quot;</span>
-                <span class="s2">&quot; so should be DP.&quot;</span>
-            <span class="p">)</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;found_dp_gradients_key&quot;</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#    &quot;optimizer does  contain key _was_dp_gradients_called&quot;</span>
+            <span class="c1">#    &quot; so should be DP.&quot;</span>
+            <span class="c1">#)</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">DPused</span><span class="p">,</span> <span class="n">reason</span>
 
@@ -300,22 +316,26 @@
         <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;_was_dp_gradients_called&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;optimizer does not contain key _was_dp_gradients_called &quot;</span>
-                <span class="s2">&quot;so is not DP.&quot;</span>
-            <span class="p">)</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;no_dp_gradients_key&quot;</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#    &quot;optimizer does not contain key _was_dp_gradients_called &quot;</span>
+            <span class="c1">#    &quot;so is not DP.&quot;</span>
+            <span class="c1">#)</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">_was_dp_gradients_called</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;optimizer has been changed but fit() has not been rerun.&quot;</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;changed_opt_no_fit&quot;</span><span class="p">)</span>
+            <span class="c1">#&quot;optimizer has been changed but fit() has not been rerun.&quot;</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">_was_dp_gradients_called</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot; value of optimizer._was_dp_gradients_called is True, &quot;</span>
-                <span class="s2">&quot;so DP variant of optimizer has been run&quot;</span>
-            <span class="p">)</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dp_optimizer_run&quot;</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#    &quot; value of optimizer._was_dp_gradients_called is True, &quot;</span>
+            <span class="c1">#    &quot;so DP variant of optimizer has been run&quot;</span>
+            <span class="c1">#)</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;unrecognised combination&quot;</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;unrecognised_combination&quot;</span><span class="p">)</span>
+            <span class="c1">#&quot;unrecognised combination&quot;</span>
             <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="n">DPused</span><span class="p">,</span> <span class="n">reason</span>
@@ -328,13 +348,17 @@
             <span class="s2">&quot;tensorflow_privacy.DPKerasAdamOptimizer&quot;</span><span class="p">,</span>
             <span class="s2">&quot;tensorflow_privacy.DPKerasSGDOptimizer&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{str(self.optimizer)}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">in</span> <span class="n">allowed_optimizers</span><span class="p">:</span>
             <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;optimizer </span><span class="si">{self.optimizer}</span><span class="s2"> allowed&quot;</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_allowed&quot;</span><span class="p">,</span>
+                                          <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="c1">#f&quot;optimizer {self.optimizer} allowed&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;optimizer </span><span class="si">{self.optimizer}</span><span class="s2"> is not allowed&quot;</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_not_allowed&quot;</span><span class="p">,</span>
+                                          <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="c1">#f&quot;optimizer {self.optimizer} is not allowed&quot;</span>
 
         <span class="k">return</span> <span class="n">reason</span><span class="p">,</span> <span class="n">disclosive</span>
 
@@ -342,10 +366,14 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
     <span class="p">):</span>
 
-        <span class="n">replace_message</span> <span class="o">=</span> <span class="s2">&quot;WARNING: model parameters may present a disclosure risk&quot;</span>
-        <span class="n">using_DP_SGD</span> <span class="o">=</span> <span class="s2">&quot;Changed parameter optimizer = &#39;DPKerasSGDOptimizer&#39;&quot;</span>
-        <span class="n">Using_DP_Adagrad</span> <span class="o">=</span> <span class="s2">&quot;Changed parameter optimizer = &#39;DPKerasAdagradOptimizer&#39;&quot;</span>
-        <span class="n">using_DP_Adam</span> <span class="o">=</span> <span class="s2">&quot;Changed parameter optimizer = &#39;DPKerasAdamOptimizer&#39;&quot;</span>
+        <span class="n">replace_message</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;warn_possible_disclosure_risk&quot;</span><span class="p">)</span>
+        <span class="c1">#&quot;WARNING: model parameters may present a disclosure risk&quot;</span>
+        <span class="n">using_DP_SGD</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;using_dp_sgd&quot;</span><span class="p">)</span>
+        <span class="c1">#&quot;Changed parameter optimizer = &#39;DPKerasSGDOptimizer&#39;&quot;</span>
+        <span class="n">Using_DP_Adagrad</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;using_dp_adagrad&quot;</span><span class="p">)</span>
+        <span class="c1">#&quot;Changed parameter optimizer = &#39;DPKerasAdagradOptimizer&#39;&quot;</span>
+        <span class="n">using_DP_Adam</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;using_dp_adam&quot;</span><span class="p">)</span>
+        <span class="c1">#&quot;Changed parameter optimizer = &#39;DPKerasAdamOptimizer&#39;&quot;</span>
 
         <span class="n">optimizer_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="kc">None</span><span class="p">:</span> <span class="p">(</span><span class="n">using_DP_SGD</span><span class="p">,</span> <span class="n">tf_privacy</span><span class="o">.</span><span class="n">DPKerasSGDOptimizer</span><span class="p">),</span>
@@ -379,7 +407,9 @@
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opt_msg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;During compilation: </span><span class="si">{opt_msg}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;during_compilation&quot;</span><span class="p">,</span>
+                                       <span class="n">opt_msg</span><span class="o">=</span><span class="n">opt_msg</span><span class="p">))</span>
+                <span class="c1">#f&quot;During compilation: {opt_msg}&quot;)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span></div>
 
@@ -448,19 +478,25 @@
             <span class="s2">&quot;tfsaves/requested_model.tf&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">models_same</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recommendation is not to release because </span><span class="si">{same_msg}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_report_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span>
+                                    <span class="n">msg</span><span class="o">=</span><span class="n">same_msg</span><span class="p">))</span>
+            <span class="c1">#f&quot;Recommendation is not to release because {same_msg}.\n&quot;)</span>
             <span class="k">return</span> <span class="n">same_msg</span><span class="p">,</span> <span class="kc">True</span>
 
         <span class="c1"># was a dp-enbled optimiser provided?</span>
         <span class="n">allowed</span><span class="p">,</span> <span class="n">allowedmessage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_optimizer_allowed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recommendation is not to release because </span><span class="si">{allowedmessage}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_report_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span>
+                                    <span class="n">msg</span><span class="o">=</span><span class="n">allowedmessage</span><span class="p">))</span>
+                <span class="c1">#f&quot;Recommendation is not to release because {allowedmessage}.\n&quot;)</span>
             <span class="k">return</span> <span class="n">allowedmessage</span><span class="p">,</span> <span class="kc">True</span>
 
         <span class="c1"># was the dp-optimiser used during fit()</span>
         <span class="n">dpused</span><span class="p">,</span> <span class="n">dpusedmessage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_DP_used</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dpused</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recommendation is not to release because </span><span class="si">{dpusedmessage}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_report_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span>
+                                    <span class="n">msg</span><span class="o">=</span><span class="n">dpusedmessage</span><span class="p">))</span>
+                <span class="c1">#f&quot;Recommendation is not to release because {dpusedmessage}.\n&quot;)</span>
             <span class="k">return</span> <span class="n">dpusedmessage</span><span class="p">,</span> <span class="kc">True</span>
 
         <span class="c1"># is this the same as the values immediately after fit()?</span>
@@ -469,7 +505,8 @@
             <span class="ow">or</span> <span class="n">dpusedmessage</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_reason</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_epsilon</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_epsilon</span>
         <span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;Optimizer config has been changed since training.&quot;</span><span class="p">,</span> <span class="kc">True</span>
+                  <span class="k">return</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;opt_config_changed&quot;</span><span class="p">),</span> <span class="kc">True</span>
+            <span class="c1">#&quot;Optimizer config has been changed since training.&quot;, True</span>
 
         <span class="c1"># if so what was the value of epsilon achieved</span>
         <span class="n">eps_met</span><span class="p">,</span> <span class="n">current_epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dp_epsilon_met</span><span class="p">(</span>
@@ -478,22 +515,25 @@
             <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">eps_met</span><span class="p">:</span>
-            <span class="n">dpepsilonmessage</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;WARNING: epsilon </span><span class="si">{current_epsilon}</span><span class="s2"> &quot;</span>
-                <span class="s2">&quot;is above normal max recommended value.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;Discussion with researcher needed.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Recommendation is further discussion needed &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{dpepsilonmessage}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="n">dpepsilonmessage</span><span class="p">,</span> <span class="kc">True</span>
+                <span class="n">dpepsilonmessage</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;epsilon_above_normal&quot;</span><span class="p">)</span>
+                <span class="c1">#(</span>
+                <span class="c1">#  f&quot;WARNING: epsilon {current_epsilon} &quot;</span>
+                <span class="c1">#&quot;is above normal max recommended value.\n&quot;</span>
+                <span class="c1">#&quot;Discussion with researcher needed.\n&quot;</span>
+                <span class="c1">#)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_further_discussion&quot;</span><span class="p">,</span>
+                                       <span class="n">msg</span><span class="o">=</span><span class="n">dpepsilonmessage</span><span class="p">))</span>
+                <span class="c1">#f&quot;Recommendation is further discussion needed &quot; f&quot;{dpepsilonmessage}.\n&quot;</span>
+                <span class="k">return</span> <span class="n">dpepsilonmessage</span><span class="p">,</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recommendation is to allow release.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">dpepsilonmessage</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;Recommendation: Allow release.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Epsilon vale of model </span><span class="si">{current_epsilon}</span><span class="s2"> &quot;</span>
-                <span class="s2">&quot;is below normal max recommended value.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_allow_release&quot;</span><span class="p">))</span>
+            <span class="c1">#&quot;Recommendation is to allow release.\n&quot;)</span>
+            <span class="n">dpepsilonmessage</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;allow_release_eps_below_max&quot;</span><span class="p">)</span>
+            <span class="c1">#(</span>
+            <span class="c1">#&quot;Recommendation: Allow release.\n&quot;</span>
+            <span class="c1">#f&quot;Epsilon vale of model {current_epsilon} &quot;</span>
+            <span class="c1">#&quot;is below normal max recommended value.\n&quot;</span>
+            <span class="c1">#)</span>
 
             <span class="k">return</span> <span class="n">dpepsilonmessage</span><span class="p">,</span> <span class="kc">False</span></div>
 
@@ -523,13 +563,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
-                <span class="s2">&quot;Please input a name with extension for the model to be saved.&quot;</span>
+                <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_filename_with_extension&quot;</span><span class="p">)</span>
+                <span class="c1">#&quot;Please input a name with extension for the model to be saved.&quot;</span>
             <span class="p">)</span>
 
         <span class="n">thename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
         <span class="c1"># print(f&#39;in save(), parsed filename is {thename}&#39;)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;file name must indicate type as a suffix&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;filename_must_indicate_type&quot;</span><span class="p">))</span>
+            <span class="c1">#&quot;file name must indicate type as a suffix&quot;)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
@@ -544,12 +586,15 @@
                     <span class="p">)</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;saving as a </span><span class="si">{suffix}</span><span class="s2"> file gave this error message:  </span><span class="si">{er}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_saving_file&quot;</span><span class="p">,</span>
+                    <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">er</span><span class="o">=</span><span class="n">er</span><span class="p">))</span>
+                    <span class="c1">#f&quot;saving as a {suffix} file gave this error message:  {er}&quot;)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{suffix}</span><span class="s2"> file suffix  not supported &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for models of type </span><span class="si">{self.model_type}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="p">)</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;suffix_not_supported_for_type&quot;</span><span class="p">,</span>
+                                           <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">))</span></div>
+                    <span class="c1">#f&quot;{suffix} file suffix  not supported &quot;</span>
+                    <span class="c1">#f&quot;for models of type {self.model_type}.\n&quot;</span>
+
 
 <div class="viewcode-block" id="SafeKerasModel.load"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.SafeKerasModel.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -579,7 +624,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;loading from a </span><span class="si">{suffix}</span><span class="s2"> file is currently not supported&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;loading from a </span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> file is currently not supported&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">f</span></div></div>
 </pre></div>
