@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Introduction &mdash; GRAIMATTER 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -19,6 +20,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -81,9 +83,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="introduction">
+  <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
-<div class="section" id="what-is-safemodel">
+<section id="what-is-safemodel">
 <h2>What is safemodel?<a class="headerlink" href="#what-is-safemodel" title="Permalink to this heading"></a></h2>
 <p>The safemodel package is an opensource wrapper for common machine learning
 models. It is designed for use by researchers in Trusted Research Environments (TREs) where disclosure control methods  must be implemented.</p>
@@ -91,23 +93,23 @@ models. It is designed for use by researchers in Trusted Research Environments (
 more compliant with disclosure control.</p>
 <p>Safemodel provides feedback to the researcher through a JSON parseable
 ‘checkfile’ report:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;researcher&quot;</span><span class="p">:</span> <span class="s2">&quot;andy&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;model_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DecisionTreeClassifier&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;model_save_file&quot;</span><span class="p">:</span> <span class="s2">&quot;unsafe.pkl&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="s2">&quot;WARNING: model parameters may present a disclosure risk:\n- para</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;researcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;andy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;model_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DecisionTreeClassifier&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;model_save_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unsafe.pkl&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WARNING: model parameters may present a disclosure risk:\n- para</span>
 <span class="s2">meter min_samples_leaf = 1 identified as less than the recommended min value of</span>
-<span class="s2">5.&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;recommendation&quot;</span><span class="p">:</span> <span class="s2">&quot;Do not allow release&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;WARNING: model parameters may present a disclosure risk:\n- param</span>
+<span class="s2">5.&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;recommendation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Do not allow release&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WARNING: model parameters may present a disclosure risk:\n- param</span>
 <span class="s2">eter min_samples_leaf = 1 identified as less than the recommended min value of 5</span>
 <span class="s2">.Error: user has not called fit() method or has deleted saved values.Recommendat</span>
-<span class="s2">ion: Do not release.&quot;</span>
-<span class="p">}</span>
+<span class="s2">ion: Do not release.&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

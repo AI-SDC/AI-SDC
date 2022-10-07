@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Preprocessing &mdash; GRAIMATTER 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -19,6 +20,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -78,73 +80,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-preprocessing.loaders">
-<span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-preprocessing.loaders" title="Permalink to this heading"></a></h1>
-<p>loaders.py
-A set of useful handlers to pull in datasets common to the project and perform the appropriate
-pre-processing</p>
-<dl class="py exception">
-<dt class="sig sig-object py" id="preprocessing.loaders.DataNotAvailable">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">DataNotAvailable</span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#DataNotAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.DataNotAvailable" title="Permalink to this definition"></a></dt>
-<dd><p>Exception raised if the user asks for a dataset that they do not have the data for. I.e.
-some datasets require a .csv file to have been downloaded.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="preprocessing.loaders.UnknownDataset">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">UnknownDataset</span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#UnknownDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.UnknownDataset" title="Permalink to this definition"></a></dt>
-<dd><p>Exception raised if the user passes a name that we don’t recognise</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="preprocessing.loaders.get_data_sklearn">
-<span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">get_data_sklearn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/github/workspace/data'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#get_data_sklearn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.get_data_sklearn" title="Permalink to this definition"></a></dt>
-<dd><p>Main entry method to return data in format sensible for sklearn. User passes a name and that
-dataset is returned as a tuple of pandas DataFrames (data, labels).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>dataset_name: str</strong></dt><dd><p>The name of the dataset to load</p>
-</dd>
-<dt><strong>data_folder: str</strong></dt><dd><p>The name of the local folder in which data is stored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>X: pd.DataFrame</dt><dd><p>The input dataframe – rows are examples, columns variables</p>
-</dd>
-<dt>y: pd.DataFrame</dt><dd><p>the target dataframe – has a single column containing the target values</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The following datasets are available:
-mimic2-iaccd (requires data download)
-in-hospital-mortality (requires data download)
-medical-mnist-ab-v-br-100 (requires data download)
-medical-mnist-ab-v-br-500 (requires data download)
-medical-mnist-all-100 (requires data download)
-indian liver (requires data download)
-texas hospitals 10 (requires data download)
-synth-ae (requires data download)
-synth-ae-small (requires data download)
-nursery (downloads automatically)
-iris (available out of the box via sklearn)</p>
-<p>Datasets can be normalised by adding the following prefixes:
-standard: standardises all columns to have zero mean and unit variance.
-minmax: standardises all columns to have values between 0 and 1.
-round: rounds continues features to have 3dp</p>
-<p>These can be nested.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">get_data_sklearn</span><span class="p">(</span><span class="s2">&quot;mimic2-iaccd&quot;</span><span class="p">)</span> <span class="c1"># pull the mimic2-iaccd data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">get_data_sklearn</span><span class="p">(</span><span class="s2">&quot;minmax iris&quot;</span><span class="p">)</span> <span class="c1"># pull the iris data and round continuous features</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
+  <section id="preprocessing">
+<h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading"></a></h1>
+</section>
 
 
            </div>
