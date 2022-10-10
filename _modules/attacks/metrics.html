@@ -74,22 +74,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for attacks.metrics</h1><div class="highlight"><pre>
-<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Calculate metrics.</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">roc_curve</span>
+
 <span class="kn">from</span> <span class="nn">.mia_extremecase</span> <span class="kn">import</span> <span class="n">min_max_disc</span>
 
 <span class="c1"># pylint: disable = invalid-name</span>
 
 <span class="n">VAR_THRESH</span> <span class="o">=</span> <span class="mf">1e-2</span>
+
 
 <span class="k">def</span> <span class="nf">_div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Solve the problem of division by 0 and round up.</span>
@@ -115,11 +116,13 @@
         <span class="n">division</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">division</span>
 
+
 <span class="k">def</span> <span class="nf">_tpr_at_fpr</span><span class="p">(</span>
     <span class="n">y_true</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">y_score</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-    <span class="n">fpr</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
-    <span class="n">fpr_perc</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">fpr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
+    <span class="n">fpr_perc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compute the TPR at a fixed FPR.</span>
 <span class="sd">    In particular, returns the TPR value corresponding to a particular FPR. Uses interpolation</span>
 <span class="sd">    to fill in gaps.</span>
@@ -142,8 +145,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">fpr_perc</span><span class="p">:</span>
-        <span class="n">fpr</span> <span class="o">/=</span> <span class="mf">100.</span>
-
+        <span class="n">fpr</span> <span class="o">/=</span> <span class="mf">100.0</span>
 
     <span class="n">fpr_vals</span><span class="p">,</span> <span class="n">tpr_vals</span><span class="p">,</span> <span class="n">thresh_vals</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_score</span><span class="p">)</span>
     <span class="n">thresh_from_fpr</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">fpr_vals</span><span class="p">,</span> <span class="n">thresh_vals</span><span class="p">)</span>
@@ -154,8 +156,9 @@
 
     <span class="k">return</span> <span class="n">tpr</span>
 
+
 <span class="k">def</span> <span class="nf">_expected_auc_var</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;&quot;Compute variance of AUC under assumption of uniform probabilities</span>
+    <span class="sd">&quot;&quot;&quot; &quot;Compute variance of AUC under assumption of uniform probabilities</span>
 <span class="sd">    uses the expression given as eqn (2) in  https://cs.nyu.edu/~mohri/pub/area.pdf</span>
 
 <span class="sd">    Parameters</span>
@@ -173,10 +176,14 @@
 <span class="sd">    var: float</span>
 <span class="sd">        null variance of AUC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p_xxy</span> <span class="o">=</span> <span class="n">p_xyy</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="p">(</span><span class="n">auc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">auc</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_xxy</span> <span class="o">-</span> <span class="n">auc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_neg</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_xyy</span> <span class="o">-</span> <span class="n">auc</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span>\
-        <span class="p">(</span><span class="n">num_pos</span> <span class="o">*</span> <span class="n">num_neg</span><span class="p">)</span>
+    <span class="n">p_xxy</span> <span class="o">=</span> <span class="n">p_xyy</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">auc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">auc</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">num_pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_xxy</span> <span class="o">-</span> <span class="n">auc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">num_neg</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_xyy</span> <span class="o">-</span> <span class="n">auc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_pos</span> <span class="o">*</span> <span class="n">num_neg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">var</span>
+
 
 <div class="viewcode-block" id="auc_p_val"><a class="viewcode-back" href="../../attacks.html#attacks.metrics.auc_p_val">[docs]</a><span class="k">def</span> <span class="nf">auc_p_val</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Compute the p-value for a given AUC</span>
@@ -198,20 +205,17 @@
 <span class="sd">        standard deviation of the NULL AUC diustribution (mean = 0.5)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">auc_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-        <span class="n">_expected_auc_var</span><span class="p">(</span>
-            <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">n_pos</span><span class="p">,</span>
-            <span class="n">n_neg</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">auc_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">_expected_auc_var</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_pos</span><span class="p">,</span> <span class="n">n_neg</span><span class="p">))</span>
     <span class="n">auc_p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">auc</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">auc_std</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">auc_p</span><span class="p">,</span> <span class="n">auc_std</span></div>
 
-<div class="viewcode-block" id="get_metrics"><a class="viewcode-back" href="../../attacks.html#attacks.metrics.get_metrics">[docs]</a><span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="c1"># pylint: disable = too-many-locals</span>
-                <span class="n">X_test</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                <span class="n">y_test</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                <span class="n">permute_rows</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_metrics"><a class="viewcode-back" href="../../attacks.html#attacks.metrics.get_metrics">[docs]</a><span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="n">clf</span><span class="p">,</span>
+    <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">permute_rows</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate metrics, including attacker advantage for MIA binary.</span>
 <span class="sd">    Implemented as Definition 4 on https://arxiv.org/pdf/1709.01604.pdf</span>
@@ -233,99 +237,101 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Includes the following metrics</span>
+<span class="sd">    Includes the following metrics:</span>
 
-<span class="sd">    True positive rate or recall (TPR)</span>
-<span class="sd">    False positive rate (FPR), proportion of negative examples incorrectly classified as positives</span>
-<span class="sd">    False alarm rate (FAR), proportion of objects classified as positives that are incorrect,</span>
-<span class="sd">        also known as false discovery rate</span>
-<span class="sd">    True neagative rate (TNR)</span>
-<span class="sd">    Positive predictive value or precision (PPV)</span>
-<span class="sd">    Negative predictive value (NPV)</span>
-<span class="sd">    False neagative rate (FNR)</span>
-<span class="sd">    Accuracy (ACC)</span>
-<span class="sd">    F1 Score - harmonic mean of precision and recall.</span>
-<span class="sd">    Advantage</span>
+<span class="sd">    * True positive rate or recall (TPR).</span>
+<span class="sd">    * False positive rate (FPR), proportion of negative examples incorrectly \</span>
+<span class="sd">    classified as positives.</span>
+<span class="sd">    * False alarm rate (FAR), proportion of objects classified as positives \</span>
+<span class="sd">    that are incorrect, also known as false discovery rate.</span>
+<span class="sd">    * True neagative rate (TNR).</span>
+<span class="sd">    * Positive predictive value or precision (PPV).</span>
+<span class="sd">    * Negative predictive value (NPV).</span>
+<span class="sd">    * False neagative rate (FNR).</span>
+<span class="sd">    * Accuracy (ACC).</span>
+<span class="sd">    * F1 Score - harmonic mean of precision and recall.</span>
+<span class="sd">    * Advantage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">permute_rows</span><span class="p">:</span>
         <span class="n">N</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># pylint: disable = no-member</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span>  <span class="c1"># pylint: disable = no-member</span>
+            <span class="n">seed</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
         <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="n">order</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
     <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-    <span class="c1">#print(&#39;tn&#39;, tn, &#39;fp&#39;,fp,&#39;fn&#39;, fn,&#39;tp&#39;, tp)</span>
+    <span class="c1"># print(&#39;tn&#39;, tn, &#39;fp&#39;,fp,&#39;fn&#39;, fn,&#39;tp&#39;, tp)</span>
 
     <span class="c1"># true positive rate or recall</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;TPR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tp</span><span class="o">/</span><span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;TPR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
     <span class="c1"># false positive rate, proportion of negative examples incorrectly classified as positives</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FPR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fp</span> <span class="o">/</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FPR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fp</span> <span class="o">/</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
     <span class="c1"># False alarm rate, proportion of things classified as positives that are incorrect,</span>
     <span class="c1"># also known as false discovery rate</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FAR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tp</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tp</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
     <span class="c1"># true negative rate or specificity</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;TNR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;TNR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
     <span class="c1"># precision or positive predictive value</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PPV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PPV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
     <span class="c1"># negative predictive value</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;NPV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;NPV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
     <span class="c1"># false negative rate</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FNR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FNR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
     <span class="c1"># overall accuracy</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;ACC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;ACC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)),</span> <span class="mi">8</span><span class="p">)</span>
     <span class="c1"># harmonic mean of precision and sensitivity</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;F1score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PPV&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;TPR&#39;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PPV&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;TPR&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;F1score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_div</span><span class="p">(</span>
+        <span class="mi">2</span> <span class="o">*</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PPV&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;TPR&quot;</span><span class="p">],</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PPV&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;TPR&quot;</span><span class="p">],</span> <span class="mi">0</span>
+    <span class="p">)</span>
     <span class="c1"># Advantage: TPR - FPR</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;Advantage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;TPR&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FPR&#39;</span><span class="p">]))</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;Advantage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;TPR&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FPR&quot;</span><span class="p">]))</span>
 
-    <span class="c1">#calculate AUC of model</span>
+    <span class="c1"># calculate AUC of model</span>
     <span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">),</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;AUC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">),</span> <span class="mi">8</span><span class="p">)</span>
 
     <span class="c1"># Calculate AUC p-val</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;P_HIGHER_AUC&#39;</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">auc_p_val</span><span class="p">(</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">],</span>
-        <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span> <span class="o">-</span> <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;P_HIGHER_AUC&quot;</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">auc_p_val</span><span class="p">(</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;AUC&quot;</span><span class="p">],</span> <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span> <span class="o">-</span> <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="p">)</span>
 
     <span class="n">fmax</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">fdif</span><span class="p">,</span> <span class="n">pdif</span> <span class="o">=</span> <span class="n">min_max_disc</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">)</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMAX01&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMIN01&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FDIF01&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PDIF01&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span> <span class="c1"># use -log(p) so answer is positive</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMAX01&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMIN01&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FDIF01&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PDIF01&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span>  <span class="c1"># use -log(p) so answer is positive</span>
 
     <span class="n">fmax</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">fdif</span><span class="p">,</span> <span class="n">pdif</span> <span class="o">=</span> <span class="n">min_max_disc</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">x_prop</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMAX02&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMIN02&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FDIF02&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PDIF02&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span> <span class="c1"># use -log(p) so answer is positive</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMAX02&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMIN02&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FDIF02&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PDIF02&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span>  <span class="c1"># use -log(p) so answer is positive</span>
 
     <span class="n">fmax</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">fdif</span><span class="p">,</span> <span class="n">pdif</span> <span class="o">=</span> <span class="n">min_max_disc</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">x_prop</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMAX001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FMIN001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;FDIF001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;PDIF001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span> <span class="c1"># use -log(p) so answer is positive</span>
-
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMAX001&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmax</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FMIN001&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmin</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;FDIF001&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdif</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;PDIF001&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">pdif</span>  <span class="c1"># use -log(p) so answer is positive</span>
 
     <span class="c1"># Add some things useful for debugging / filtering</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;pred_prob_var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred_proba</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;pred_prob_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred_proba</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
 
     <span class="c1"># TPR at various FPR</span>
     <span class="n">fpr_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fpr</span> <span class="ow">in</span> <span class="n">fpr_vals</span><span class="p">:</span>
         <span class="n">tpr</span> <span class="o">=</span> <span class="n">_tpr_at_fpr</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">fpr</span><span class="o">=</span><span class="n">fpr</span><span class="p">)</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;TPR@</span><span class="si">{</span><span class="n">fpr</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;TPR@</span><span class="si">{</span><span class="n">fpr</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">metrics</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tpr</span>
 
     <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">roc_thresh</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">)</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;fpr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fpr</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;tpr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tpr</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;roc_thresh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_thresh</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;fpr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fpr</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;tpr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tpr</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;roc_thresh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_thresh</span>
 
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;n_pos_test_examples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;n_neg_test_examples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;n_pos_test_examples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;n_neg_test_examples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">metrics</span></div>
 </pre></div>

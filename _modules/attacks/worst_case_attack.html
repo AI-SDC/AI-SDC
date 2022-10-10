@@ -74,26 +74,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for attacks.worst_case_attack</h1><div class="highlight"><pre>
-<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">worst_case_attack.py</span>
 
 <span class="sd">Runs a worst case attack based upon predictive probabilities stored in two .csv files</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
-
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Hashable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="kn">from</span> <span class="nn">attacks</span> <span class="kn">import</span> <span class="n">metrics</span>
-<span class="kn">from</span> <span class="nn">attacks</span> <span class="kn">import</span> <span class="n">report</span>
+<span class="kn">from</span> <span class="nn">attacks</span> <span class="kn">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">report</span>
 <span class="kn">from</span> <span class="nn">attacks.attack</span> <span class="kn">import</span> <span class="n">Attack</span>
 <span class="kn">from</span> <span class="nn">attacks.dataset</span> <span class="kn">import</span> <span class="n">Data</span>
 
@@ -101,24 +98,28 @@
 
 <span class="n">P_THRESH</span> <span class="o">=</span> <span class="mf">0.05</span>
 
+
 <div class="viewcode-block" id="WorstCaseAttackArgs"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttackArgs">[docs]</a><span class="k">class</span> <span class="nc">WorstCaseAttackArgs</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Arguments for worst case&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;n_reps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;p_thresh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;n_dummy_reps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;train_beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;test_beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;test_prop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;n_rows_in&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;n_rows_out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;in_sample_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;out_sample_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;report_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;n_reps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;p_thresh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;n_dummy_reps&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;train_beta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;test_beta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;test_prop&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;n_rows_in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;n_rows_out&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;in_sample_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;out_sample_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;report_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="WorstCaseAttackArgs.set_param"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttackArgs.set_param">[docs]</a>    <span class="k">def</span> <span class="nf">set_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Set a parameter&quot;&quot;&quot;</span>
@@ -128,9 +129,11 @@
         <span class="sd">&quot;&quot;&quot;Return arguments&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span></div></div>
 
+
 <div class="viewcode-block" id="WorstCaseAttack"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack">[docs]</a><span class="k">class</span> <span class="nc">WorstCaseAttack</span><span class="p">(</span><span class="n">Attack</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to wrap the worst case attack code&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">WorstCaseAttackArgs</span><span class="o">=</span><span class="n">WorstCaseAttackArgs</span><span class="p">()):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">WorstCaseAttackArgs</span> <span class="o">=</span> <span class="n">WorstCaseAttackArgs</span><span class="p">()):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metrics</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
@@ -139,10 +142,7 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;WorstCase attack&quot;</span>
 
-<div class="viewcode-block" id="WorstCaseAttack.attack"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">dataset</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
-        <span class="n">target_model</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="WorstCaseAttack.attack"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">target_model</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Programmatic attack entry point</span>
 
 <span class="sd">        To be used when code has access to data class and trained target model</span>
@@ -170,10 +170,9 @@
         <span class="n">test_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">out_sample_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_from_preds</span><span class="p">(</span><span class="n">train_preds</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="WorstCaseAttack.attack_from_preds"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">[docs]</a>    <span class="k">def</span> <span class="nf">attack_from_preds</span><span class="p">(</span> <span class="c1"># pylint: disable=too-many-locals</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">train_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">test_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="WorstCaseAttack.attack_from_preds"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">[docs]</a>    <span class="k">def</span> <span class="nf">attack_from_preds</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the attack based upon the predictions in train_preds and test_preds, and the params</span>
 <span class="sd">        stored in self.args</span>
@@ -197,15 +196,11 @@
             <span class="n">n_test_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_dummy_reps</span><span class="p">):</span>
                 <span class="n">d_train_preds</span><span class="p">,</span> <span class="n">d_test_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_arrays</span><span class="p">(</span>
-                    <span class="n">n_train_rows</span><span class="p">,</span>
-                    <span class="n">n_test_rows</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">train_beta</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">test_beta</span>
+                    <span class="n">n_train_rows</span><span class="p">,</span> <span class="n">n_test_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">train_beta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">test_beta</span>
                 <span class="p">)</span>
                 <span class="n">temp_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_attack_reps</span><span class="p">(</span><span class="n">d_train_preds</span><span class="p">,</span> <span class="n">d_test_preds</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metrics</span> <span class="o">+=</span> <span class="n">temp_metrics</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finished running attacks&quot;</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="WorstCaseAttack.run_attack_reps"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.run_attack_reps">[docs]</a>    <span class="k">def</span> <span class="nf">run_attack_reps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -223,8 +218,8 @@
 <span class="sd">        mia_metrics: List</span>
 <span class="sd">            List of attack metrics dictionaries, one for each repetition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;n_rows_in&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;n_rows_out&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;n_rows_in&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;n_rows_out&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">))</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;attack-reps&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sorting probabilities to leave highest value in first column&quot;</span><span class="p">)</span>
         <span class="n">train_preds</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">-</span><span class="n">train_preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -232,12 +227,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating MIA data&quot;</span><span class="p">)</span>
         <span class="n">mi_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">train_preds</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">))</span>
-        <span class="n">mi_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
-            <span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">)),</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">))</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">mi_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">))))</span>
 
         <span class="n">mia_metrics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_reps</span><span class="p">):</span>
@@ -249,18 +239,12 @@
             <span class="n">attack_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mi_train_x</span><span class="p">,</span> <span class="n">mi_train_y</span><span class="p">)</span>
 
             <span class="n">mia_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span>
-                    <span class="n">attack_classifier</span><span class="p">,</span>
-                    <span class="n">mi_test_x</span><span class="p">,</span>
-                    <span class="n">mi_test_y</span>
-                <span class="p">)</span>
+                <span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">attack_classifier</span><span class="p">,</span> <span class="n">mi_test_x</span><span class="p">,</span> <span class="n">mi_test_y</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finished simulating attacks&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">mia_metrics</span></div>
-
-
 
     <span class="k">def</span> <span class="nf">_get_global_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attack_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Summarise metrics from a metric list</span>
@@ -279,58 +263,54 @@
         <span class="n">global_metrics</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">auc_p_vals</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">metrics</span><span class="o">.</span><span class="n">auc_p_val</span><span class="p">(</span>
-                <span class="n">m</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">],</span>
-                <span class="n">m</span><span class="p">[</span><span class="s1">&#39;n_pos_test_examples&#39;</span><span class="p">],</span>
-                <span class="n">m</span><span class="p">[</span><span class="s1">&#39;n_neg_test_examples&#39;</span><span class="p">]</span>
-            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">attack_metrics</span>
+                <span class="n">m</span><span class="p">[</span><span class="s2">&quot;AUC&quot;</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;n_pos_test_examples&quot;</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;n_neg_test_examples&quot;</span><span class="p">]</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">attack_metrics</span>
         <span class="p">]</span>
 
         <span class="n">m</span> <span class="o">=</span> <span class="n">attack_metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">auc_std</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">auc_p_val</span><span class="p">(</span>
-            <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">m</span><span class="p">[</span><span class="s1">&#39;n_pos_test_examples&#39;</span><span class="p">],</span>
-            <span class="n">m</span><span class="p">[</span><span class="s1">&#39;n_neg_test_examples&#39;</span><span class="p">]</span>
+            <span class="mf">0.5</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;n_pos_test_examples&quot;</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;n_neg_test_examples&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="n">global_metrics</span><span class="p">[</span><span class="s1">&#39;null_auc_3sd_range&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">auc_std</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">auc_std</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">global_metrics</span><span class="p">[</span><span class="s1">&#39;n_sig_auc_p_vals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span><span class="n">auc_p_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">)</span>
-        <span class="n">global_metrics</span><span class="p">[</span><span class="s1">&#39;n_sig_auc_p_vals_corrected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
-            <span class="n">auc_p_vals</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span>
-            <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">global_metrics</span><span class="p">[</span>
+            <span class="s2">&quot;null_auc_3sd_range&quot;</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">auc_std</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">auc_std</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">global_metrics</span><span class="p">[</span><span class="s2">&quot;n_sig_auc_p_vals&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
+            <span class="n">auc_p_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span>
+        <span class="p">)</span>
+        <span class="n">global_metrics</span><span class="p">[</span><span class="s2">&quot;n_sig_auc_p_vals_corrected&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
+            <span class="n">auc_p_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span> <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
-        <span class="n">pdif_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;PDIF01&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">attack_metrics</span><span class="p">]</span>
-        <span class="n">global_metrics</span><span class="p">[</span><span class="s1">&#39;n_sig_pdif_vals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span><span class="n">pdif_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">)</span>
-        <span class="n">global_metrics</span><span class="p">[</span><span class="s1">&#39;n_sig_pdif_vals_corrected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
-            <span class="n">pdif_vals</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span>
-            <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">pdif_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;PDIF01&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">attack_metrics</span><span class="p">]</span>
+        <span class="n">global_metrics</span><span class="p">[</span><span class="s2">&quot;n_sig_pdif_vals&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
+            <span class="n">pdif_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span>
+        <span class="p">)</span>
+        <span class="n">global_metrics</span><span class="p">[</span><span class="s2">&quot;n_sig_pdif_vals_corrected&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_n_significant</span><span class="p">(</span>
+            <span class="n">pdif_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span> <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">global_metrics</span>
 
-
     <span class="k">def</span> <span class="nf">_get_n_significant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_val_list</span><span class="p">,</span> <span class="n">p_thresh</span><span class="p">,</span> <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper method to determine if values within a list of p-values are significant at</span>
 <span class="sd">        p_thresh. Can perform multiple testing correction.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bh_fdr_correction</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_val_list</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">p_thresh</span><span class="p">)</span> <span class="c1"># pylint: disable = consider-using-generator</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="mi">1</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_val_list</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">p_thresh</span>
+            <span class="p">)</span>  <span class="c1"># pylint: disable = consider-using-generator</span>
         <span class="n">p_val_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">p_val_list</span><span class="p">))</span>
         <span class="n">n_vals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_val_list</span><span class="p">)</span>
-        <span class="n">hoch_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[(</span><span class="n">k</span> <span class="o">/</span> <span class="n">n_vals</span><span class="p">)</span> <span class="o">*</span> <span class="n">P_THRESH</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_vals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="p">)</span>
+        <span class="n">hoch_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">k</span> <span class="o">/</span> <span class="n">n_vals</span><span class="p">)</span> <span class="o">*</span> <span class="n">P_THRESH</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_vals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
         <span class="n">bh_sig_list</span> <span class="o">=</span> <span class="n">p_val_list</span> <span class="o">&lt;=</span> <span class="n">hoch_vals</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">):</span>
             <span class="n">n_sig_bh</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">n_sig_bh</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">n_sig_bh</span>
-
 
     <span class="k">def</span> <span class="nf">_generate_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generate a single array of predictions, used when doing baseline experiments</span>
@@ -367,8 +347,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_rows_in</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">n_rows_out</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">train_beta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">test_beta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="n">train_beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">test_beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Generate train and test prediction arrays, used when computing baseline</span>
 
 <span class="sd">        Parameters</span>
@@ -413,54 +394,53 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Making dummy data with </span><span class="si">%d</span><span class="s2"> rows in and </span><span class="si">%d</span><span class="s2"> out&quot;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_rows_in</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_rows_out</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_rows_out</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating rows&quot;</span><span class="p">)</span>
         <span class="n">train_preds</span><span class="p">,</span> <span class="n">test_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_arrays</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_rows_in</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">n_rows_out</span><span class="p">,</span>
             <span class="n">train_beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">train_beta</span><span class="p">,</span>
-            <span class="n">test_beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">test_beta</span>
+            <span class="n">test_beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">test_beta</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving files&quot;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">in_sample_filename</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">out_sample_filename</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></div>
 
-
     <span class="k">def</span> <span class="nf">_construct_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructs the metadata object, after attacks&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Store all args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;experiment_details&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;experiment_details&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;func&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;experiment_details&#39;</span><span class="p">]:</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;experiment_details&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;func&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">]:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">][</span><span class="s2">&quot;func&quot;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attack&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;attack&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1"># Global metrics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;global_metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_metrics</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;baseline_global_metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_metrics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;global_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_metrics</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;baseline_global_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_metrics</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metrics</span>
         <span class="p">)</span>
-
 
 <div class="viewcode-block" id="WorstCaseAttack.make_report"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.WorstCaseAttack.make_report">[docs]</a>    <span class="k">def</span> <span class="nf">make_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Creates output dictionary structure&quot;&quot;&quot;</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;attack_metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;dummy_attack_metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metrics</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;attack_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;dummy_attack_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metrics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_construct_metadata</span><span class="p">()</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">json_report</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">create_json_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_report</span><span class="p">)</span>
 
             <span class="n">pdf</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">create_mia_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-            <span class="n">pdf</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">output</span></div></div>
+
 
 <span class="k">def</span> <span class="nf">_make_dummy_data</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Initialise class and run dummy data creation&quot;&quot;&quot;</span>
@@ -469,6 +449,7 @@
     <span class="n">wc_args</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;out_sample_filename&quot;</span><span class="p">,</span> <span class="s2">&quot;test_preds.csv&quot;</span><span class="p">)</span>
     <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">WorstCaseAttack</span><span class="p">(</span><span class="n">wc_args</span><span class="p">)</span>
     <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_dummy_data</span><span class="p">()</span>
+
 
 <span class="k">def</span> <span class="nf">_run_attack</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Initialise class and run attack from prediction files&quot;&quot;&quot;</span>
@@ -479,151 +460,160 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../attacks.html#attacks.worst_case_attack.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;main method to parse arguments and invoke relevant method&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;main method to parse arguments and invoke relevant method&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="p">(</span>
-        <span class="s1">&#39;Perform a worst case attack from saved model predictions&#39;</span>
-        <span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Perform a worst case attack from saved model predictions&quot;</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
-    <span class="n">dummy_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;make-dummy-data&#39;</span><span class="p">)</span>
-    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--num-rows-in&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;n_rows_in&#39;</span><span class="p">,</span>
+    <span class="n">dummy_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;make-dummy-data&quot;</span><span class="p">)</span>
+    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--num-rows-in&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_rows_in&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;How many rows to generate in the in-sample file. Default = </span><span class="si">%(default)d</span><span class="s2">&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--num-rows-out&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_rows_out&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;How many rows to generate in the in-sample file. Default = </span><span class="si">%(default)d</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;How many rows to generate in the out-of-sample file. Default = </span><span class="si">%(default)d</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--num-rows-out&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;n_rows_out&#39;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;How many rows to generate in the out-of-sample file. Default = </span><span class="si">%(default)d</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-
-    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--train-beta&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
+    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--train-beta&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;train_beta&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Value of b parameter for beta distribution used to sample the in-sample &#39;</span>
-            <span class="s1">&#39;probabilities. &#39;</span>
-            <span class="s1">&#39;High values will give more extreme probabilities. Set this value higher than &#39;</span>
-            <span class="s1">&#39;--test-beta to see successful attacks. Default = </span><span class="si">%(default)f</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Value of b parameter for beta distribution used to sample the in-sample &quot;</span>
+            <span class="s2">&quot;probabilities. &quot;</span>
+            <span class="s2">&quot;High values will give more extreme probabilities. Set this value higher than &quot;</span>
+            <span class="s2">&quot;--test-beta to see successful attacks. Default = </span><span class="si">%(default)f</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--test-beta&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
+    <span class="n">dummy_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--test-beta&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test_beta&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Value of b parameter for beta distribution used to sample the out-of-sample &#39;</span>
-            <span class="s1">&#39;probabilities. High values will give more extreme probabilities. Set this value &#39;</span>
-            <span class="s1">&#39;lower than --train-beta to see successful attacks. Default = </span><span class="si">%(default)f</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Value of b parameter for beta distribution used to sample the out-of-sample &quot;</span>
+            <span class="s2">&quot;probabilities. High values will give more extreme probabilities. Set this value &quot;</span>
+            <span class="s2">&quot;lower than --train-beta to see successful attacks. Default = </span><span class="si">%(default)f</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">dummy_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_make_dummy_data</span><span class="p">)</span>
 
-    <span class="n">attack_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;run-attack&#39;</span><span class="p">)</span>
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--in-sample-preds&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;in_sample_filename&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;run-attack&quot;</span><span class="p">)</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--in-sample-preds&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;in_sample_filename&quot;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;train_preds.csv&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;csv file containing the predictive probabilities (one column per class) for the &#39;</span>
-            <span class="s1">&#39;training data (one row per training example). Default = </span><span class="si">%(default)s</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;csv file containing the predictive probabilities (one column per class) for the &quot;</span>
+            <span class="s2">&quot;training data (one row per training example). Default = </span><span class="si">%(default)s</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--out-of-sample-preds&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;out_sample_filename&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--out-of-sample-preds&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;out_sample_filename&quot;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;test_preds.csv&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;csv file containing the predictive probabilities (one column per class) for the &#39;</span>
-            <span class="s1">&#39;non-training data (one row per training example). Default = </span><span class="si">%(default)s</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;csv file containing the predictive probabilities (one column per class) for the &quot;</span>
+            <span class="s2">&quot;non-training data (one row per training example). Default = </span><span class="si">%(default)s</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--n-reps&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-r&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--n-reps&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_reps&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Number of repetitions (splitting data into attack model training and testing &#39;</span>
-            <span class="s1">&#39;paritions to perform. Default = </span><span class="si">%(default)d</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Number of repetitions (splitting data into attack model training and testing &quot;</span>
+            <span class="s2">&quot;partitions to perform. Default = </span><span class="si">%(default)d</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test-prop&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--test-prop&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test_prop&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Proportion of examples to be used for testing when fiting the attack model. &#39;</span>
-            <span class="s1">&#39;Default = </span><span class="si">%(default)f</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Proportion of examples to be used for testing when fiting the attack model. &quot;</span>
+            <span class="s2">&quot;Default = </span><span class="si">%(default)f</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--report-name&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--report-name&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;report_name&#39;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;worstcase_report&#39;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;report_name&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;worstcase_report&quot;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Filename for the report output. Default = </span><span class="si">%(default)s</span><span class="s1">. Code will append .pdf and .json&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Filename for the report output. Default = </span><span class="si">%(default)s</span><span class="s2">. Code will append .pdf and .json&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n-dummy-reps&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--n-dummy-reps&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;n_dummy_reps&#39;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_dummy_reps&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;Number of dummy datasets to sample. Each will be assessed with --n-reps train and &#39;</span>
-            <span class="s1">&#39;test splits. Set to 0 to do no baseline calculations. Default = </span><span class="si">%(default)d</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;Number of dummy datasets to sample. Each will be assessed with --n-reps train and &quot;</span>
+            <span class="s2">&quot;test splits. Set to 0 to do no baseline calculations. Default = </span><span class="si">%(default)d</span><span class="s2">&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--p-thresh&#39;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
+    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--p-thresh&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">P_THRESH</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;p_thresh&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s1">&#39;P-value threshold for significance testing. Default = </span><span class="si">%(default)f</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;p_thresh&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;P-value threshold for significance testing. Default = </span><span class="si">%(default)f</span><span class="s2">&quot;</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">attack_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_run_attack</span><span class="p">)</span>
-
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
@@ -633,7 +623,8 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid command. Try --help to get more details&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
