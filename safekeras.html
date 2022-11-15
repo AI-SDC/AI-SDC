@@ -50,11 +50,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SafeKerasModel</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel"><code class="docutils literal notranslate"><span class="pre">SafeKerasModel</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.check_DP_used"><code class="docutils literal notranslate"><span class="pre">check_DP_used()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.check_checkpoint_equality"><code class="docutils literal notranslate"><span class="pre">check_checkpoint_equality()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.check_optimizer_allowed"><code class="docutils literal notranslate"><span class="pre">check_optimizer_allowed()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.check_optimizer_is_DP"><code class="docutils literal notranslate"><span class="pre">check_optimizer_is_DP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.load_safe_keras_model"><code class="docutils literal notranslate"><span class="pre">load_safe_keras_model()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.same_configs"><code class="docutils literal notranslate"><span class="pre">same_configs()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.same_weights"><code class="docutils literal notranslate"><span class="pre">same_weights()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#safemodel.classifiers.safekeras.test_checkpoint_equality"><code class="docutils literal notranslate"><span class="pre">test_checkpoint_equality()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -89,7 +90,7 @@
 <h1>SafeKerasModel<a class="headerlink" href="#safekerasmodel" title="Permalink to this heading"></a></h1>
 <p>An example Python Notebook is available  <a class="reference external" href="https://github.com/jim-smith/GRAIMatter/blob/main/WP2/wrapper/wrapper-concept.ipynb">Here</a></p>
 <span class="target" id="module-safemodel.classifiers.safekeras"></span><p>safekeras.py:
-Jim Smith, Andrew McCarty and Richjard Preen
+Jim Smith, Andrew McCarty and Richard Preen
 UWE 2022</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="safemodel.classifiers.safekeras.SafeKerasModel">
@@ -284,82 +285,79 @@ as this is necessarily complex</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
 <td><p>Retrieves the weights of the model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel.load" title="safemodel.classifiers.safekeras.SafeKerasModel.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>([name])</p></td>
-<td><p>reads model from file in appropriate format.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_weights</span></code>(filepath[, by_name, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_weights</span></code>(filepath[, by_name, ...])</p></td>
 <td><p>Loads all layer weights, either from a TensorFlow or an HDF5 weight file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_predict_function</span></code>([force])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_predict_function</span></code>([force])</p></td>
 <td><p>Creates a function that executes one step of inference.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_test_function</span></code>([force])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_test_function</span></code>([force])</p></td>
 <td><p>Creates a function that executes one step of evaluation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_train_function</span></code>([force])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_train_function</span></code>([force])</p></td>
 <td><p>Creates a function that executes one step of training.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check" title="safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>([verbose])</p></td>
-<td><p>Checks whether model should be considered unsafe foer example, has been changed since fit() was last run, or does not meet DP policy</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check" title="safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>([verbose])</p></td>
+<td><p>Checks whether model should be considered unsafe for example, has been changed since fit() was last run, or does not meet DP policy</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x[, batch_size, verbose, steps, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_generator</span></code>(generator[, steps, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_generator</span></code>(generator[, steps, ...])</p></td>
 <td><p>Generates predictions for the input samples from a data generator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_on_batch</span></code>(x)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_on_batch</span></code>(x)</p></td>
 <td><p>Returns predictions for a single batch of samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_step</span></code>(data)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_step</span></code>(data)</p></td>
 <td><p>The logic for one inference step.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
 <td><p>Checks whether current model parameters violate the safe rules.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>([filename, data_obj])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>([filename, data_obj])</p></td>
 <td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_metrics</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_metrics</span></code>()</p></td>
 <td><p>Resets the state of all the metrics in the model.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([data_obj, attack_name, filename])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([data_obj, attack_name, filename])</p></td>
 <td><p>Runs a specified attack on the trained model and saves a report to file</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel.save" title="safemodel.classifiers.safekeras.SafeKerasModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.classifiers.safekeras.SafeKerasModel.save" title="safemodel.classifiers.safekeras.SafeKerasModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
 <td><p>Writes model to file in appropriate format.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_spec</span></code>([dynamic_batch])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_spec</span></code>([dynamic_batch])</p></td>
 <td><p>Returns the <cite>tf.TensorSpec</cite> of call inputs as a tuple <cite>(args, kwargs)</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_weights</span></code>(filepath[, overwrite, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_weights</span></code>(filepath[, overwrite, ...])</p></td>
 <td><p>Saves all layer weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_weights</span></code>(weights)</p></td>
 <td><p>Sets the weights of the layer, from NumPy arrays.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>([line_length, positions, print_fn, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>([line_length, positions, print_fn, ...])</p></td>
 <td><p>Prints a string summary of the network.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_on_batch</span></code>(x[, y, sample_weight, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_on_batch</span></code>(x[, y, sample_weight, ...])</p></td>
 <td><p>Test the model on a single batch of samples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_step</span></code>(data)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_step</span></code>(data)</p></td>
 <td><p>The logic for one evaluation step.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code>(**kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code>(**kwargs)</p></td>
 <td><p>Returns a JSON string containing the network configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_yaml</span></code>(**kwargs)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_yaml</span></code>(**kwargs)</p></td>
 <td><p>Returns a yaml string containing the network configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_on_batch</span></code>(x[, y, sample_weight, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_on_batch</span></code>(x[, y, sample_weight, ...])</p></td>
 <td><p>Runs a single gradient update on a single batch of data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_step</span></code>(data)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_step</span></code>(data)</p></td>
 <td><p>The logic for one training step.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_name_scope</span></code>(method)</p></td>
 <td><p>Decorator to automatically enter the module name scope.</p></td>
 </tr>
 </tbody>
@@ -413,20 +411,10 @@ Provides feedback to user if epsilon is not sufficient</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="safemodel.classifiers.safekeras.SafeKerasModel.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#SafeKerasModel.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.SafeKerasModel.load" title="Permalink to this definition"></a></dt>
-<dd><p>reads model from file in appropriate format.
-Optimizer is deliberately excluded in the save.
-This is to prevent possibility of restarting training,
-which could offer possible back door into attacks.
-Thus optimizer cannot be loaded.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">
 <span class="sig-name descname"><span class="pre">posthoc_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#SafeKerasModel.posthoc_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether model should be considered unsafe
-foer example, has been changed since fit() was last run,
+for example, has been changed since fit() was last run,
 or does not meet DP policy</p>
 </dd></dl>
 
@@ -460,6 +448,15 @@ possible back door into attacks.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="safemodel.classifiers.safekeras.check_checkpoint_equality">
+<span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_checkpoint_equality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#check_checkpoint_equality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.check_checkpoint_equality" title="Permalink to this definition"></a></dt>
+<dd><p>compares two checkpoints saved with tensorflow save_model
+On the assumption that the optimiser is not going to be saved,
+and that the model is going to be saved in frozen form
+this only checks the architecture and weights layer by layer</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="safemodel.classifiers.safekeras.check_optimizer_allowed">
 <span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_optimizer_allowed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#check_optimizer_allowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.check_optimizer_allowed" title="Permalink to this definition"></a></dt>
 <dd><p>checks if the model’s optimizer is in our white-list
@@ -473,6 +470,16 @@ default setting is not allowed</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="safemodel.classifiers.safekeras.load_safe_keras_model">
+<span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">load_safe_keras_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#load_safe_keras_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.load_safe_keras_model" title="Permalink to this definition"></a></dt>
+<dd><p>reads model from file in appropriate format.
+Optimizer is deliberately excluded in the save.
+This is to prevent possibility of restarting training,
+which could offer possible back door into attacks.
+Thus optimizer cannot be loaded.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="safemodel.classifiers.safekeras.same_configs">
 <span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">same_configs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#same_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.same_configs" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if two models havethe same architecture</p>
@@ -482,15 +489,6 @@ default setting is not allowed</p>
 <dt class="sig sig-object py" id="safemodel.classifiers.safekeras.same_weights">
 <span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">same_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#same_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.same_weights" title="Permalink to this definition"></a></dt>
 <dd><p>checks if two nets with same architecture havethe same weights</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="safemodel.classifiers.safekeras.test_checkpoint_equality">
-<span class="sig-prename descclassname"><span class="pre">safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">test_checkpoint_equality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/safekeras.html#test_checkpoint_equality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.safekeras.test_checkpoint_equality" title="Permalink to this definition"></a></dt>
-<dd><p>compares two checkpoints saved with tensorflow save_model
-On the assumption that the optimiser is not going to be saved,
-and that the model is going to be saved in frozen form
-this only checks the architecture and weights layer by layer</p>
 </dd></dl>
 
 </section>

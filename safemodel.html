@@ -143,22 +143,19 @@ complex datastructures that cannot be compared directly.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.get_params" title="safemodel.safemodel.SafeModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.load" title="safemodel.safemodel.SafeModel.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>([name])</p></td>
-<td><p>reads model from file in appropriate format.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.posthoc_check" title="safemodel.safemodel.SafeModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.posthoc_check" title="safemodel.safemodel.SafeModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>()</p></td>
 <td><p>Checks whether model has been interfered with since fit() was last run</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.preliminary_check" title="safemodel.safemodel.SafeModel.preliminary_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code></a>([verbose, apply_constraints])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.preliminary_check" title="safemodel.safemodel.SafeModel.preliminary_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code></a>([verbose, apply_constraints])</p></td>
 <td><p>Checks whether current model parameters violate the safe rules.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.request_release" title="safemodel.safemodel.SafeModel.request_release"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code></a>([filename, data_obj])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.request_release" title="safemodel.safemodel.SafeModel.request_release"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code></a>([filename, data_obj])</p></td>
 <td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.run_attack" title="safemodel.safemodel.SafeModel.run_attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code></a>([data_obj, attack_name, filename])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.run_attack" title="safemodel.safemodel.SafeModel.run_attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code></a>([data_obj, attack_name, filename])</p></td>
 <td><p>Runs a specified attack on the trained model and saves a report to file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.save" title="safemodel.safemodel.SafeModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.safemodel.SafeModel.save" title="safemodel.safemodel.SafeModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
 <td><p>Writes model to file in appropriate format.</p></td>
 </tr>
 </tbody>
@@ -204,7 +201,8 @@ Optionally fixes violations.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="safemodel.safemodel.SafeModel.__str__">
 <span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/safemodel/safemodel.html#SafeModel.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.safemodel.SafeModel.__str__" title="Permalink to this definition"></a></dt>
-<dd><p>Returns string with model description.</p>
+<dd><p>Returns string with model description.
+No point writing a test, especially as it depends on username</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -259,16 +257,6 @@ and splits it into dicts for the current and saved versions</p>
 <span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/safemodel/safemodel.html#SafeModel.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.safemodel.SafeModel.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>gets dictionary of parameter values
 restricted to those expected by base classifier.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="safemodel.safemodel.SafeModel.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/safemodel/safemodel.html#SafeModel.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.safemodel.SafeModel.load" title="Permalink to this definition"></a></dt>
-<dd><p>reads model from file in appropriate format.
-Optimizer is deliberately excluded in the save
-To prevent possible to restart training and thus
-possible back door into attacks.
-Thus optimizer cannot be loaded.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -363,6 +351,8 @@ Single Attribute Inference: attributes</p>
 <dt class="sig sig-object py" id="safemodel.safemodel.SafeModel.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/safemodel/safemodel.html#SafeModel.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.safemodel.SafeModel.save" title="Permalink to this definition"></a></dt>
 <dd><p>Writes model to file in appropriate format.</p>
+<p>Note this is overloaded in SafeKerasClassifer
+to deal with tensorflow specifics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">

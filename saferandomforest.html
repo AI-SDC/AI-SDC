@@ -105,7 +105,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks" title="safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">additional_checks</span></code></a>(curr_separate, saved_separate)</p></td>
-<td><p>Random Forest-specific checks would benefit from refactoring into simpler blocks perhaps</p></td>
+<td><p>Random Forest-specific checks would benefit from refactoring into simpler blocks perhaps.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(X)</p></td>
 <td><p>Apply trees in the forest to X, return leaf indices.</p></td>
@@ -128,37 +128,34 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>([deep])</p></td>
 <td><p>gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code>([name])</p></td>
-<td><p>reads model from file in appropriate format.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code>()</p></td>
 <td><p>Checks whether model has been interfered with since fit() was last run</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(X)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(X)</p></td>
 <td><p>Predict class for X.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_log_proba</span></code>(X)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_log_proba</span></code>(X)</p></td>
 <td><p>Predict class log-probabilities for X.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code>(X)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code>(X)</p></td>
 <td><p>Predict class probabilities for X.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
 <td><p>Checks whether current model parameters violate the safe rules.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>([filename, data_obj])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>([filename, data_obj])</p></td>
 <td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([data_obj, attack_name, filename])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([data_obj, attack_name, filename])</p></td>
 <td><p>Runs a specified attack on the trained model and saves a report to file</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>([name])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>([name])</p></td>
 <td><p>Writes model to file in appropriate format.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>(X, y[, sample_weight])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>(X, y[, sample_weight])</p></td>
 <td><p>Return the mean accuracy on the given test data and labels.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code>(**params)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
 </tbody>
@@ -167,7 +164,8 @@
 <dt class="sig sig-object py" id="safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks">
 <span class="sig-name descname"><span class="pre">additional_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/safemodel/classifiers/saferandomforestclassifier.html#SafeRandomForestClassifier.additional_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Random Forest-specific checks
-would benefit from refactoring into simpler blocks perhaps</p>
+would benefit from refactoring into simpler blocks perhaps.
+NOTE that this is never called if the model has not been fitted</p>
 </dd></dl>
 
 <dl class="py method">

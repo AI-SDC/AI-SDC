@@ -75,12 +75,14 @@
              
   <h1>Source code for safemodel.classifiers.safekeras</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; safekeras.py:</span>
-<span class="sd"> Jim Smith, Andrew McCarty and Richjard Preen</span>
+<span class="sd"> Jim Smith, Andrew McCarty and Richard Preen</span>
 <span class="sd"> UWE 2022</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># general imports</span>
-<span class="c1"># import copy</span>
+
+
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="c1"># import sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -99,31 +101,55 @@
 <span class="c1"># safemodel superclass</span>
 <span class="kn">from</span> <span class="nn">safemodel.safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
 
-<span class="c1"># from tensorflow_privacy.privacy.optimizers import dp_optimizer_keras</span>
+<span class="c1"># suppress numerous deprecatino warnings</span>
+<span class="c1"># shut tensorflow up</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="c1"># this is the current class that dpvarians of optimizers come from</span>
+<span class="c1"># may change in later versions of tensorflow_privacy</span>
+<span class="n">DP_CLASS_STRING</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;tensorflow_privacy.privacy.optimizers.dp_optimizer_keras.&quot;</span>
+    <span class="s2">&quot;make_keras_optimizer_class.&lt;locals&gt;.DPOptimizerClass&quot;</span>
+<span class="p">)</span>
+
+<span class="n">DP_CLASS_STRING2</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;tensorflow_privacy.privacy.optimizers.dp_optimizer_keras.&quot;</span>
+    <span class="s2">&quot;make_keras_generic_optimizer_class.&lt;locals&gt;.DPOptimizerClass&quot;</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="same_configs"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.same_configs">[docs]</a><span class="k">def</span> <span class="nf">same_configs</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Checks if two models havethe same architecture&quot;&quot;&quot;</span>
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_layers</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;different numbers of layers&quot;</span>
+        <span class="n">errstr</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;different_layer_count&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">errstr</span>
     <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
         <span class="n">m1_layer_config</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">m1_layer_config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
         <span class="n">m2_layer_config</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">m2_layer_config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
         <span class="n">match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">m1_layer_config</span><span class="p">,</span> <span class="n">m2_layer_config</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="n">num_diffs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_diffs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;layer_configs_differ&quot;</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">match</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;layer_configs_differ&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">num_diffs</span>
+            <span class="p">)</span>
             <span class="c1"># f&quot;Layer {layer} configs differ in {len(match)} places:\n&quot;</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_diffs</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;change&quot;</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;parameter </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> changed from </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;to </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> after model was fitted.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;param_changed_from_to&quot;</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">val</span><span class="o">=</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">cur_val</span><span class="o">=</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># should not be reachable as dense objects cannot be modified</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># pragma: no cover</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
 
-    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;configurations match&quot;</span></div>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;same_ann_config&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="same_weights"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.same_weights">[docs]</a><span class="k">def</span> <span class="nf">same_weights</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -131,21 +157,22 @@
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num_layers</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;different numbers of layers&quot;</span>
-    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
+    <span class="c1"># layer 0 is input layer determined by data size</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">):</span>
         <span class="n">m1layer</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
         <span class="n">m2layer</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2layer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2layer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2"> not the same size.&quot;</span>
-        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)):</span>
-            <span class="n">m1d</span> <span class="o">=</span> <span class="n">m2layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)):</span>  <span class="c1"># pylint: disable=consider-using-enumerate</span>
+            <span class="n">m1d</span> <span class="o">=</span> <span class="n">m1layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
             <span class="n">m2d</span> <span class="o">=</span> <span class="n">m2layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
             <span class="c1"># print(type(m1d), m1d.shape)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">m1d</span><span class="p">,</span> <span class="n">m2d</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">m1d</span><span class="p">,</span> <span class="n">m2d</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
                 <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> of layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2"> differs&quot;</span>
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;weights match&quot;</span></div>
 
 
-<div class="viewcode-block" id="test_checkpoint_equality"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.test_checkpoint_equality">[docs]</a><span class="k">def</span> <span class="nf">test_checkpoint_equality</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="check_checkpoint_equality"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.check_checkpoint_equality">[docs]</a><span class="k">def</span> <span class="nf">check_checkpoint_equality</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;compares two checkpoints saved with tensorflow save_model</span>
 <span class="sd">    On the assumption that the optimiser is not going to be saved,</span>
 <span class="sd">    and that the model is going to be saved in frozen form</span>
@@ -169,18 +196,21 @@
 
     <span class="n">same_config</span><span class="p">,</span> <span class="n">config_message</span> <span class="o">=</span> <span class="n">same_configs</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">same_config</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;different config&quot;</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="n">config_message</span>
+        <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="n">same_weight</span><span class="p">,</span> <span class="n">weights_message</span> <span class="o">=</span> <span class="n">same_weights</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">same_weight</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;different weights&quot;</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="n">weights_message</span>
+        <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="n">same</span><span class="p">,</span> <span class="n">msg</span></div>
 
 
 <div class="viewcode-block" id="check_DP_used"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.check_DP_used">[docs]</a><span class="k">def</span> <span class="nf">check_DP_used</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;checks whether the DP optimizer was actually the one used&quot;&quot;&quot;</span>
-    <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
 
     <span class="n">key_needed</span> <span class="o">=</span> <span class="s2">&quot;_was_dp_gradients_called&quot;</span>
     <span class="n">critical_val</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key_needed</span><span class="p">,</span> <span class="s2">&quot;missing&quot;</span><span class="p">)</span>
@@ -190,10 +220,18 @@
         <span class="n">DPused</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="n">critical_val</span> <span class="o">==</span> <span class="s2">&quot;missing&quot;</span><span class="p">:</span>
         <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;no_dp_gradients_key&quot;</span><span class="p">)</span>
+        <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">elif</span> <span class="n">critical_val</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;changed_opt_no_fit&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;unrecognised_combination&quot;</span><span class="p">)</span>
+        <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="c1"># not currently reachable because optimizer class does</span>
+        <span class="c1"># not support assignment</span>
+        <span class="c1"># but leave in to future-proof</span>
+        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unrecognised_combination&quot;</span>
+        <span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">return</span> <span class="n">DPused</span><span class="p">,</span> <span class="n">reason</span></div>
 
@@ -203,17 +241,13 @@
 <span class="sd">    default setting is not allowed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">allowed</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_not_allowed&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
-    <span class="n">allowed_optimizers</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;tensorflow_privacy.DPKerasAdagradOptimizer&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tensorflow_privacy.DPKerasAdamOptimizer&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;tensorflow_privacy.DPKerasSGDOptimizer&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
-    <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="n">allowed_optimizers</span><span class="p">:</span>
+    <span class="n">opt_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">optimizer</span><span class="p">))</span>
+    <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_not_allowed&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">DP_CLASS_STRING</span> <span class="ow">in</span> <span class="n">opt_type</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">DP_CLASS_STRING2</span> <span class="ow">in</span> <span class="n">opt_type</span><span class="p">):</span>
         <span class="n">allowed</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_allowed&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;optimizer_allowed&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_type</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">reason</span><span class="p">,</span> <span class="n">allowed</span></div>
+    <span class="k">return</span> <span class="n">allowed</span><span class="p">,</span> <span class="n">reason</span></div>
 
 
 <div class="viewcode-block" id="check_optimizer_is_DP"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.check_optimizer_is_DP">[docs]</a><span class="k">def</span> <span class="nf">check_optimizer_is_DP</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -226,6 +260,38 @@
         <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;found_dp_gradients_key&quot;</span><span class="p">)</span>
         <span class="n">DPused</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">DPused</span><span class="p">,</span> <span class="n">reason</span></div>
+
+
+<div class="viewcode-block" id="load_safe_keras_model"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.load_safe_keras_model">[docs]</a><span class="k">def</span> <span class="nf">load_safe_keras_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    reads model from file in appropriate format.</span>
+<span class="sd">    Optimizer is deliberately excluded in the save.</span>
+<span class="sd">    This is to prevent possibility of restarting training,</span>
+<span class="sd">    which could offer possible back door into attacks.</span>
+<span class="sd">    Thus optimizer cannot be loaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">the_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">model_load_file</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">model_load_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Please input a name with extension for the model to load.&quot;</span>
+
+    <span class="k">elif</span> <span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.tf&quot;</span><span class="p">:</span>
+        <span class="c1"># load from tf</span>
+        <span class="n">the_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
+            <span class="n">model_load_file</span>  <span class="c1"># , custom_objects={&quot;SafeKerasModel&quot;}</span>
+        <span class="p">)</span>
+        <span class="n">load</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_load_file</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="p">)</span>
+        <span class="n">the_model</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">load</span><span class="o">.</span><span class="n">get_weights</span><span class="p">())</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">model_load_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;loading from a </span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> file is currently not supported&quot;</span>
+
+    <span class="k">if</span> <span class="n">the_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">the_model</span><span class="p">)</span>
+    <span class="c1"># else</span>
+    <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SafeKerasModel"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.SafeKerasModel">[docs]</a><span class="k">class</span> <span class="nc">SafeKerasModel</span><span class="p">(</span><span class="n">KerasModel</span><span class="p">,</span> <span class="n">SafeModel</span><span class="p">):</span>
@@ -289,7 +355,9 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;batch_size should not be 0 - division by zero&quot;</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;batch_size_zero&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
 
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -320,8 +388,9 @@
 <span class="sd">        and produces feedback&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">batch_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;division_by_zero&quot;</span><span class="p">))</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;division_by_zero&quot;</span><span class="p">)</span>
             <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="p">(</span>
             <span class="n">ok</span><span class="p">,</span>
@@ -411,7 +480,7 @@
 <span class="sd">        (iv) finally makes a saved copy of the newly fitted model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># pylint can&#39;t cope whoe we first declared these via a dict :(</span>
+        <span class="c1"># pylint can&#39;t cope that we first declared these via a dict :(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
@@ -426,7 +495,7 @@
                 <span class="s2">&quot;as return epsilon was above max recommended value, &quot;</span>
                 <span class="s2">&quot;and user set refine_epsilon= True&quot;</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span>
 
         <span class="n">returnval</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span>
@@ -447,36 +516,34 @@
 
 <div class="viewcode-block" id="SafeKerasModel.posthoc_check"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">[docs]</a>    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Checks whether model should be considered unsafe</span>
-<span class="sd">        foer example, has been changed since fit() was last run,</span>
+<span class="sd">        for example, has been changed since fit() was last run,</span>
 <span class="sd">        or does not meet DP policy</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
         <span class="c1"># have the model architecture or weights been changed?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;tfsaves/requested_model.tf&quot;</span><span class="p">)</span>
-        <span class="n">models_same</span><span class="p">,</span> <span class="n">same_msg</span> <span class="o">=</span> <span class="n">test_checkpoint_equality</span><span class="p">(</span>
+        <span class="n">models_same</span><span class="p">,</span> <span class="n">same_msg</span> <span class="o">=</span> <span class="n">check_checkpoint_equality</span><span class="p">(</span>
             <span class="s2">&quot;tfsaves/fit_model.tf&quot;</span><span class="p">,</span>
             <span class="s2">&quot;tfsaves/requested_model.tf&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">models_same</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">same_msg</span><span class="p">))</span>
-            <span class="c1"># f&quot;Recommendation is not to release because {same_msg}.\n&quot;)</span>
-            <span class="k">return</span> <span class="n">same_msg</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">same_msg</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># was a dp-enbled optimiser provided?</span>
         <span class="n">allowed</span><span class="p">,</span> <span class="n">allowedmessage</span> <span class="o">=</span> <span class="n">check_optimizer_allowed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">allowedmessage</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="c1"># f&quot;Recommendation is not to release because {allowedmessage}.\n&quot;)</span>
-            <span class="k">return</span> <span class="n">allowedmessage</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">allowedmessage</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># was the dp-optimiser used during fit()</span>
         <span class="n">dpused</span><span class="p">,</span> <span class="n">dpusedmessage</span> <span class="o">=</span> <span class="n">check_DP_used</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dpused</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">dpusedmessage</span><span class="p">))</span>
-            <span class="c1"># f&quot;Recommendation is not to release because {dpusedmessage}.\n&quot;)</span>
-            <span class="k">return</span> <span class="n">dpusedmessage</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">dpusedmessage</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># have values been changed since saved  immediately after fit()?</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -484,7 +551,8 @@
             <span class="ow">or</span> <span class="n">dpusedmessage</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_reason</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_epsilon</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_epsilon</span>
         <span class="p">):</span>
-            <span class="k">return</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;opt_config_changed&quot;</span><span class="p">),</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;opt_config_changed&quot;</span><span class="p">)</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># if not what was the value of epsilon achieved</span>
         <span class="n">eps_met</span><span class="p">,</span> <span class="n">cur_eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dp_epsilon_met</span><span class="p">(</span>
@@ -503,17 +571,20 @@
                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_further_discussion&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">dpepsilonmessage</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-            <span class="k">return</span> <span class="n">dpepsilonmessage</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">dpepsilonmessage</span>
+            <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">disclosive</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_not_release&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">msg</span>
+            <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="kc">True</span>
 
         <span class="c1"># passed all the tests!!</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_allow_release&quot;</span><span class="p">))</span>
-
-        <span class="n">dpepsilonmessage</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;allow_release_eps_below_max&quot;</span><span class="p">,</span> <span class="n">current_epsilon</span><span class="o">=</span><span class="n">cur_eps</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">dpepsilonmessage</span><span class="p">,</span> <span class="kc">False</span></div>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recommend_allow_release&quot;</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;allow_release_eps_below_max&quot;</span><span class="p">,</span> <span class="n">current_epsilon</span><span class="o">=</span><span class="n">cur_eps</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="SafeKerasModel.save"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.SafeKerasModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
@@ -540,10 +611,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
-                <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_filename_with_extension&quot;</span><span class="p">)</span>
-                <span class="c1"># &quot;Please input a name with extension for the model to be saved.&quot;</span>
-            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_filename_with_extension&quot;</span><span class="p">))</span>
+            <span class="k">return</span>
 
         <span class="n">thename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
         <span class="c1"># print(f&#39;in save(), parsed filename is {thename}&#39;)</span>
@@ -562,9 +631,9 @@
                         <span class="c1"># save_traces=False,</span>
                         <span class="n">save_format</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span>
                     <span class="p">)</span>
-
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except</span>
-                    <span class="nb">print</span><span class="p">(</span>
+                <span class="c1"># pragma:no cover</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except # pragma:no cover</span>
+                    <span class="nb">print</span><span class="p">(</span>  <span class="c1"># pragma:no cover</span>
                         <span class="n">get_reporting_string</span><span class="p">(</span>
                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_saving_file&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">er</span><span class="o">=</span><span class="n">er</span>
                         <span class="p">)</span>
@@ -575,41 +644,9 @@
                     <span class="n">get_reporting_string</span><span class="p">(</span>
                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;suffix_not_supported_for_type&quot;</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span>
                     <span class="p">)</span>
-                <span class="p">)</span></div>
+                <span class="p">)</span></div></div>
                 <span class="c1"># f&quot;{suffix} file suffix  not supported &quot;</span>
                 <span class="c1"># f&quot;for models of type {self.model_type}.\n&quot;</span>
-
-<div class="viewcode-block" id="SafeKerasModel.load"><a class="viewcode-back" href="../../../safekeras.html#safemodel.classifiers.safekeras.SafeKerasModel.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        reads model from file in appropriate format.</span>
-<span class="sd">        Optimizer is deliberately excluded in the save.</span>
-<span class="sd">        This is to prevent possibility of restarting training,</span>
-<span class="sd">        which could offer possible back door into attacks.</span>
-<span class="sd">        Thus optimizer cannot be loaded.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
-                <span class="s2">&quot;Please input a name with extension for the model to load.&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.h5&quot;</span><span class="p">:</span>
-            <span class="c1"># load from .h5</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;SafeKerasModel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
-            <span class="p">)</span>
-
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.tf&quot;</span><span class="p">:</span>
-            <span class="c1"># load from tf</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;SafeKerasModel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">}</span>
-            <span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_load_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;loading from a </span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> file is currently not supported&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">f</span></div></div>
 </pre></div>
 
            </div>
