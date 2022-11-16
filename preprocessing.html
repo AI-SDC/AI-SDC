@@ -43,9 +43,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#preprocessing.loaders.DataNotAvailable"><code class="docutils literal notranslate"><span class="pre">DataNotAvailable</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#preprocessing.loaders.UnknownDataset"><code class="docutils literal notranslate"><span class="pre">UnknownDataset</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#preprocessing.loaders.get_data_sklearn"><code class="docutils literal notranslate"><span class="pre">get_data_sklearn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.preprocessing.loaders.DataNotAvailable"><code class="docutils literal notranslate"><span class="pre">DataNotAvailable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.preprocessing.loaders.UnknownDataset"><code class="docutils literal notranslate"><span class="pre">UnknownDataset</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.preprocessing.loaders.get_data_sklearn"><code class="docutils literal notranslate"><span class="pre">get_data_sklearn()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="attacks.html">Attacks</a></li>
@@ -81,27 +81,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-preprocessing.loaders">
-<span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-preprocessing.loaders" title="Permalink to this heading"></a></h1>
+  <section id="module-aisdc.preprocessing.loaders">
+<span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-aisdc.preprocessing.loaders" title="Permalink to this heading"></a></h1>
 <p>loaders.py
 A set of useful handlers to pull in datasets common to the project and perform the appropriate
 pre-processing</p>
 <dl class="py exception">
-<dt class="sig sig-object py" id="preprocessing.loaders.DataNotAvailable">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">DataNotAvailable</span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#DataNotAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.DataNotAvailable" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.DataNotAvailable">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">DataNotAvailable</span></span><a class="reference internal" href="_modules/aisdc/preprocessing/loaders.html#DataNotAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.DataNotAvailable" title="Permalink to this definition"></a></dt>
 <dd><p>Exception raised if the user asks for a dataset that they do not have the data for. I.e.
 some datasets require a .csv file to have been downloaded.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="preprocessing.loaders.UnknownDataset">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">UnknownDataset</span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#UnknownDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.UnknownDataset" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.UnknownDataset">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">UnknownDataset</span></span><a class="reference internal" href="_modules/aisdc/preprocessing/loaders.html#UnknownDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.UnknownDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Exception raised if the user passes a name that we don’t recognise</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="preprocessing.loaders.get_data_sklearn">
-<span class="sig-prename descclassname"><span class="pre">preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">get_data_sklearn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/AI-SDC/AI-SDC/data'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/preprocessing/loaders.html#get_data_sklearn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing.loaders.get_data_sklearn" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.get_data_sklearn">
+<span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">get_data_sklearn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/AI-SDC/AI-SDC/aisdc/data'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/preprocessing/loaders.html#get_data_sklearn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.get_data_sklearn" title="Permalink to this definition"></a></dt>
 <dd><p>Main entry method to return data in format sensible for sklearn. User passes a name and that
 dataset is returned as a tuple of pandas DataFrames (data, labels).</p>
 <dl class="field-list simple">
