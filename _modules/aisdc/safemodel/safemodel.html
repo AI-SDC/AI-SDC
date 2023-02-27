@@ -109,7 +109,7 @@
 
 
 <div class="viewcode-block" id="check_min"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.check_min">[docs]</a><span class="k">def</span> <span class="nf">check_min</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Checks minimum value constraint.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks minimum value constraint.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -154,7 +154,7 @@
 
 
 <div class="viewcode-block" id="check_max"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.check_max">[docs]</a><span class="k">def</span> <span class="nf">check_max</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Checks maximum value constraint.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks maximum value constraint.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -199,7 +199,7 @@
 
 
 <div class="viewcode-block" id="check_equal"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.check_equal">[docs]</a><span class="k">def</span> <span class="nf">check_equal</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Checks equality value constraint.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks equality value constraint.</span>
 
 
 
@@ -239,7 +239,7 @@
 
 
 <div class="viewcode-block" id="check_type"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.check_type">[docs]</a><span class="k">def</span> <span class="nf">check_type</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Checks the type of a value.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks the type of a value.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -276,7 +276,7 @@
 
 
 <div class="viewcode-block" id="SafeModel"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel">[docs]</a><span class="k">class</span> <span class="nc">SafeModel</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-instance-attributes</span>
-    <span class="sd">&quot;&quot;&quot;Privacy protected model base class.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected model base class.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -322,7 +322,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SafeModel.__init__"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Super class constructor, gets researcher name.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Super class constructor, gets researcher name.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="kc">None</span>
@@ -339,7 +339,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span></div>
 
 <div class="viewcode-block" id="SafeModel.get_params"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;gets dictionary of parameter values</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;gets dictionary of parameter values</span>
 <span class="sd">        restricted to those expected by base classifier.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">the_params</span> <span class="o">=</span> <span class="p">{}</span>
@@ -353,7 +353,7 @@
 <div class="viewcode-block" id="SafeModel.save"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
-        <span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
 
 <span class="sd">        Note this is overloaded in SafeKerasClassifer</span>
 <span class="sd">        to deal with tensorflow specifics.</span>
@@ -472,7 +472,7 @@
     <span class="c1">#         return temp_file</span>
 
     <span class="k">def</span> <span class="nf">__get_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Gets constraints relevant to the model type from the master read-only file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets constraints relevant to the model type from the master read-only file.&quot;&quot;&quot;</span>
         <span class="n">rules</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">rule_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;rules.json&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">rule_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
@@ -483,7 +483,7 @@
     <span class="k">def</span> <span class="nf">__apply_constraints</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Applies a safe rule for a given parameter.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies a safe rule for a given parameter.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;is_type&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cur_val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;float&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -503,7 +503,7 @@
     <span class="k">def</span> <span class="nf">__check_model_param</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether a current model parameter violates a safe rule.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether a current model parameter violates a safe rule.</span>
 <span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -530,7 +530,7 @@
     <span class="k">def</span> <span class="nf">__check_model_param_and</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical AND rule.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical AND rule.</span>
 <span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -542,7 +542,7 @@
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span>
 
     <span class="k">def</span> <span class="nf">__check_model_param_or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical OR rule.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical OR rule.&quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;subexpr&quot;</span><span class="p">]:</span>
@@ -555,7 +555,7 @@
 <div class="viewcode-block" id="SafeModel.preliminary_check"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.preliminary_check">[docs]</a>    <span class="k">def</span> <span class="nf">preliminary_check</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate the safe rules.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate the safe rules.</span>
 <span class="sd">        Optionally fixes violations.</span>
 
 
@@ -613,7 +613,7 @@
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 
 <div class="viewcode-block" id="SafeModel.get_current_and_saved_models"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_and_saved_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Makes a copy of self.__dict__</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes a copy of self.__dict__</span>
 <span class="sd">        and splits it into dicts for the current and saved versions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_model</span> <span class="o">=</span> <span class="p">{}</span>
@@ -621,7 +621,6 @@
         <span class="n">attribute_names_as_list</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">attribute_names_as_list</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span><span class="p">:</span>
                 <span class="c1"># logger.debug(f&#39;copying {key}&#39;)</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -651,7 +650,7 @@
 <div class="viewcode-block" id="SafeModel.examine_seperate_items"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.examine_seperate_items">[docs]</a>    <span class="k">def</span> <span class="nf">examine_seperate_items</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_vals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_vals</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;comparison of more complex structures</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;comparison of more complex structures</span>
 <span class="sd">        in the super class we just check these model-specific items exist</span>
 <span class="sd">        in both current and saved copies&quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -676,7 +675,7 @@
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 
 <div class="viewcode-block" id="SafeModel.posthoc_check"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.posthoc_check">[docs]</a>    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run&quot;&quot;&quot;</span>
 
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -732,8 +731,7 @@
 <div class="viewcode-block" id="SafeModel.additional_checks"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.additional_checks">[docs]</a>    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-branches</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-
-        <span class="sd">&quot;&quot;&quot;Placeholder function for additional posthoc checks e.g. keras this</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder function for additional posthoc checks e.g. keras this</span>
 <span class="sd">        version just checks that any lists have the same contents</span>
 
 
@@ -789,7 +787,7 @@
 <div class="viewcode-block" id="SafeModel.request_release"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.request_release">[docs]</a>    <span class="k">def</span> <span class="nf">request_release</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span> <span class="n">data_obj</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
-        <span class="sd">&quot;&quot;&quot;Saves model to filename specified and creates a report for the TRE</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves model to filename specified and creates a report for the TRE</span>
 <span class="sd">        output checkers.</span>
 
 <span class="sd">        Parameters</span>
@@ -872,8 +870,7 @@
         <span class="n">attack_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;worst_case&quot;</span><span class="p">,</span>
         <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-
-        <span class="sd">&quot;&quot;&quot;Runs a specified attack on the trained model and saves a report to file</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a specified attack on the trained model and saves a report to file</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -951,7 +948,7 @@
         <span class="k">return</span> <span class="n">metadata</span></div>
 
 <div class="viewcode-block" id="SafeModel.__str__"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="sd">&quot;&quot;&quot;Returns string with model description.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns string with model description.</span>
 <span class="sd">        No point writing a test, especially as it depends on username</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">+</span> <span class="s2">&quot; with parameters: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div></div>

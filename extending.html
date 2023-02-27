@@ -110,14 +110,14 @@ by the automatic sphinx documentation</p>
 </section>
 <section id="copy-the-template">
 <h2>Copy The Template<a class="headerlink" href="#copy-the-template" title="Permalink to this heading"></a></h2>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp new_model_template xgboost.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>new_model_template<span class="w"> </span>xgboost.py
 </pre></div>
 </div>
 </section>
 <section id="define-the-safer-class">
 <h2>Define the Safer Class<a class="headerlink" href="#define-the-safer-class" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SafeGradientBoosting</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Privacy protected GradientBoostingClassifier.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Privacy protected GradientBoostingClassifier.&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -131,10 +131,10 @@ to define safe limits for parameters of newly implemented models.</p>
 <h2>Update the __init__ method with paramnames, ignore_items, and examine_separately items<a class="headerlink" href="#update-the-init-method-with-paramnames-ignore-items-and-examine-separately-items" title="Permalink to this heading"></a></h2>
 <p>Code for a new class needs to reflect is the contents of the list self.basemodel_paramnames.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SafeModelToMakeSafe</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Privacy protected XGBoost.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Privacy protected XGBoost.&quot;&quot;&quot;</span>
 
 <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span><span class="o">=</span><span class="p">[</span>
@@ -162,7 +162,7 @@ to define safe limits for parameters of newly implemented models.</p>
 <p>For sklearn models this list can be extracted from the sklearn man page for the new model. For example,
 Saferandomforest defines the valid paramnames as:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span><span class="o">=</span><span class="p">[</span>
         <span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span><span class="s1">&#39;criterion&#39;</span><span class="p">,</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">,</span>
@@ -182,14 +182,14 @@ is called.</p>
 Lists are handled in the safemodel base class.
 Decision Trees handled in safedecisiontree.py and saferandomforest.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SafeGradientBoosting</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Privacy protected GradientBoostingClassifier.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Privacy protected GradientBoostingClassifier.&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="override-the-fit-function">
 <h2>Override the fit() function<a class="headerlink" href="#override-the-fit-function" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Do fit and then store model dict&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store model dict&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k_anonymity</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
@@ -202,10 +202,10 @@ Decision Trees handled in safedecisiontree.py and saferandomforest.py</p>
 it the .rst to reflect the newly implemented class. Then you must update the
 index.rst file by to include the new .rst file, although the extension is
 not required. E.g. saferandomforest links in saferandomforest.rst</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs
-cp saferandomforest.rst xgboost.rst
-edit xgboost.rst
-edit index.rst
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
+cp<span class="w"> </span>saferandomforest.rst<span class="w"> </span>xgboost.rst
+edit<span class="w"> </span>xgboost.rst
+edit<span class="w"> </span>index.rst
 </pre></div>
 </div>
 </section>
