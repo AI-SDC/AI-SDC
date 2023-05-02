@@ -44,6 +44,10 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Attacks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.auc_p_val"><code class="docutils literal notranslate"><span class="pre">auc_p_val()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.get_metrics"><code class="docutils literal notranslate"><span class="pre">get_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.get_probabilities"><code class="docutils literal notranslate"><span class="pre">get_probabilities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.min_max_disc"><code class="docutils literal notranslate"><span class="pre">min_max_disc()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack"><code class="docutils literal notranslate"><span class="pre">WorstCaseAttack</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs"><code class="docutils literal notranslate"><span class="pre">WorstCaseAttackArgs</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -96,6 +100,151 @@
   <section id="attacks">
 <h1>Attacks<a class="headerlink" href="#attacks" title="Permalink to this heading"></a></h1>
 <p>Examples showing how to run the code can be found in the examples folder.</p>
+<span class="target" id="module-aisdc.metrics"></span><p>Calculate metrics.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.metrics.auc_p_val">
+<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">auc_p_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/metrics.html#auc_p_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.auc_p_val" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the p-value for a given AUC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>auc: float</strong></dt><dd><p>Observed AUC value</p>
+</dd>
+<dt><strong>n_pos: int</strong></dt><dd><p>Number of positive examples</p>
+</dd>
+<dt><strong>n_neg: int</strong></dt><dd><p>Number of negative examples</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>auc_p: float</dt><dd><p>p-value of observing an AUC &gt; auc by chance</p>
+</dd>
+<dt>auc_std: float</dt><dd><p>standard deviation of the NULL AUC diustribution (mean = 0.5)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.metrics.get_metrics">
+<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred_proba</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/metrics.html#get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate metrics, including attacker advantage for MIA binary.
+Implemented as Definition 4 on <a class="reference external" href="https://arxiv.org/pdf/1709.01604.pdf">https://arxiv.org/pdf/1709.01604.pdf</a>
+which is also implemented in tensorFlow-privacy <a class="reference external" href="https://github.com/tensorflow/privacy">https://github.com/tensorflow/privacy</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y_test: np.ndarray</strong></dt><dd><p>test data labels</p>
+</dd>
+<dt><strong>y_pred_proba: np.ndarray of shape [x,2] and type float</strong></dt><dd><p>predicted probabilities</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>metrics: dict</dt><dd><p>dictionary of metric values</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Includes the following metrics:</p>
+<ul class="simple">
+<li><p>True positive rate or recall (TPR).</p></li>
+<li><p>False positive rate (FPR), proportion of negative examples incorrectly     classified as positives.</p></li>
+<li><p>False alarm rate (FAR), proportion of objects classified as positives     that are incorrect, also known as false discovery rate.</p></li>
+<li><p>True neagative rate (TNR).</p></li>
+<li><p>Positive predictive value or precision (PPV).</p></li>
+<li><p>Negative predictive value (NPV).</p></li>
+<li><p>False neagative rate (FNR).</p></li>
+<li><p>Accuracy (ACC).</p></li>
+<li><p>F1 Score - harmonic mean of precision and recall.</p></li>
+<li><p>Advantage.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.metrics.get_probabilities">
+<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">array([],</span> <span class="pre">dtype=float64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permute_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/metrics.html#get_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Given a prediction model and a dataset, calculate the predictions of the model for
+each data sample in probability format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>clf: sklearn.Model</strong></dt><dd><p>trained model</p>
+</dd>
+<dt><strong>X_test: np.ndarray</strong></dt><dd><p>test data matrix</p>
+</dd>
+<dt><strong>y_test: np.ndarray</strong></dt><dd><p>test data labels</p>
+</dd>
+<dt><strong>permute_rows: boolean</strong></dt><dd><p>a flag to indicate whether rows should be permuted</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>y_pred_proba: a list of probabilities for each sample in the dataset</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If permute_rows is set to true, y_test must also be supplied.
+The function will then return both the predicted probabilities and corresponding y_test</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.metrics.min_max_disc">
+<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">min_max_disc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/metrics.html#min_max_disc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.min_max_disc" title="Permalink to this definition"></a></dt>
+<dd><p>Non-average-case methods for MIA attacks. Considers actual frequency of membership
+amongst samples with highest- and lowest- assessed probability of membership. If an
+MIA method confidently asserts that 5% of samples are members and 5% of samples are
+not, but cannot tell for the remaining 90% of samples, then these metrics will flag
+this behaviour, but AUC/advantage may not. Since the difference may be noisy, a
+p-value against a null of independence of true membership and assessed membership
+probability (that is, membership probabilities are essentially random) is also used
+as a metric (using a usual Gaussian approximation to binomial). If the p-value is
+low and the frequency difference is high (&gt;0.5) then the MIA attack is successful
+for some samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>y: np.ndarray</strong></dt><dd><p>true labels</p>
+</dd>
+<dt><strong>yp: np.ndarray</strong></dt><dd><p>probabilities of labels, or monotonic transformation of probabilties</p>
+</dd>
+<dt><strong>xprop: float</strong></dt><dd><p>proportion of samples with highest- and lowest- probability of membership to be
+considered</p>
+</dd>
+<dt><strong>logp: bool</strong></dt><dd><p>convert p-values to log(p).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>maxd: float</dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with highest assessed
+membership probability</p>
+</dd>
+<dt>mind: float</dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with lowest assessed
+membership probability</p>
+</dd>
+<dt>mmd: float</dt><dd><p>difference between maxd and mind</p>
+</dd>
+<dt>pval: float</dt><dd><p>p-value or log-p value corresponding to mmd against null hypothesis that random
+variables corresponding to y and yp are independent.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">maxd</span><span class="p">,</span> <span class="n">mind</span><span class="p">,</span> <span class="n">mmd</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">min_max_desc</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">xprop</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">logp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <span class="target" id="module-aisdc.attacks.worst_case_attack"></span><p>worst_case_attack.py</p>
 <p>Runs a worst case attack based upon predictive probabilities stored in two .csv files</p>
 <dl class="py class">
