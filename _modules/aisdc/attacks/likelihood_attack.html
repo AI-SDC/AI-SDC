@@ -97,7 +97,8 @@
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="kn">from</span> <span class="nn">aisdc.attacks</span> <span class="kn">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">report</span>
+<span class="kn">from</span> <span class="nn">aisdc</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">aisdc.attacks</span> <span class="kn">import</span> <span class="n">report</span>
 <span class="kn">from</span> <span class="nn">aisdc.attacks.attack</span> <span class="kn">import</span> <span class="n">Attack</span>
 <span class="kn">from</span> <span class="nn">aisdc.attacks.dataset</span> <span class="kn">import</span> <span class="n">Data</span>
 
@@ -245,7 +246,7 @@
 
         <span class="k">return</span> <span class="n">dataset</span>
 
-<div class="viewcode-block" id="LIRAAttack.run_scenario_from_preds"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">[docs]</a>    <span class="k">def</span> <span class="nf">run_scenario_from_preds</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-statements</span>
+<div class="viewcode-block" id="LIRAAttack.run_scenario_from_preds"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">[docs]</a>    <span class="k">def</span> <span class="nf">run_scenario_from_preds</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-statements, too-many-arguments, too-many-locals</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">shadow_clf</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span>
         <span class="n">X_target_train</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
@@ -255,15 +256,6 @@
         <span class="n">y_shadow_train</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">shadow_train_preds</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">]:</span>
-        <span class="c1"># def run_scenario_from_preds( # pylint: disable = too-many-locals, too-many-arguments</span>
-        <span class="c1">#     shadow_clf,</span>
-        <span class="c1">#     X_target_train: Iterable[float],</span>
-        <span class="c1">#     y_target_train: Iterable[float],</span>
-        <span class="c1">#     target_train_preds: Iterable[float],</span>
-        <span class="c1">#     X_shadow_train: Iterable[float],</span>
-        <span class="c1">#     y_shadow_train: Iterable[float],</span>
-        <span class="c1">#     shadow_train_preds: Iterable[float],</span>
-
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Implements the likelihood test, using the &quot;offline&quot; version</span>
 <span class="sd">        See p.6 (top of second column) for details</span>
 
@@ -410,9 +402,13 @@
 
         <span class="n">mia_clf</span> <span class="o">=</span> <span class="n">DummyClassifier</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finished scenario&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">mia_clf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_scores</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_labels</span><span class="p">))</span>
-        <span class="p">]</span></div>
+
+        <span class="n">mia_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_scores</span><span class="p">)</span>
+        <span class="n">mia_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_labels</span><span class="p">)</span>
+        <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get_probabilities</span><span class="p">(</span>
+            <span class="n">mia_clf</span><span class="p">,</span> <span class="n">mia_scores</span><span class="p">,</span> <span class="n">mia_labels</span><span class="p">,</span> <span class="n">permute_rows</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="LIRAAttack.example"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.example">[docs]</a>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs an example attack using data from sklearn</span>

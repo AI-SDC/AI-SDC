@@ -296,9 +296,15 @@
 <span class="sd">        fpdf document object</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">dummy_metrics</span> <span class="o">=</span> <span class="n">attack_output</span><span class="p">[</span><span class="s2">&quot;dummy_attack_metrics&quot;</span><span class="p">]</span>
-    <span class="n">mia_metrics</span> <span class="o">=</span> <span class="n">attack_output</span><span class="p">[</span><span class="s2">&quot;attack_metrics&quot;</span><span class="p">]</span>
+    <span class="c1"># dummy_metrics = attack_output[&quot;dummy_attack_metrics&quot;]</span>
+    <span class="n">dummy_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mia_metrics</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">v</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attack_output</span><span class="p">[</span><span class="s2">&quot;attack_experiment_logger&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;attack_instance_logger&quot;</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="c1"># mia_metrics = attack_output[&quot;attack_metrics&quot;]</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">attack_output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">dummy_metrics</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">dummy_metrics</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">do_dummy</span> <span class="o">=</span> <span class="kc">False</span>
