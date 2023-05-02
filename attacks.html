@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Attacks &mdash; GRAIMATTER 1.0.0 documentation</title>
@@ -11,10 +11,9 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -29,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> GRAIMATTER
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GRAIMATTER
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -86,8 +89,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Attacks</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Attacks</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/attacks.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,7 +109,7 @@
 <span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">auc_p_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/metrics.html#auc_p_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.auc_p_val" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the p-value for a given AUC</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>auc: float</strong></dt><dd><p>Observed AUC value</p>
 </dd>
@@ -116,7 +119,7 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>auc_p: float</dt><dd><p>p-value of observing an AUC &gt; auc by chance</p>
 </dd>
@@ -134,7 +137,7 @@
 Implemented as Definition 4 on <a class="reference external" href="https://arxiv.org/pdf/1709.01604.pdf">https://arxiv.org/pdf/1709.01604.pdf</a>
 which is also implemented in tensorFlow-privacy <a class="reference external" href="https://github.com/tensorflow/privacy">https://github.com/tensorflow/privacy</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>y_test: np.ndarray</strong></dt><dd><p>test data labels</p>
 </dd>
@@ -142,7 +145,7 @@ which is also implemented in tensorFlow-privacy <a class="reference external" hr
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>metrics: dict</dt><dd><p>dictionary of metric values</p>
 </dd>
@@ -171,7 +174,7 @@ which is also implemented in tensorFlow-privacy <a class="reference external" hr
 <dd><p>Given a prediction model and a dataset, calculate the predictions of the model for
 each data sample in probability format.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>clf: sklearn.Model</strong></dt><dd><p>trained model</p>
 </dd>
@@ -183,7 +186,7 @@ each data sample in probability format.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>y_pred_proba: a list of probabilities for each sample in the dataset</dt><dd></dd>
 </dl>
@@ -208,7 +211,7 @@ as a metric (using a usual Gaussian approximation to binomial). If the p-value i
 low and the frequency difference is high (&gt;0.5) then the MIA attack is successful
 for some samples.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>y: np.ndarray</strong></dt><dd><p>true labels</p>
 </dd>
@@ -221,7 +224,7 @@ considered</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>maxd: float</dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with highest assessed
 membership probability</p>
@@ -253,10 +256,6 @@ variables corresponding to y and yp are independent.</p>
 <dd><p>Class to wrap the worst case attack code</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(dataset, target_model)</p></td>
 <td><p>Programmatic attack entry point</p></td>
@@ -287,7 +286,7 @@ variables corresponding to y and yp are independent.</p>
 <dd><p>Programmatic attack entry point</p>
 <p>To be used when code has access to data class and trained target model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>dataset: attacks.dataset.Data</strong></dt><dd><p>dataset as a Data class object</p>
 </dd>
@@ -313,7 +312,7 @@ in the constructor</p>
 <dd><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params
 stored in self.args</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>train_preds: np.ndarray</strong></dt><dd><p>Array of train predictions. One row per example, one column per class (i.e. 2)</p>
 </dd>
@@ -329,7 +328,7 @@ stored in self.args</p>
 <span class="sig-name descname"><span class="pre">generate_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_rows_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.generate_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays" title="Permalink to this definition"></a></dt>
 <dd><p>Generate train and test prediction arrays, used when computing baseline</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_rows_in: int</strong></dt><dd><p>number of rows of in-sample (training) probabilities</p>
 </dd>
@@ -341,7 +340,7 @@ stored in self.args</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>train_preds: np.ndarray</dt><dd><p>Array of train predictions (n_rows x 2 columns)</p>
 </dd>
@@ -357,13 +356,13 @@ stored in self.args</p>
 <span class="sig-name descname"><span class="pre">make_dummy_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.make_dummy_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="Permalink to this definition"></a></dt>
 <dd><p>Makes dummy data for testing functionality</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>args: dict</strong></dt><dd><p>Command line arguments</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"></dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -381,7 +380,7 @@ stored in self.args</p>
 <span class="sig-name descname"><span class="pre">run_attack_reps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.run_attack_reps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="Permalink to this definition"></a></dt>
 <dd><p>Run actual attack reps from train and test predictions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>train_preds: np.ndarray</strong></dt><dd><p>predictions from the model on training (in-sample) data</p>
 </dd>
@@ -389,7 +388,7 @@ stored in self.args</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>mia_metrics: List</dt><dd><p>List of attack metrics dictionaries, one for each repetition</p>
 </dd>
@@ -406,10 +405,6 @@ stored in self.args</p>
 <dd><p>Arguments for worst case</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args" title="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_args</span></code></a>()</p></td>
 <td><p>Return arguments</p></td>
@@ -446,10 +441,6 @@ stored in self.args</p>
 <dd><p>Json encoder that can cope with numpy arrays</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.report.NumpyArrayEncoder.default" title="aisdc.attacks.report.NumpyArrayEncoder.default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default</span></code></a>(o)</p></td>
 <td><p>If an object is an np.ndarray, convert to list</p></td>
@@ -487,7 +478,7 @@ stored in self.args</p>
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_mia_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_mia_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_mia_report" title="Permalink to this definition"></a></dt>
 <dd><p>make a worst case membership inference report</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>metadata: dict</strong></dt><dd><p>dictionary of metadata</p>
 </dd>
@@ -499,7 +490,7 @@ stored in self.args</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>pdf: fpdf.FPDF</dt><dd><p>fpdf document object</p>
 </dd>
@@ -533,10 +524,6 @@ stored in self.args</p>
 <dd><p>A Dummy Classifier to allow this code to work with get_metrics</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict" title="aisdc.attacks.likelihood_attack.DummyClassifier.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(test_X)</p></td>
 <td><p>Return an array of 1/0 depending on value in second column</p></td>
@@ -566,10 +553,6 @@ stored in self.args</p>
 <dd><p>The main LIRA Attack class</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="aisdc.attacks.likelihood_attack.LIRAAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(dataset, target_model)</p></td>
 <td><p>Programmatic attack running Runs a LIRA attack from a dataset object and a target model</p></td>
@@ -597,7 +580,7 @@ stored in self.args</p>
 <dd><p>Programmatic attack running
 Runs a LIRA attack from a dataset object and a target model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>dataset: attacks.dataset.Data</strong></dt><dd><p>Dataset as an instance of the Data class. Needs to have x_train, x_test, y_train
 and y_test set.</p>
@@ -630,7 +613,7 @@ interface (i.e. has fit, predict and predict_proba methods)</p>
 <p>Creates the output report. If self.args.report_name is not None, it will also save the
 information in json and pdf formats</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>output: Dict</dt><dd><p>Dictionary containing all attack output</p>
 </dd>
@@ -645,7 +628,7 @@ information in json and pdf formats</p>
 <dd><p>Implements the likelihood test, using the “offline” version
 See p.6 (top of second column) for details</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>shadow_clf: sklearn.Model</strong></dt><dd><p>An sklearn classifier that will be trained to form the shadow model.
 All hyper-parameters should have been set.</p>
@@ -664,7 +647,7 @@ All hyper-parameters should have been set.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>mia_scores: np.ndarray</dt><dd><p>Attack probabilities of belonging to the training set or not</p>
 </dd>
@@ -714,10 +697,6 @@ a config.json file that can be used to run the attack from the command line.</p>
 <dd><p>LIRA Attack arguments</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args" title="aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_args</span></code></a>()</p></td>
 <td><p>Return arguments</p></td>

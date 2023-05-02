@@ -10,10 +10,9 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -26,11 +25,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> GRAIMATTER
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            GRAIMATTER
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -63,9 +66,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>aisdc.safemodel.classifiers.saferandomforestclassifier</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aisdc.safemodel.classifiers.saferandomforestclassifier</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -93,12 +96,12 @@
 
 
 <div class="viewcode-block" id="SafeRandomForestClassifier"><a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier">[docs]</a><span class="k">class</span> <span class="nc">SafeRandomForestClassifier</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Privacy protected Random Forest classifier.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Random Forest classifier.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-        <span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span>
@@ -139,7 +142,7 @@
 <div class="viewcode-block" id="SafeRandomForestClassifier.additional_checks"><a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks">[docs]</a>    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-nested-blocks,too-many-branches</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Random Forest-specific checks</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Random Forest-specific checks</span>
 <span class="sd">        would benefit from refactoring into simpler blocks perhaps.</span>
 <span class="sd">        NOTE that this is never called if the model has not been fitted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -183,7 +186,9 @@
                                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;forest_estimators_differ&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">num_diff_trees</span>
                             <span class="p">)</span>
                             <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except #pragma:no cover</span>
+                <span class="k">except</span> <span class="p">(</span>
+                    <span class="ne">BaseException</span>  <span class="c1"># pylint: disable=broad-except</span>
+                <span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pragma:no coverion</span>
                     <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unable_to_check_item&quot;</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span>
                     <span class="p">)</span>
@@ -193,13 +198,13 @@
 
     <span class="c1"># pylint: disable=arguments-differ</span>
 <div class="viewcode-block" id="SafeRandomForestClassifier.fit"><a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Do fit and then store model dict&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store model dict&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k_anonymity</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SafeRandomForestClassifier.get_k_anonymity"><a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.get_k_anonymity">[docs]</a>    <span class="k">def</span> <span class="nf">get_k_anonymity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;calculates the k-anonymity of a random forest model</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;calculates the k-anonymity of a random forest model</span>
 <span class="sd">        as the minimum of the anonymity for each record.</span>
 <span class="sd">        That is defined as the size of the set of records which</span>
 <span class="sd">        appear in the same leaf as the record in every tree.</span>
