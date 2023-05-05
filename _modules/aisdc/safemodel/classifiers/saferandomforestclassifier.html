@@ -92,7 +92,7 @@
 <span class="kn">from</span> <span class="nn">..safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
 <span class="kn">from</span> <span class="nn">.safedecisiontreeclassifier</span> <span class="kn">import</span> <span class="n">decision_trees_are_equal</span>
 
-<span class="c1"># pylint: disable=too-many-ancestors,too-many-instance-attributes</span>
+<span class="c1"># pylint: disable=too-many-ancestors,too-many-instance-attributes, unidiomatic-typecheck</span>
 
 
 <div class="viewcode-block" id="SafeRandomForestClassifier"><a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier">[docs]</a><span class="k">class</span> <span class="nc">SafeRandomForestClassifier</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">):</span>
@@ -152,7 +152,7 @@
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span><span class="p">:</span>
             <span class="c1"># template for class of things that make up forest</span>
             <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;base_estimator&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">!=</span> <span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">[</span><span class="n">item</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="n">saved_separate</span><span class="p">[</span><span class="n">item</span><span class="p">]):</span>
                     <span class="c1"># msg += get_reporting_string(name=&quot;basic_params_differ&quot;,length=1)</span>
                     <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;param_changed_from_to&quot;</span><span class="p">,</span>
