@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.attacks.report &mdash; GRAIMATTER 1.0.3 documentation</title>
+  <title>aisdc.attacks.report &mdash; GRAIMATTER 1.0.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -51,6 +51,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../safesvc.html">SafeSVC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../extending.html">Extending SafeModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
 
         </div>
@@ -280,17 +282,17 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    metadata: dict</span>
-<span class="sd">        dictionary of metadata</span>
+<span class="sd">    attack_output: dict</span>
+<span class="sd">        dictionary with following items</span>
 
-<span class="sd">    mia_metrics: list</span>
-<span class="sd">        list of metrics dictionaries</span>
+<span class="sd">            metadata: dict</span>
+<span class="sd">                dictionary of metadata</span>
 
-<span class="sd">    dummy_metrics: list</span>
-<span class="sd">        list of metrics dictionaries</span>
+<span class="sd">            attack_experiment_logger: dict</span>
+<span class="sd">                list of metrics as dictionary items for an experiment</span>
 
-<span class="sd">    dummy_metadata: dict</span>
-<span class="sd">        metadata for dummy experiments</span>
+<span class="sd">            dummy_attack_experiment_logger: dict</span>
+<span class="sd">                list of metrics as dictionary items across dummy experiments</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -390,9 +392,36 @@
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyArrayEncoder</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create_lr_report"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.report.create_lr_report">[docs]</a><span class="k">def</span> <span class="nf">create_lr_report</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
-    <span class="n">mia_metrics</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;attack_metrics&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<div class="viewcode-block" id="create_lr_report"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.report.create_lr_report">[docs]</a><span class="k">def</span> <span class="nf">create_lr_report</span><span class="p">(</span><span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FPDF</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;make a lira membership inference report</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    output: dict</span>
+<span class="sd">        dictionary with following items</span>
+
+<span class="sd">        metadata: dict</span>
+<span class="sd">                dictionary of metadata</span>
+
+<span class="sd">        attack_experiment_logger: dict</span>
+<span class="sd">            list of metrics as dictionary items for an experiments</span>
+<span class="sd">            In case of LIRA attack scenario, this will have dictionary</span>
+<span class="sd">            items of attack_instance_logger that</span>
+<span class="sd">            will have a single metrics dictionary</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    pdf: fpdf.FPDF</span>
+<span class="sd">        fpdf document object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mia_metrics</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">v</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;attack_experiment_logger&quot;</span><span class="p">][</span><span class="s2">&quot;attack_instance_logger&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># mia_metrics = output[&quot;attack_metrics&quot;][0]</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
     <span class="n">_roc_plot_single</span><span class="p">(</span><span class="n">mia_metrics</span><span class="p">,</span> <span class="s2">&quot;log_roc.png&quot;</span><span class="p">)</span>
     <span class="n">pdf</span> <span class="o">=</span> <span class="n">FPDF</span><span class="p">()</span>

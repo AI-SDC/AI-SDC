@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extending SafeModel &mdash; GRAIMATTER 1.0.3 documentation</title>
+  <title>Extending SafeModel &mdash; GRAIMATTER 1.0.5 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,6 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="JSON Output for MIA attacks" href="output_format.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
 </head>
 
@@ -65,6 +66,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#include-any-optional-helper-functions">Include any optional helper functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
 
         </div>
@@ -158,6 +161,7 @@ to define safe limits for parameters of newly implemented models.</p>
         <span class="s2">&quot;model_save_file&quot;</span><span class="p">,</span>
         <span class="s2">&quot;ignore_items&quot;</span><span class="p">,</span>
         <span class="s2">&quot;base_estimator_&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;base_estimator&quot;</span><span class="p">,</span> <span class="s2">&quot;estimators_&quot;</span><span class="p">]</span>
 </pre></div>
@@ -248,6 +252,7 @@ safekeras.py that help with the the specifics of neural networks.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="output_format.html" class="btn btn-neutral float-right" title="JSON Output for MIA attacks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

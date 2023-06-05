@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.0.3 documentation</title>
+  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.0.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -51,6 +51,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../safesvc.html">SafeSVC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../extending.html">Extending SafeModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
 
         </div>
@@ -336,6 +338,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
@@ -820,7 +823,7 @@
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You must provide the name of the file you want to save your model&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For security reasons, this will overwrite previous versions&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -860,7 +863,8 @@
                     <span class="p">)</span>
 
             <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span>
 
             <span class="n">outputfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">+</span> <span class="s2">&quot;_checkfile.json&quot;</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span>

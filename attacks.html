@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Attacks &mdash; GRAIMATTER 1.0.3 documentation</title>
+  <title>Attacks &mdash; GRAIMATTER 1.0.5 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -74,6 +74,8 @@
 <li class="toctree-l1"><a class="reference internal" href="safesvc.html">SafeSVC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extending.html">Extending SafeModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
 
         </div>
@@ -377,7 +379,7 @@ stored in self.args</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps">
-<span class="sig-name descname"><span class="pre">run_attack_reps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.run_attack_reps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run_attack_reps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.run_attack_reps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="Permalink to this definition"></a></dt>
 <dd><p>Run actual attack reps from train and test predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -390,7 +392,10 @@ stored in self.args</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>mia_metrics: List</dt><dd><p>List of attack metrics dictionaries, one for each repetition</p>
+<dt>mia_metrics_dict: dict</dt><dd><p>a dictionary with two items including mia_metrics
+(a list of metric across repetitions) and failfast_metric_summary object
+(an object of FailFast class) to maintain summary of
+fail/success of attacks for a given metric of failfast option</p>
 </dd>
 </dl>
 </dd>
@@ -469,24 +474,51 @@ stored in self.args</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.create_lr_report">
-<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_lr_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_lr_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_lr_report" title="Permalink to this definition"></a></dt>
-<dd><p>TODO</p>
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_lr_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_lr_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_lr_report" title="Permalink to this definition"></a></dt>
+<dd><p>make a lira membership inference report</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>output: dict</strong></dt><dd><p>dictionary with following items</p>
+<dl class="simple">
+<dt>metadata: dict</dt><dd><p>dictionary of metadata</p>
+</dd>
+<dt>attack_experiment_logger: dict</dt><dd><p>list of metrics as dictionary items for an experiments
+In case of LIRA attack scenario, this will have dictionary
+items of attack_instance_logger that
+will have a single metrics dictionary</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>pdf: fpdf.FPDF</dt><dd><p>fpdf document object</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.create_mia_report">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_mia_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_mia_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_mia_report" title="Permalink to this definition"></a></dt>
 <dd><p>make a worst case membership inference report</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>metadata: dict</strong></dt><dd><p>dictionary of metadata</p>
+<dd class="field-odd"><dl>
+<dt><strong>attack_output: dict</strong></dt><dd><p>dictionary with following items</p>
+<blockquote>
+<div><dl class="simple">
+<dt>metadata: dict</dt><dd><p>dictionary of metadata</p>
 </dd>
-<dt><strong>mia_metrics: list</strong></dt><dd><p>list of metrics dictionaries</p>
+<dt>attack_experiment_logger: dict</dt><dd><p>list of metrics as dictionary items for an experiment</p>
 </dd>
-<dt><strong>dummy_metrics: list</strong></dt><dd><p>list of metrics dictionaries</p>
+<dt>dummy_attack_experiment_logger: dict</dt><dd><p>list of metrics as dictionary items across dummy experiments</p>
 </dd>
-<dt><strong>dummy_metadata: dict</strong></dt><dd><p>metadata for dummy experiments</p>
+</dl>
+</div></blockquote>
 </dd>
 </dl>
 </dd>
@@ -585,7 +617,7 @@ Runs a LIRA attack from a dataset object and a target model</p>
 <dt><strong>dataset: attacks.dataset.Data</strong></dt><dd><p>Dataset as an instance of the Data class. Needs to have x_train, x_test, y_train
 and y_test set.</p>
 </dd>
-<dt><strong>target_mode: sklearn.base.BaseEstimator</strong></dt><dd><p>Trained target model. Any class that implements the sklearn.base.BaseEstimator
+<dt><strong>target_model: sklearn.base.BaseEstimator</strong></dt><dd><p>Trained target model. Any class that implements the sklearn.base.BaseEstimator
 interface (i.e. has fit, predict and predict_proba methods)</p>
 </dd>
 </dl>

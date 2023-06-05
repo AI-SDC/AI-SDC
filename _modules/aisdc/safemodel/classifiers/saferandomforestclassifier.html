@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.safemodel.classifiers.saferandomforestclassifier &mdash; GRAIMATTER 1.0.3 documentation</title>
+  <title>aisdc.safemodel.classifiers.saferandomforestclassifier &mdash; GRAIMATTER 1.0.5 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -51,6 +51,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../safesvc.html">SafeSVC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SafeModel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
 
         </div>
@@ -135,6 +137,7 @@
             <span class="s2">&quot;model_save_file&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ignore_items&quot;</span><span class="p">,</span>
             <span class="s2">&quot;base_estimator_&quot;</span><span class="p">,</span>  <span class="c1"># this is an object</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;estimators_&quot;</span><span class="p">,</span> <span class="s2">&quot;base_estimator&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="mi">0</span>
