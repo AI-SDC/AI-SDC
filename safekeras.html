@@ -111,6 +111,8 @@ as this is necessarily complex</p>
 </dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_dtype</span></code></dt><dd><p>The dtype of the layer’s computations.</p>
 </dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">distribute_reduction_method</span></code></dt><dd><p>The method employed to reduce per-replica values during training.</p>
+</dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">distribute_strategy</span></code></dt><dd><p>The <cite>tf.distribute.Strategy</cite> this model was created under.</p>
 </dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>The dtype of the layer weights.</p>
@@ -129,10 +131,12 @@ as this is necessarily complex</p>
 </dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code></dt><dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
 </dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">jit_compile</span></code></dt><dd><p>Specify whether to compile the model with XLA.</p>
+</dd>
 <dt><strong>layers</strong></dt><dd></dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">losses</span></code></dt><dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>Returns the model’s metrics added using <cite>compile()</cite>, <cite>add_metric()</cite> APIs.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics</span></code></dt><dd><p>Return metrics added using <cite>compile()</cite> or <cite>add_metric()</cite>.</p>
 </dd>
 <dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics_names</span></code></dt><dd><p>Returns the model’s display labels for all outputs.</p>
 </dd>
@@ -239,35 +243,41 @@ as this is necessarily complex</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">examine_seperate_items</span></code>(curr_vals, saved_vals)</p></td>
 <td><p>comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_state</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export</span></code>(filepath)</p></td>
+<td><p>Create a SavedModel artifact for inference (e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_state</span></code>()</p></td>
 <td><p>Finalizes the layers state after updating layer weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, Y, validation_data, epochs, batch_size)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, Y, validation_data, epochs, batch_size)</p></td>
 <td><p>Overrides the tensorflow fit() method with some extra functionality: (i) records number of samples for checking DP epsilon values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_generator</span></code>(generator[, steps_per_epoch, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_generator</span></code>(generator[, steps_per_epoch, ...])</p></td>
 <td><p>Fits the model on data yielded batch-by-batch by a Python generator.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config[, custom_objects])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_config</span></code>(config[, custom_objects])</p></td>
 <td><p>Creates a layer from its config.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code>()</p></td>
 <td><p>Returns the config of the <cite>Model</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_current_and_saved_models</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_current_and_saved_models</span></code>()</p></td>
 <td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
 <td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_mask_at</span></code>(node_index)</p></td>
 <td><p>Retrieves the input mask tensor(s) of a layer at a given node.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_shape_at</span></code>(node_index)</p></td>
 <td><p>Retrieves the input shape(s) of a layer at a given node.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_layer</span></code>([name, index])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_layer</span></code>([name, index])</p></td>
 <td><p>Retrieves a layer based on either its name (unique) or index.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics_result</span></code>()</p></td>
+<td><p>Returns the model's metrics values as a dict.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_at</span></code>(node_index)</p></td>
 <td><p>Retrieves the output tensor(s) of a layer at a given node.</p></td>
@@ -287,8 +297,8 @@ as this is necessarily complex</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weights</span></code>()</p></td>
 <td><p>Retrieves the weights of the model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_weights</span></code>(filepath[, by_name, ...])</p></td>
-<td><p>Loads all layer weights, either from a TensorFlow or an HDF5 weight file.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_weights</span></code>(filepath[, skip_mismatch, ...])</p></td>
+<td><p>Loads all layer weights from a saved files.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_predict_function</span></code>([force])</p></td>
 <td><p>Creates a function that executes one step of inference.</p></td>
@@ -330,7 +340,7 @@ as this is necessarily complex</p>
 <td><p>Writes model to file in appropriate format.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_spec</span></code>([dynamic_batch])</p></td>
-<td><p>Returns the <cite>tf.TensorSpec</cite> of call inputs as a tuple <cite>(args, kwargs)</cite>.</p></td>
+<td><p>Returns the <cite>tf.TensorSpec</cite> of call args as a tuple <cite>(args, kwargs)</cite>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_weights</span></code>(filepath[, overwrite, ...])</p></td>
 <td><p>Saves all layer weights.</p></td>
@@ -367,6 +377,18 @@ as this is necessarily complex</p>
 <table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><strong>__call__</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>build_from_config</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>compile_from_config</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>get_build_config</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>get_compile_config</strong></p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p><strong>reset_states</strong></p></td>
