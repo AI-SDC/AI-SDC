@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeSVC &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>SafeSVC &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -97,65 +97,65 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks" title="aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">additional_checks</span></code></a>(curr_separate, saved_separate)</p></td>
-<td><p>SVC specific checks</p></td>
+<td><p>SVC specific checks.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">examine_seperate_items</span></code>(curr_vals, saved_vals)</p></td>
-<td><p>comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies</p></td>
+<td><p>Comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safesvc.SafeSVC.fit" title="aisdc.safemodel.classifiers.safesvc.SafeSVC.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(train_features, train_labels)</p></td>
-<td><p>Do fit and then store model dict</p></td>
+<td><p>Do fit and then store model dict.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_current_and_saved_models</span></code>()</p></td>
-<td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions</p></td>
+<td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>([deep])</p></td>
-<td><p>gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
+<td><p>Gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">k_hat_svm</span></code>(x[, y])</p></td>
 <td><p>Define the version which is sent to sklearn.svm.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">phi_hat</span></code>(input_vector)</p></td>
-<td><p>Project a single feature</p></td>
+<td><p>Project a single feature.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">phi_hat_multi</span></code>(input_features)</p></td>
-<td><p>Compute feature space for a matrix of inputs</p></td>
+<td><p>Compute feature space for a matrix of inputs.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code>()</p></td>
-<td><p>Checks whether model has been interfered with since fit() was last run</p></td>
+<td><p>Checks whether model has been interfered with since fit() was last run.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(test_features)</p></td>
-<td><p>Make predictions</p></td>
+<td><p>Make predictions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code>(test_features)</p></td>
-<td><p>Predictive probabilities</p></td>
+<td><p>Predictive probabilities.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
 <td><p>Checks whether current model parameters violate the safe rules.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>([filename, data_obj])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>(path, ext[, target])</p></td>
 <td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([data_obj, attack_name, filename])</p></td>
-<td><p>Runs a specified attack on the trained model and saves a report to file</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([target, attack_name, outputdir, ...])</p></td>
+<td><p>Runs a specified attack on the trained model and saves a report to file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code>([name])</p></td>
 <td><p>Writes model to file in appropriate format.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code>(**kwargs)</p></td>
-<td><p>Set params</p></td>
+<td><p>Set params.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks">
 <span class="sig-name descname"><span class="pre">additional_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/classifiers/safesvc.html#SafeSVC.additional_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks" title="Permalink to this definition"></a></dt>
-<dd><p>SVC specific checks</p>
+<dd><p>SVC specific checks.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safesvc.SafeSVC.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/classifiers/safesvc.html#SafeSVC.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safesvc.SafeSVC.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Do fit and then store model dict</p>
+<dd><p>Do fit and then store model dict.</p>
 </dd></dl>
 
 </dd></dl>

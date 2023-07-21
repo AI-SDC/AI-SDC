@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preprocessing &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>Preprocessing &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -89,9 +89,9 @@
              
   <section id="module-aisdc.preprocessing.loaders">
 <span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-aisdc.preprocessing.loaders" title="Permalink to this heading"></a></h1>
-<p>loaders.py
+<p>Loaders.py
 A set of useful handlers to pull in datasets common to the project and perform the appropriate
-pre-processing</p>
+pre-processing.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="aisdc.preprocessing.loaders.DataNotAvailable">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">DataNotAvailable</span></span><a class="reference internal" href="_modules/aisdc/preprocessing/loaders.html#DataNotAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.DataNotAvailable" title="Permalink to this definition"></a></dt>
@@ -102,7 +102,7 @@ some datasets require a .csv file to have been downloaded.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="aisdc.preprocessing.loaders.UnknownDataset">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">UnknownDataset</span></span><a class="reference internal" href="_modules/aisdc/preprocessing/loaders.html#UnknownDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.UnknownDataset" title="Permalink to this definition"></a></dt>
-<dd><p>Exception raised if the user passes a name that we don’t recognise</p>
+<dd><p>Exception raised if the user passes a name that we don’t recognise.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -113,17 +113,17 @@ dataset is returned as a tuple of pandas DataFrames (data, labels).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>dataset_name: str</strong></dt><dd><p>The name of the dataset to load</p>
+<dt><strong>dataset_name</strong><span class="classifier">str</span></dt><dd><p>The name of the dataset to load</p>
 </dd>
-<dt><strong>data_folder: str</strong></dt><dd><p>The name of the local folder in which data is stored.</p>
+<dt><strong>data_folder</strong><span class="classifier">str</span></dt><dd><p>The name of the local folder in which data is stored.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>X: pd.DataFrame</dt><dd><p>The input dataframe – rows are examples, columns variables</p>
+<dt><strong>X</strong><span class="classifier">pd.DataFrame</span></dt><dd><p>The input dataframe – rows are examples, columns variables</p>
 </dd>
-<dt>y: pd.DataFrame</dt><dd><p>the target dataframe – has a single column containing the target values</p>
+<dt><strong>y</strong><span class="classifier">pd.DataFrame</span></dt><dd><p>the target dataframe – has a single column containing the target values</p>
 </dd>
 </dl>
 </dd>

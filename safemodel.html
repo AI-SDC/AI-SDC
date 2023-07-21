@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Base Class &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>Base Class &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -101,7 +101,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">safeRFModel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">safeRFModel</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;safe.pkl&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">safeRFModel</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">safeRFModel</span><span class="o">.</span><span class="n">request_release</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;safe.pkl&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">safeRFModel</span><span class="o">.</span><span class="n">request_release</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;safe&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 <span class="go">WARNING: model parameters may present a disclosure risk:</span>
 <span class="go">- parameter min_samples_leaf = 1 identified as less than the recommended min value of 5.</span>
 <span class="go">Changed parameter min_samples_leaf = 5.</span>
@@ -111,21 +111,21 @@
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>model_type: string</strong></dt><dd><p>A string describing the type of model. Default is “None”.</p>
+<dt><strong>model_type</strong><span class="classifier">string</span></dt><dd><p>A string describing the type of model. Default is “None”.</p>
 </dd>
 <dt><strong>model:</strong></dt><dd><p>The Machine Learning Model.</p>
 </dd>
 <dt><strong>saved_model:</strong></dt><dd><p>A saved copy of the Machine Learning Model used for comparison.</p>
 </dd>
-<dt><strong>ignore_items: list</strong></dt><dd><p>A list of items to ignore when comparing the model with the
+<dt><strong>ignore_items</strong><span class="classifier">list</span></dt><dd><p>A list of items to ignore when comparing the model with the
 saved_model.</p>
 </dd>
-<dt><strong>examine_separately_items: list</strong></dt><dd><p>A list of items to examine separately. These items are more
+<dt><strong>examine_separately_items</strong><span class="classifier">list</span></dt><dd><p>A list of items to examine separately. These items are more
 complex datastructures that cannot be compared directly.</p>
 </dd>
-<dt><strong>filename: string</strong></dt><dd><p>A filename to save the model.</p>
+<dt><strong>filename</strong><span class="classifier">string</span></dt><dd><p>A filename to save the model.</p>
 </dd>
-<dt><strong>researcher: string</strong></dt><dd><p>The researcher user-id used for logging</p>
+<dt><strong>researcher</strong><span class="classifier">string</span></dt><dd><p>The researcher user-id used for logging</p>
 </dd>
 </dl>
 </dd>
@@ -137,25 +137,25 @@ complex datastructures that cannot be compared directly.</p>
 <td><p>Placeholder function for additional posthoc checks e.g.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.examine_seperate_items" title="aisdc.safemodel.safemodel.SafeModel.examine_seperate_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">examine_seperate_items</span></code></a>(curr_vals, saved_vals)</p></td>
-<td><p>comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies</p></td>
+<td><p>Comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models" title="aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_current_and_saved_models</span></code></a>()</p></td>
-<td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions</p></td>
+<td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.get_params" title="aisdc.safemodel.safemodel.SafeModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
-<td><p>gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
+<td><p>Gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.posthoc_check" title="aisdc.safemodel.safemodel.SafeModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>()</p></td>
-<td><p>Checks whether model has been interfered with since fit() was last run</p></td>
+<td><p>Checks whether model has been interfered with since fit() was last run.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.preliminary_check" title="aisdc.safemodel.safemodel.SafeModel.preliminary_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code></a>([verbose, apply_constraints])</p></td>
 <td><p>Checks whether current model parameters violate the safe rules.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.request_release" title="aisdc.safemodel.safemodel.SafeModel.request_release"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code></a>([filename, data_obj])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.request_release" title="aisdc.safemodel.safemodel.SafeModel.request_release"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code></a>(path, ext[, target])</p></td>
 <td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.run_attack" title="aisdc.safemodel.safemodel.SafeModel.run_attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code></a>([data_obj, attack_name, filename])</p></td>
-<td><p>Runs a specified attack on the trained model and saves a report to file</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.run_attack" title="aisdc.safemodel.safemodel.SafeModel.run_attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code></a>([target, attack_name, outputdir, ...])</p></td>
+<td><p>Runs a specified attack on the trained model and saves a report to file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.safemodel.SafeModel.save" title="aisdc.safemodel.safemodel.SafeModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
 <td><p>Writes model to file in appropriate format.</p></td>
@@ -204,7 +204,7 @@ Optionally fixes violations.</p>
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.__str__">
 <span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.__str__" title="Permalink to this definition"></a></dt>
 <dd><p>Returns string with model description.
-No point writing a test, especially as it depends on username</p>
+No point writing a test, especially as it depends on username.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -217,19 +217,19 @@ No point writing a test, especially as it depends on username</p>
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.additional_checks">
 <span class="sig-name descname"><span class="pre">additional_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.additional_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.additional_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Placeholder function for additional posthoc checks e.g. keras this
-version just checks that any lists have the same contents</p>
+version just checks that any lists have the same contents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>curr_separate: python dictionary</strong></dt><dd></dd>
-<dt><strong>saved_separate: python dictionary</strong></dt><dd></dd>
+<dt><strong>curr_separate</strong><span class="classifier">python dictionary</span></dt><dd></dd>
+<dt><strong>saved_separate</strong><span class="classifier">python dictionary</span></dt><dd></dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd></dd>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd></dd>
 <dt>A message string</dt><dd></dd>
-<dt>disclosive: bool</dt><dd></dd>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd></dd>
 <dt>A boolean value to indicate whether the model is potentially disclosive.</dt><dd></dd>
 </dl>
 </dd>
@@ -242,29 +242,29 @@ keys as defined in the list self.examine_separately</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.examine_seperate_items">
 <span class="sig-name descname"><span class="pre">examine_seperate_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_vals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_vals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.examine_seperate_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.examine_seperate_items" title="Permalink to this definition"></a></dt>
-<dd><p>comparison of more complex structures
+<dd><p>Comparison of more complex structures
 in the super class we just check these model-specific items exist
-in both current and saved copies</p>
+in both current and saved copies.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models">
 <span class="sig-name descname"><span class="pre">get_current_and_saved_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.get_current_and_saved_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models" title="Permalink to this definition"></a></dt>
 <dd><p>Makes a copy of self.__dict__
-and splits it into dicts for the current and saved versions</p>
+and splits it into dicts for the current and saved versions.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.get_params">
 <span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.get_params" title="Permalink to this definition"></a></dt>
-<dd><p>gets dictionary of parameter values
+<dd><p>Gets dictionary of parameter values
 restricted to those expected by base classifier.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.posthoc_check">
 <span class="sig-name descname"><span class="pre">posthoc_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.posthoc_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.posthoc_check" title="Permalink to this definition"></a></dt>
-<dd><p>Checks whether model has been interfered with since fit() was last run</p>
+<dd><p>Checks whether model has been interfered with since fit() was last run.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -275,18 +275,18 @@ Optionally fixes violations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>verbose: bool</strong></dt><dd><p>A boolean value to determine increased output level.</p>
+<dt><strong>verbose</strong><span class="classifier">bool</span></dt><dd><p>A boolean value to determine increased output level.</p>
 </dd>
-<dt><strong>apply_constraints: bool</strong></dt><dd><p>A boolean to determine whether identified constraints are
+<dt><strong>apply_constraints</strong><span class="classifier">bool</span></dt><dd><p>A boolean to determine whether identified constraints are
 to be upheld and applied.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd><p>A message string</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string</p>
 </dd>
-<dt>disclosive: bool</dt><dd><p>A boolean value indicating whether the model is potentially
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially
 disclosive.</p>
 </dd>
 </dl>
@@ -296,49 +296,45 @@ disclosive.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.request_release">
-<span class="sig-name descname"><span class="pre">request_release</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Data</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.request_release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.request_release" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">request_release</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Target</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.request_release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.request_release" title="Permalink to this definition"></a></dt>
 <dd><p>Saves model to filename specified and creates a report for the TRE
 output checkers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>filename: string</strong></dt><dd></dd>
-<dt><strong>The filename used to save the model</strong></dt><dd></dd>
-<dt><strong>dataobj: object of type Data</strong></dt><dd></dd>
-<dt><strong>Contains train/test data and encoding dictionary needed to run attacks</strong></dt><dd></dd>
+<dt><strong>path</strong><span class="classifier">string</span></dt><dd><p>Path to save the outputs.</p>
+</dd>
+<dt><strong>ext</strong><span class="classifier">str</span></dt><dd><p>File extension defining the model saved format, e.g., “pkl” or “sav”.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">attacks.target.Target</span></dt><dd><p>Contains model and dataset information.</p>
+</dd>
 </dl>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"></dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>1. The dataset object is saved in a file called filebase_data.json
-(where filebase= filename without the extension)
-for reference/use by the TRE.
-Data should never be held or stored with the model.
-Clearly filebase_data.json mst never leave the TRE.
-2. If data_obj is not null, then worst case MIA and attribute inference
-attacks are called via run_attack.
-Outputs from the attacks will be stored in filebase_attack_res.json</p>
+<p>If target is not null, then worst case MIA and attribute inference
+attacks are called via run_attack.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.run_attack">
-<span class="sig-name descname"><span class="pre">run_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Data</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'worst_case'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.run_attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.run_attack" title="Permalink to this definition"></a></dt>
-<dd><p>Runs a specified attack on the trained model and saves a report to file</p>
+<span class="sig-name descname"><span class="pre">run_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Target</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'worst_case'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'RES'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/safemodel/safemodel.html#SafeModel.run_attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.run_attack" title="Permalink to this definition"></a></dt>
+<dd><p>Runs a specified attack on the trained model and saves a report to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>data_obj: Data</strong></dt><dd></dd>
-<dt><strong>the dataset in the form of a Data object</strong></dt><dd></dd>
-<dt><strong>attack_name: string</strong></dt><dd></dd>
-<dt><strong>filebasename: string</strong></dt><dd></dd>
-<dt><strong>Report will be saved to filebasename.json</strong></dt><dd></dd>
+<dt><strong>target</strong><span class="classifier">Target</span></dt><dd><p>The target in the form of a Target object.</p>
+</dd>
+<dt><strong>attack_name</strong><span class="classifier">str</span></dt><dd><p>Name of the attack to run.</p>
+</dd>
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Name of a .json file to save report.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>dict of meta data results</dt><dd></dd>
+<dt>dict</dt><dd><p>Metadata results.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -358,7 +354,7 @@ to deal with tensorflow specifics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>name: string</strong></dt><dd><p>The name of the file to save</p>
+<dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>The name of the file to save</p>
 </dd>
 </dl>
 </dd>
@@ -381,19 +377,19 @@ possible back door into attacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>key: string</strong></dt><dd><p>The dictionary key to examine.</p>
+<dt><strong>key</strong><span class="classifier">string</span></dt><dd><p>The dictionary key to examine.</p>
 </dd>
-<dt><strong>val: Any Type</strong></dt><dd><p>The expected value of the key.</p>
+<dt><strong>val</strong><span class="classifier">Any Type</span></dt><dd><p>The expected value of the key.</p>
 </dd>
-<dt><strong>cur_val: Any Type</strong></dt><dd><p>The current value of the key.</p>
+<dt><strong>cur_val</strong><span class="classifier">Any Type</span></dt><dd><p>The current value of the key.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd><p>A message string.</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
 </dd>
-<dt>disclosive: bool</dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
 </dd>
 </dl>
 </dd>
@@ -407,19 +403,19 @@ possible back door into attacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>key: string</strong></dt><dd><p>The dictionary key to examine.</p>
+<dt><strong>key</strong><span class="classifier">string</span></dt><dd><p>The dictionary key to examine.</p>
 </dd>
-<dt><strong>val: Any Type</strong></dt><dd><p>The expected value of the key.</p>
+<dt><strong>val</strong><span class="classifier">Any Type</span></dt><dd><p>The expected value of the key.</p>
 </dd>
-<dt><strong>cur_val: Any Type</strong></dt><dd><p>The current value of the key.</p>
+<dt><strong>cur_val</strong><span class="classifier">Any Type</span></dt><dd><p>The current value of the key.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd><p>A message string.</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
 </dd>
-<dt>disclosive: bool</dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
 </dd>
 </dl>
 </dd>
@@ -433,20 +429,20 @@ possible back door into attacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>key: string</strong></dt><dd><p>The dictionary key to examine.</p>
+<dt><strong>key</strong><span class="classifier">string</span></dt><dd><p>The dictionary key to examine.</p>
 </dd>
-<dt><strong>val: Any Type</strong></dt><dd><p>The expected value of the key.</p>
+<dt><strong>val</strong><span class="classifier">Any Type</span></dt><dd><p>The expected value of the key.</p>
 </dd>
-<dt><strong>cur_val: Any Type</strong></dt><dd><p>The current value of the key.</p>
+<dt><strong>cur_val</strong><span class="classifier">Any Type</span></dt><dd><p>The current value of the key.</p>
 </dd>
 <dt><strong>..</strong></dt><dd></dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd><p>A message string.</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
 </dd>
-<dt>disclosive: bool</dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
 </dd>
 </dl>
 </dd>
@@ -460,19 +456,19 @@ possible back door into attacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>key: string</strong></dt><dd><p>The dictionary key to examine.</p>
+<dt><strong>key</strong><span class="classifier">string</span></dt><dd><p>The dictionary key to examine.</p>
 </dd>
-<dt><strong>val: Any Type</strong></dt><dd><p>The expected value of the key.</p>
+<dt><strong>val</strong><span class="classifier">Any Type</span></dt><dd><p>The expected value of the key.</p>
 </dd>
-<dt><strong>cur_val: Any Type</strong></dt><dd><p>The current value of the key.</p>
+<dt><strong>cur_val</strong><span class="classifier">Any Type</span></dt><dd><p>The current value of the key.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>msg: string</dt><dd><p>A message string.</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
 </dd>
-<dt>disclosive: bool</dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially disclosive.</p>
 </dd>
 </dl>
 </dd>

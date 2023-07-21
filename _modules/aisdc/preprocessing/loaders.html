@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.preprocessing.loaders &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>aisdc.preprocessing.loaders &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -81,9 +81,9 @@
              
   <h1>Source code for aisdc.preprocessing.loaders</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">loaders.py</span>
+<span class="sd">Loaders.py</span>
 <span class="sd">A set of useful handlers to pull in datasets common to the project and perform the appropriate</span>
-<span class="sd">pre-processing</span>
+<span class="sd">pre-processing.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># pylint: disable=import-error, invalid-name, consider-using-with, too-many-return-statements</span>
@@ -114,7 +114,7 @@
 
 
 <div class="viewcode-block" id="UnknownDataset"><a class="viewcode-back" href="../../../preprocessing.html#aisdc.preprocessing.loaders.UnknownDataset">[docs]</a><span class="k">class</span> <span class="nc">UnknownDataset</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if the user passes a name that we don&#39;t recognise&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if the user passes a name that we don&#39;t recognise.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="DataNotAvailable"><a class="viewcode-back" href="../../../preprocessing.html#aisdc.preprocessing.loaders.DataNotAvailable">[docs]</a><span class="k">class</span> <span class="nc">DataNotAvailable</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -131,17 +131,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    dataset_name: str</span>
+<span class="sd">    dataset_name : str</span>
 <span class="sd">        The name of the dataset to load</span>
-<span class="sd">    data_folder: str</span>
+<span class="sd">    data_folder : str</span>
 <span class="sd">        The name of the local folder in which data is stored.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    X: pd.DataFrame</span>
+<span class="sd">    X : pd.DataFrame</span>
 <span class="sd">        The input dataframe -- rows are examples, columns variables</span>
-<span class="sd">    y: pd.DataFrame</span>
+<span class="sd">    y : pd.DataFrame</span>
 <span class="sd">        the target dataframe -- has a single column containing the target values</span>
 
 <span class="sd">    Notes</span>
@@ -171,8 +171,6 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; X, y = get_data_sklearn(&quot;mimic2-iaccd&quot;) # pull the mimic2-iaccd data</span>
 <span class="sd">    &gt;&gt;&gt; X, y = get_data_sklearn(&quot;minmax iris&quot;) # pull the iris data and round continuous features</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;DATASET FOLDER = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">)</span>
 
@@ -237,9 +235,7 @@
 
 
 <span class="k">def</span> <span class="nf">_iris</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    sklearn iris data - just first two classes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sklearn iris data - just first two classes.&quot;&quot;&quot;</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span>
@@ -247,9 +243,7 @@
 
 
 <span class="k">def</span> <span class="nf">_nursery</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The sklearn nursery dataset</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The sklearn nursery dataset.&quot;&quot;&quot;</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">26</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -271,9 +265,7 @@
 <span class="k">def</span> <span class="nf">_images_to_ndarray</span><span class="p">(</span>
     <span class="n">images_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number_to_load</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">flatten</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Grab number_to_load images from the images_dir and create a np array and label array</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Grab number_to_load images from the images_dir and create a np array and label array.&quot;&quot;&quot;</span>
     <span class="n">folder_path</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
     <span class="n">images_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">))</span>
     <span class="n">images_names</span> <span class="o">=</span> <span class="n">images_names</span><span class="p">[:</span><span class="n">number_to_load</span><span class="p">]</span>
@@ -297,7 +289,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load Medical MNIST into pandas format</span>
 <span class="sd">    borrows heavily from: https://www.kaggle.com/harelshattenstein/medical-mnist-knn</span>
-<span class="sd">    Creates a binary classification</span>
+<span class="sd">    Creates a binary classification.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">base_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -360,7 +352,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    First norws (default 5000) rows from the Synthetic A&amp;E data from NHS England</span>
-<span class="sd">    https://data.england.nhs.uk/dataset/a-e-synthetic-data/resource/81b068e5-6501-4840-a880-a8e7aa56890e # pylint: disable=line-too-long</span>
+<span class="sd">    https://data.england.nhs.uk/dataset/a-e-synthetic-data/resource/81b068e5-6501-4840-a880-a8e7aa56890e # pylint: disable=line-too-long.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -414,7 +406,7 @@
 <span class="k">def</span> <span class="nf">_indian_liver</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Indian Liver Patient Dataset</span>
-<span class="sd">    https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian%20Liver%20Patient%20Dataset%20(ILPD).csv # pylint: disable=line-too-long</span>
+<span class="sd">    https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian%20Liver%20Patient%20Dataset%20(ILPD).csv # pylint: disable=line-too-long.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># (https://archive.ics.uci.edu/ml/datasets/ILPD+(Indian+Liver+Patient+Dataset)</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">&quot;Indian Liver Patient Dataset (ILPD).csv&quot;</span><span class="p">)</span>
@@ -459,7 +451,7 @@
 <span class="k">def</span> <span class="nf">_in_hospital_mortality</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    In-hospital mortality data from this study:</span>
-<span class="sd">        https://datadryad.org/stash/dataset/doi:10.5061/dryad.0p2ngf1zd</span>
+<span class="sd">        https://datadryad.org/stash/dataset/doi:10.5061/dryad.0p2ngf1zd.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check the data has been downloaded. If not throw an exception with instructions on how to</span>
     <span class="c1"># download, and where to store</span>
@@ -493,9 +485,7 @@
 
 
 <span class="k">def</span> <span class="nf">_mimic_iaccd</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Loads the mimic_iaccd data and performs Alba&#39;s pre-processing</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the mimic_iaccd data and performs Alba&#39;s pre-processing.&quot;&quot;&quot;</span>
 
     <span class="c1"># Check the data has been downloaded. If not throw an exception with instructions on how to</span>
     <span class="c1"># download, and where to store</span>
@@ -551,12 +541,11 @@
     <span class="c1"># pylint: disable=too-many-statements, too-many-locals</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Texas Hospitals Dataset</span>
-<span class="sd">    (https://www.dshs.texas.gov/THCIC/Hospitals/Download.shtm)</span>
+<span class="sd">    (https://www.dshs.texas.gov/THCIC/Hospitals/Download.shtm).</span>
 
 <span class="sd">    Note: this has been tested repeated in the GRAIMatter project.</span>
 <span class="sd">    However, for licensing reasons we cannot redistribute the data.</span>
 <span class="sd">    Therefore it is omitted from CI test coverage and metrics.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;PUDF-1Q2006-tab-delimited.zip&quot;</span><span class="p">,</span>

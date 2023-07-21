@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Attacks &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>Attacks &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -52,9 +52,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.get_probabilities"><code class="docutils literal notranslate"><span class="pre">get_probabilities()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.metrics.min_max_disc"><code class="docutils literal notranslate"><span class="pre">min_max_disc()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack"><code class="docutils literal notranslate"><span class="pre">WorstCaseAttack</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs"><code class="docutils literal notranslate"><span class="pre">WorstCaseAttackArgs</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.worst_case_attack.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.NumpyArrayEncoder"><code class="docutils literal notranslate"><span class="pre">NumpyArrayEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.add_output_to_pdf"><code class="docutils literal notranslate"><span class="pre">add_output_to_pdf()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.create_json_report"><code class="docutils literal notranslate"><span class="pre">create_json_report()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.create_lr_report"><code class="docutils literal notranslate"><span class="pre">create_lr_report()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.create_mia_report"><code class="docutils literal notranslate"><span class="pre">create_mia_report()</span></code></a></li>
@@ -63,7 +63,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.report.title"><code class="docutils literal notranslate"><span class="pre">title()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier"><code class="docutils literal notranslate"><span class="pre">DummyClassifier</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack"><code class="docutils literal notranslate"><span class="pre">LIRAAttack</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs"><code class="docutils literal notranslate"><span class="pre">LIRAAttackArgs</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aisdc.attacks.likelihood_attack.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
@@ -109,23 +108,23 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.metrics.auc_p_val">
 <span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">auc_p_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/metrics.html#auc_p_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.auc_p_val" title="Permalink to this definition"></a></dt>
-<dd><p>Compute the p-value for a given AUC</p>
+<dd><p>Compute the p-value for a given AUC.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>auc: float</strong></dt><dd><p>Observed AUC value</p>
+<dt><strong>auc</strong><span class="classifier">float</span></dt><dd><p>Observed AUC value</p>
 </dd>
-<dt><strong>n_pos: int</strong></dt><dd><p>Number of positive examples</p>
+<dt><strong>n_pos</strong><span class="classifier">int</span></dt><dd><p>Number of positive examples</p>
 </dd>
-<dt><strong>n_neg: int</strong></dt><dd><p>Number of negative examples</p>
+<dt><strong>n_neg</strong><span class="classifier">int</span></dt><dd><p>Number of negative examples</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>auc_p: float</dt><dd><p>p-value of observing an AUC &gt; auc by chance</p>
+<dt><strong>auc_p</strong><span class="classifier">float</span></dt><dd><p>p-value of observing an AUC &gt; auc by chance</p>
 </dd>
-<dt>auc_std: float</dt><dd><p>standard deviation of the NULL AUC diustribution (mean = 0.5)</p>
+<dt><strong>auc_std</strong><span class="classifier">float</span></dt><dd><p>standard deviation of the NULL AUC diustribution (mean = 0.5)</p>
 </dd>
 </dl>
 </dd>
@@ -135,21 +134,21 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.metrics.get_metrics">
 <span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred_proba</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/metrics.html#get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate metrics, including attacker advantage for MIA binary.
-Implemented as Definition 4 on <a class="reference external" href="https://arxiv.org/pdf/1709.01604.pdf">https://arxiv.org/pdf/1709.01604.pdf</a>
-which is also implemented in tensorFlow-privacy <a class="reference external" href="https://github.com/tensorflow/privacy">https://github.com/tensorflow/privacy</a></p>
+<dd><p>Calculate metrics, including attacker advantage for MIA binary.</p>
+<p>Implemented as Definition 4 on <a class="reference external" href="https://arxiv.org/pdf/1709.01604.pdf">https://arxiv.org/pdf/1709.01604.pdf</a>
+which is also implemented in tensorFlow-privacy <a class="reference external" href="https://github.com/tensorflow/privacy">https://github.com/tensorflow/privacy</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>y_test: np.ndarray</strong></dt><dd><p>test data labels</p>
+<dt><strong>y_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data labels</p>
 </dd>
-<dt><strong>y_pred_proba: np.ndarray of shape [x,2] and type float</strong></dt><dd><p>predicted probabilities</p>
+<dt><strong>y_pred_proba</strong><span class="classifier">np.ndarray of shape [x,2] and type float</span></dt><dd><p>predicted probabilities</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>metrics: dict</dt><dd><p>dictionary of metric values</p>
+<dt><strong>metrics</strong><span class="classifier">dict</span></dt><dd><p>dictionary of metric values</p>
 </dd>
 </dl>
 </dd>
@@ -178,19 +177,19 @@ each data sample in probability format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>clf: sklearn.Model</strong></dt><dd><p>trained model</p>
+<dt><strong>clf</strong><span class="classifier">sklearn.Model</span></dt><dd><p>trained model</p>
 </dd>
-<dt><strong>X_test: np.ndarray</strong></dt><dd><p>test data matrix</p>
+<dt><strong>X_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data matrix</p>
 </dd>
-<dt><strong>y_test: np.ndarray</strong></dt><dd><p>test data labels</p>
+<dt><strong>y_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data labels</p>
 </dd>
-<dt><strong>permute_rows: boolean</strong></dt><dd><p>a flag to indicate whether rows should be permuted</p>
+<dt><strong>permute_rows</strong><span class="classifier">boolean</span></dt><dd><p>a flag to indicate whether rows should be permuted</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>y_pred_proba: a list of probabilities for each sample in the dataset</dt><dd></dd>
+<dt><strong>y_pred_proba</strong><span class="classifier">a list of probabilities for each sample in the dataset</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -215,28 +214,28 @@ for some samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>y: np.ndarray</strong></dt><dd><p>true labels</p>
+<dt><strong>y</strong><span class="classifier">np.ndarray</span></dt><dd><p>true labels</p>
 </dd>
-<dt><strong>yp: np.ndarray</strong></dt><dd><p>probabilities of labels, or monotonic transformation of probabilties</p>
+<dt><strong>yp</strong><span class="classifier">np.ndarray</span></dt><dd><p>probabilities of labels, or monotonic transformation of probabilties</p>
 </dd>
-<dt><strong>xprop: float</strong></dt><dd><p>proportion of samples with highest- and lowest- probability of membership to be
+<dt><strong>xprop</strong><span class="classifier">float</span></dt><dd><p>proportion of samples with highest- and lowest- probability of membership to be
 considered</p>
 </dd>
-<dt><strong>logp: bool</strong></dt><dd><p>convert p-values to log(p).</p>
+<dt><strong>logp</strong><span class="classifier">bool</span></dt><dd><p>convert p-values to log(p).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>maxd: float</dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with highest assessed
+<dt><strong>maxd</strong><span class="classifier">float</span></dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with highest assessed
 membership probability</p>
 </dd>
-<dt>mind: float</dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with lowest assessed
+<dt><strong>mind</strong><span class="classifier">float</span></dt><dd><p>frequency of y=1 amongst proportion xprop of individuals with lowest assessed
 membership probability</p>
 </dd>
-<dt>mmd: float</dt><dd><p>difference between maxd and mind</p>
+<dt><strong>mmd</strong><span class="classifier">float</span></dt><dd><p>difference between maxd and mind</p>
 </dd>
-<dt>pval: float</dt><dd><p>p-value or log-p value corresponding to mmd against null hypothesis that random
+<dt><strong>pval</strong><span class="classifier">float</span></dt><dd><p>p-value or log-p value corresponding to mmd against null hypothesis that random
 variables corresponding to y and yp are independent.</p>
 </dd>
 </dl>
@@ -250,49 +249,50 @@ variables corresponding to y and yp are independent.</p>
 </div>
 </dd></dl>
 
-<span class="target" id="module-aisdc.attacks.worst_case_attack"></span><p>worst_case_attack.py</p>
+<span class="target" id="module-aisdc.attacks.worst_case_attack"></span><p>Worst_case_attack.py.</p>
 <p>Runs a worst case attack based upon predictive probabilities stored in two .csv files</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">WorstCaseAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~aisdc.attacks.worst_case_attack.WorstCaseAttackArgs</span> <span class="pre">=</span> <span class="pre">&lt;aisdc.attacks.worst_case_attack.WorstCaseAttackArgs</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack" title="Permalink to this definition"></a></dt>
-<dd><p>Class to wrap the worst case attack code</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">WorstCaseAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_reps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dummy_reps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_beta:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_beta:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_prop:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_in:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_out:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_preds_filename:</span> <span class="pre">~typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds_filename:</span> <span class="pre">~typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'output_worstcase'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'report_worstcase'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_model_correct_feature:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_probs:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mia_attack_model:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'sklearn.ensemble._forest.RandomForestClassifier'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mia_attack_model_hyp:</span> <span class="pre">~typing.Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'P_HIGHER_AUC'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_thresh:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_comp_type:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'lte'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_count_thresh:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_fail_fast:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_json_file_name:</span> <span class="pre">~typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path:</span> <span class="pre">~typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack" title="Permalink to this definition"></a></dt>
+<dd><p>Class to wrap the worst case attack code.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(dataset, target_model)</p></td>
-<td><p>Programmatic attack entry point</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
+<td><p>Programmatic attack entry point.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack_from_prediction_files</span></code></a>()</p></td>
-<td><p>Start an attack from saved prediction files</p></td>
+<td><p>Start an attack from saved prediction files.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack_from_preds</span></code></a>(train_preds, test_preds[, ...])</p></td>
-<td><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params stored in self.args</p></td>
+<td><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params stored in self.args.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_arrays</span></code></a>(n_rows_in, n_rows_out[, ...])</p></td>
-<td><p>Generate train and test prediction arrays, used when computing baseline</p></td>
+<td><p>Generate train and test prediction arrays, used when computing baseline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_dummy_data</span></code></a>()</p></td>
-<td><p>Makes dummy data for testing functionality</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>()</p></td>
+<td><p>Get parameters for this attack.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
-<td><p>Creates output dictionary structure</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_dummy_data</span></code></a>()</p></td>
+<td><p>Makes dummy data for testing functionality.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack_reps</span></code></a>(train_preds, test_preds[, ...])</p></td>
-<td><p>Run actual attack reps from train and test predictions</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
+<td><p>Creates output dictionary structure and generates pdf and json outputs if filenames are given.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack_reps</span></code></a>(train_preds, test_preds[, ...])</p></td>
+<td><p>Run actual attack reps from train and test predictions.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="Permalink to this definition"></a></dt>
-<dd><p>Programmatic attack entry point</p>
-<p>To be used when code has access to data class and trained target model</p>
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="Permalink to this definition"></a></dt>
+<dd><p>Programmatic attack entry point.</p>
+<p>To be used when code has access to Target class and trained target model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>dataset: attacks.dataset.Data</strong></dt><dd><p>dataset as a Data class object</p>
-</dd>
-<dt><strong>target_model: sklearn.base.BaseEstimator</strong></dt><dd><p>target model that inherits from an sklearn BaseEstimator</p>
+<dt><strong>target</strong><span class="classifier">attacks.target.Target</span></dt><dd><p>target as a Target class object</p>
 </dd>
 </dl>
 </dd>
@@ -302,7 +302,7 @@ variables corresponding to y and yp are independent.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files">
 <span class="sig-name descname"><span class="pre">attack_from_prediction_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack_from_prediction_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files" title="Permalink to this definition"></a></dt>
-<dd><p>Start an attack from saved prediction files</p>
+<dd><p>Start an attack from saved prediction files.</p>
 <p>To be used when only saved predictions are available.</p>
 <p>Filenames for the saved prediction files to be specified in the arguments provided
 in the constructor</p>
@@ -312,13 +312,13 @@ in the constructor</p>
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">
 <span class="sig-name descname"><span class="pre">attack_from_preds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack_from_preds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds" title="Permalink to this definition"></a></dt>
 <dd><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params
-stored in self.args</p>
+stored in self.args.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>train_preds: np.ndarray</strong></dt><dd><p>Array of train predictions. One row per example, one column per class (i.e. 2)</p>
+<dt><strong>train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of train predictions. One row per example, one column per class (i.e. 2)</p>
 </dd>
-<dt><strong>test_preds:  np.ndarray</strong></dt><dd><p>Array of test predictions. One row per example, one column per class (i.e. 2)</p>
+<dt><strong>test_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of test predictions. One row per example, one column per class (i.e. 2)</p>
 </dd>
 </dl>
 </dd>
@@ -328,25 +328,25 @@ stored in self.args</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays">
 <span class="sig-name descname"><span class="pre">generate_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_rows_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.generate_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays" title="Permalink to this definition"></a></dt>
-<dd><p>Generate train and test prediction arrays, used when computing baseline</p>
+<dd><p>Generate train and test prediction arrays, used when computing baseline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>n_rows_in: int</strong></dt><dd><p>number of rows of in-sample (training) probabilities</p>
+<dt><strong>n_rows_in</strong><span class="classifier">int</span></dt><dd><p>number of rows of in-sample (training) probabilities</p>
 </dd>
-<dt><strong>n_rows_out: int</strong></dt><dd><p>number of rows of out-of-sample (testing) probabilities</p>
+<dt><strong>n_rows_out</strong><span class="classifier">int</span></dt><dd><p>number of rows of out-of-sample (testing) probabilities</p>
 </dd>
-<dt><strong>train_beta: float</strong></dt><dd><p>beta value for generating train probabilities</p>
+<dt><strong>train_beta</strong><span class="classifier">float</span></dt><dd><p>beta value for generating train probabilities</p>
 </dd>
-<dt><strong>test_beta: float:</strong></dt><dd><p>beta_value for generating test probabilities</p>
+<dt><strong>test_beta</strong><span class="classifier">float:</span></dt><dd><p>beta_value for generating test probabilities</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>train_preds: np.ndarray</dt><dd><p>Array of train predictions (n_rows x 2 columns)</p>
+<dt><strong>train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of train predictions (n_rows x 2 columns)</p>
 </dd>
-<dt>test_preds: np.ndarray</dt><dd><p>Array of test predictions (n_rows x 2 columns)</p>
+<dt><strong>test_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of test predictions (n_rows x 2 columns)</p>
 </dd>
 </dl>
 </dd>
@@ -356,11 +356,11 @@ stored in self.args</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data">
 <span class="sig-name descname"><span class="pre">make_dummy_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.make_dummy_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="Permalink to this definition"></a></dt>
-<dd><p>Makes dummy data for testing functionality</p>
+<dd><p>Makes dummy data for testing functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>args: dict</strong></dt><dd><p>Command line arguments</p>
+<dt><strong>args</strong><span class="classifier">dict</span></dt><dd><p>Command line arguments</p>
 </dd>
 </dl>
 </dd>
@@ -374,25 +374,26 @@ stored in self.args</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report">
 <span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.make_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report" title="Permalink to this definition"></a></dt>
-<dd><p>Creates output dictionary structure</p>
+<dd><p>Creates output dictionary structure and generates
+pdf and json outputs if filenames are given.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps">
 <span class="sig-name descname"><span class="pre">run_attack_reps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.run_attack_reps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="Permalink to this definition"></a></dt>
-<dd><p>Run actual attack reps from train and test predictions</p>
+<dd><p>Run actual attack reps from train and test predictions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>train_preds: np.ndarray</strong></dt><dd><p>predictions from the model on training (in-sample) data</p>
+<dt><strong>train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>predictions from the model on training (in-sample) data</p>
 </dd>
-<dt><strong>test_preds: np.ndarray</strong></dt><dd><p>predictions from the model on testing (out-of-sample) data</p>
+<dt><strong>test_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>predictions from the model on testing (out-of-sample) data</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>mia_metrics_dict: dict</dt><dd><p>a dictionary with two items including mia_metrics
+<dt><strong>mia_metrics_dict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with two items including mia_metrics
 (a list of metric across repetitions) and failfast_metric_summary object
 (an object of FailFast class) to maintain summary of
 fail/success of attacks for a given metric of failfast option</p>
@@ -404,51 +405,22 @@ fail/success of attacks for a given metric of failfast option</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">WorstCaseAttackArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttackArgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs" title="Permalink to this definition"></a></dt>
-<dd><p>Arguments for worst case</p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args" title="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_args</span></code></a>()</p></td>
-<td><p>Return arguments</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.set_param" title="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.set_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_param</span></code></a>(key, value)</p></td>
-<td><p>Set a parameter</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args">
-<span class="sig-name descname"><span class="pre">get_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttackArgs.get_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.get_args" title="Permalink to this definition"></a></dt>
-<dd><p>Return arguments</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.set_param">
-<span class="sig-name descname"><span class="pre">set_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Hashable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttackArgs.set_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttackArgs.set_param" title="Permalink to this definition"></a></dt>
-<dd><p>Set a parameter</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.main">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/worst_case_attack.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.main" title="Permalink to this definition"></a></dt>
-<dd><p>main method to parse arguments and invoke relevant method</p>
+<dd><p>Main method to parse arguments and invoke relevant method.</p>
 </dd></dl>
 
-<span class="target" id="module-aisdc.attacks.report"></span><p>Code for automatic report generation</p>
+<span class="target" id="module-aisdc.attacks.report"></span><p>Code for automatic report generation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.report.NumpyArrayEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">NumpyArrayEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#NumpyArrayEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.NumpyArrayEncoder" title="Permalink to this definition"></a></dt>
-<dd><p>Json encoder that can cope with numpy arrays</p>
+<dd><p>Json encoder that can cope with numpy arrays.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.report.NumpyArrayEncoder.default" title="aisdc.attacks.report.NumpyArrayEncoder.default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default</span></code></a>(o)</p></td>
-<td><p>If an object is an np.ndarray, convert to list</p></td>
+<td><p>If an object is an np.ndarray, convert to list.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code>(o)</p></td>
 <td><p>Return a JSON string representation of a Python data structure.</p></td>
@@ -461,25 +433,31 @@ fail/success of attacks for a given metric of failfast option</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.report.NumpyArrayEncoder.default">
 <span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#NumpyArrayEncoder.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.NumpyArrayEncoder.default" title="Permalink to this definition"></a></dt>
-<dd><p>If an object is an np.ndarray, convert to list</p>
+<dd><p>If an object is an np.ndarray, convert to list.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.attacks.report.add_output_to_pdf">
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">add_output_to_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FPDF</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#add_output_to_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.add_output_to_pdf" title="Permalink to this definition"></a></dt>
+<dd><p>Creates pdf and appends contents if it already exists.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.create_json_report">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_json_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_json_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_json_report" title="Permalink to this definition"></a></dt>
-<dd><p>Create a report in json format for injestion by other tools</p>
+<dd><p>Create a report in json format for injestion by other tools.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.create_lr_report">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_lr_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_lr_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_lr_report" title="Permalink to this definition"></a></dt>
-<dd><p>make a lira membership inference report</p>
+<dd><p>Make a lira membership inference report.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>output: dict</strong></dt><dd><p>dictionary with following items</p>
+<dt><strong>output</strong><span class="classifier">dict</span></dt><dd><p>dictionary with following items</p>
 <dl class="simple">
 <dt>metadata: dict</dt><dd><p>dictionary of metadata</p>
 </dd>
@@ -494,7 +472,7 @@ will have a single metrics dictionary</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>pdf: fpdf.FPDF</dt><dd><p>fpdf document object</p>
+<dt><strong>pdf</strong><span class="classifier">fpdf.FPDF</span></dt><dd><p>fpdf document object</p>
 </dd>
 </dl>
 </dd>
@@ -504,11 +482,11 @@ will have a single metrics dictionary</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.create_mia_report">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">create_mia_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/report.html#create_mia_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.create_mia_report" title="Permalink to this definition"></a></dt>
-<dd><p>make a worst case membership inference report</p>
+<dd><p>Make a worst case membership inference report.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>attack_output: dict</strong></dt><dd><p>dictionary with following items</p>
+<dt><strong>attack_output</strong><span class="classifier">dict</span></dt><dd><p>dictionary with following items</p>
 <blockquote>
 <div><dl class="simple">
 <dt>metadata: dict</dt><dd><p>dictionary of metadata</p>
@@ -524,7 +502,7 @@ will have a single metrics dictionary</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>pdf: fpdf.FPDF</dt><dd><p>fpdf document object</p>
+<dt><strong>pdf</strong><span class="classifier">fpdf.FPDF</span></dt><dd><p>fpdf document object</p>
 </dd>
 </dl>
 </dd>
@@ -534,91 +512,91 @@ will have a single metrics dictionary</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.line">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arial'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.line" title="Permalink to this definition"></a></dt>
-<dd><p>Write a standard block</p>
+<dd><p>Write a standard block.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.subtitle">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">subtitle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#subtitle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.subtitle" title="Permalink to this definition"></a></dt>
-<dd><p>Write a subtitle block</p>
+<dd><p>Write a subtitle block.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.report.title">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.report.</span></span><span class="sig-name descname"><span class="pre">title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/report.html#title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.report.title" title="Permalink to this definition"></a></dt>
-<dd><p>Write a title block</p>
+<dd><p>Write a title block.</p>
 </dd></dl>
 
-<span class="target" id="module-aisdc.attacks.likelihood_attack"></span><p>Likelihood testing scenario from <a class="reference external" href="https://arxiv.org/pdf/2112.03570.pdf">https://arxiv.org/pdf/2112.03570.pdf</a></p>
+<span class="target" id="module-aisdc.attacks.likelihood_attack"></span><p>Likelihood testing scenario from <a class="reference external" href="https://arxiv.org/pdf/2112.03570.pdf">https://arxiv.org/pdf/2112.03570.pdf</a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">DummyClassifier</span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier" title="Permalink to this definition"></a></dt>
-<dd><p>A Dummy Classifier to allow this code to work with get_metrics</p>
+<dd><p>A Dummy Classifier to allow this code to work with get_metrics.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict" title="aisdc.attacks.likelihood_attack.DummyClassifier.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(test_X)</p></td>
-<td><p>Return an array of 1/0 depending on value in second column</p></td>
+<td><p>Return an array of 1/0 depending on value in second column.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba" title="aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code></a>(test_X)</p></td>
-<td><p>Simply return the test_X</p></td>
+<td><p>Simply return the test_X.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict" title="Permalink to this definition"></a></dt>
-<dd><p>Return an array of 1/0 depending on value in second column</p>
+<dd><p>Return an array of 1/0 depending on value in second column.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba">
 <span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba" title="Permalink to this definition"></a></dt>
-<dd><p>Simply return the test_X</p>
+<dd><p>Simply return the test_X.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">LIRAAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~aisdc.attacks.likelihood_attack.LIRAAttackArgs</span> <span class="pre">=</span> <span class="pre">&lt;aisdc.attacks.likelihood_attack.LIRAAttackArgs</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack" title="Permalink to this definition"></a></dt>
-<dd><p>The main LIRA Attack class</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">LIRAAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_shadow_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'outputs_lira'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'report_lira'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_data_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_data_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_preds_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model_hyp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_json_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_shadow_rows_confidences_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shadow_models_fail_fast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack" title="Permalink to this definition"></a></dt>
+<dd><p>The main LIRA Attack class.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="aisdc.attacks.likelihood_attack.LIRAAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(dataset, target_model)</p></td>
-<td><p>Programmatic attack running Runs a LIRA attack from a dataset object and a target model</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="aisdc.attacks.likelihood_attack.LIRAAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
+<td><p>Programmatic attack running Runs a LIRA attack from a Target object and a target model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config" title="aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack_from_config</span></code></a>()</p></td>
-<td><p>Runs an attack based on the args parsed from the command line</p></td>
+<td><p>Runs an attack based on the args parsed from the command line.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.example" title="aisdc.attacks.likelihood_attack.LIRAAttack.example"><code class="xref py py-obj docutils literal notranslate"><span class="pre">example</span></code></a>()</p></td>
-<td><p>Runs an example attack using data from sklearn</p></td>
+<td><p>Runs an example attack using data from sklearn.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.make_report" title="aisdc.attacks.likelihood_attack.LIRAAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
-<td><p>Create the report</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>()</p></td>
+<td><p>Get parameters for this attack.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds" title="aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_scenario_from_preds</span></code></a>(shadow_clf, ...)</p></td>
-<td><p>Implements the likelihood test, using the &quot;offline&quot; version See p.6 (top of second column) for details</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.make_report" title="aisdc.attacks.likelihood_attack.LIRAAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
+<td><p>Create the report.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data" title="aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_example_data</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds" title="aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_scenario_from_preds</span></code></a>(shadow_clf, ...)</p></td>
+<td><p>Implements the likelihood test, using the &quot;offline&quot; version See p.6 (top of second column) for details.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data" title="aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_example_data</span></code></a>()</p></td>
 <td><p>Method to create example data and save (including config).</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.attack">
-<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="Permalink to this definition"></a></dt>
 <dd><p>Programmatic attack running
-Runs a LIRA attack from a dataset object and a target model</p>
+Runs a LIRA attack from a Target object and a target model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>dataset: attacks.dataset.Data</strong></dt><dd><p>Dataset as an instance of the Data class. Needs to have x_train, x_test, y_train
-and y_test set.</p>
-</dd>
-<dt><strong>target_model: sklearn.base.BaseEstimator</strong></dt><dd><p>Trained target model. Any class that implements the sklearn.base.BaseEstimator
-interface (i.e. has fit, predict and predict_proba methods)</p>
+<dt><strong>target</strong><span class="classifier">attacks.target.Target</span></dt><dd><p>target as an instance of the Target class. Needs to have x_train,
+x_test, y_train and y_test set.</p>
 </dd>
 </dl>
 </dd>
@@ -628,26 +606,26 @@ interface (i.e. has fit, predict and predict_proba methods)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config">
 <span class="sig-name descname"><span class="pre">attack_from_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.attack_from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config" title="Permalink to this definition"></a></dt>
-<dd><p>Runs an attack based on the args parsed from the command line</p>
+<dd><p>Runs an attack based on the args parsed from the command line.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.example">
 <span class="sig-name descname"><span class="pre">example</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.example" title="Permalink to this definition"></a></dt>
-<dd><p>Runs an example attack using data from sklearn</p>
+<dd><p>Runs an example attack using data from sklearn.</p>
 <p>Generates example data, trains a classifier and tuns the attack</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.make_report">
 <span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.make_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.make_report" title="Permalink to this definition"></a></dt>
-<dd><p>Create the report</p>
+<dd><p>Create the report.</p>
 <p>Creates the output report. If self.args.report_name is not None, it will also save the
 information in json and pdf formats</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt>output: Dict</dt><dd><p>Dictionary containing all attack output</p>
+<dt><strong>output</strong><span class="classifier">Dict</span></dt><dd><p>Dictionary containing all attack output</p>
 </dd>
 </dl>
 </dd>
@@ -658,34 +636,34 @@ information in json and pdf formats</p>
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">
 <span class="sig-name descname"><span class="pre">run_scenario_from_preds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shadow_clf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_target_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_target_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_shadow_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_shadow_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shadow_train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">sklearn.base.BaseEstimator</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.run_scenario_from_preds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds" title="Permalink to this definition"></a></dt>
 <dd><p>Implements the likelihood test, using the “offline” version
-See p.6 (top of second column) for details</p>
+See p.6 (top of second column) for details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>shadow_clf: sklearn.Model</strong></dt><dd><p>An sklearn classifier that will be trained to form the shadow model.
+<dt><strong>shadow_clf</strong><span class="classifier">sklearn.Model</span></dt><dd><p>An sklearn classifier that will be trained to form the shadow model.
 All hyper-parameters should have been set.</p>
 </dd>
-<dt><strong>X_target_train: np.ndarray</strong></dt><dd><p>Data that was used to train the target model</p>
+<dt><strong>X_target_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Data that was used to train the target model</p>
 </dd>
-<dt><strong>y_target_train: np.ndarray</strong></dt><dd><p>Labels that were used to train the target model</p>
+<dt><strong>y_target_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Labels that were used to train the target model</p>
 </dd>
-<dt><strong>target_train_preds: np.ndarray</strong></dt><dd><p>Array of predictions produced by the target model on the training data</p>
+<dt><strong>target_train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of predictions produced by the target model on the training data</p>
 </dd>
-<dt><strong>X_shadow_train: np.ndarray</strong></dt><dd><p>Data that will be used to train the shadow models</p>
+<dt><strong>X_shadow_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Data that will be used to train the shadow models</p>
 </dd>
-<dt><strong>y_shadow_train: np.ndarray</strong></dt><dd><p>Labels that will be used to train the shadow model</p>
+<dt><strong>y_shadow_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Labels that will be used to train the shadow model</p>
 </dd>
-<dt><strong>shadow_train_preds: np.ndarray</strong></dt><dd><p>Array of predictions produced by the target model on the shadow data</p>
+<dt><strong>shadow_train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of predictions produced by the target model on the shadow data</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>mia_scores: np.ndarray</dt><dd><p>Attack probabilities of belonging to the training set or not</p>
+<dt><strong>mia_scores</strong><span class="classifier">np.ndarray</span></dt><dd><p>Attack probabilities of belonging to the training set or not</p>
 </dd>
-<dt>mia_labels: np.ndarray</dt><dd><p>True labels of belonging to the training set or not</p>
+<dt><strong>mia_labels</strong><span class="classifier">np.ndarray</span></dt><dd><p>True labels of belonging to the training set or not</p>
 </dd>
-<dt>mia_cls: DummyClassifier</dt><dd><p>A DummyClassifier that directly returns the scores for compatibility with code
+<dt><strong>mia_cls</strong><span class="classifier">DummyClassifier</span></dt><dd><p>A DummyClassifier that directly returns the scores for compatibility with code
 in metrics.py</p>
 </dd>
 </dl>
@@ -723,39 +701,10 @@ a config.json file that can be used to run the attack from the command line.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttackArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">LIRAAttackArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttackArgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs" title="Permalink to this definition"></a></dt>
-<dd><p>LIRA Attack arguments</p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args" title="aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_args</span></code></a>()</p></td>
-<td><p>Return arguments</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs.set_param" title="aisdc.attacks.likelihood_attack.LIRAAttackArgs.set_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_param</span></code></a>(key, value)</p></td>
-<td><p>Set a parameter</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args">
-<span class="sig-name descname"><span class="pre">get_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttackArgs.get_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs.get_args" title="Permalink to this definition"></a></dt>
-<dd><p>Return arguments</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttackArgs.set_param">
-<span class="sig-name descname"><span class="pre">set_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Hashable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#LIRAAttackArgs.set_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttackArgs.set_param" title="Permalink to this definition"></a></dt>
-<dd><p>Set a parameter</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.main">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/aisdc/attacks/likelihood_attack.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.main" title="Permalink to this definition"></a></dt>
-<dd><p>Main method to parse args and invoke relevant code</p>
+<dd><p>Main method to parse args and invoke relevant code.</p>
 </dd></dl>
 
 </section>

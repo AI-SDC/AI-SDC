@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.metrics &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>aisdc.metrics &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -80,9 +80,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for aisdc.metrics</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Calculate metrics.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Calculate metrics.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -100,20 +98,22 @@
 
 <span class="k">def</span> <span class="nf">_div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve the problem of division by 0 and round up.</span>
-<span class="sd">    If y is non-zero, perform x/y and round to 8dp. If it is zero, return the default</span>
+
+<span class="sd">    If y is non-zero, perform x/y and round to 8dp. If it is zero, return the</span>
+<span class="sd">    default.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x: float</span>
+<span class="sd">    x : float</span>
 <span class="sd">        numerator</span>
-<span class="sd">    y: float</span>
+<span class="sd">    y : float</span>
 <span class="sd">        denominator</span>
-<span class="sd">    default: float</span>
+<span class="sd">    default : float</span>
 <span class="sd">        return value if y == 0</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    division: float</span>
+<span class="sd">    division : float</span>
 <span class="sd">        x / y, or default if y == 0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -130,23 +130,24 @@
     <span class="n">fpr_perc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the TPR at a fixed FPR.</span>
-<span class="sd">    In particular, returns the TPR value corresponding to a particular FPR. Uses interpolation</span>
-<span class="sd">    to fill in gaps.</span>
+
+<span class="sd">    In particular, returns the TPR value corresponding to a particular FPR.</span>
+<span class="sd">    Uses interpolation to fill in gaps.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    y_true: Iterable[float]</span>
+<span class="sd">    y_true : Iterable[float]</span>
 <span class="sd">        actual class labels</span>
-<span class="sd">    y_score: Iterable[float]</span>
+<span class="sd">    y_score : Iterable[float]</span>
 <span class="sd">        predicted score</span>
-<span class="sd">    fpr: float</span>
+<span class="sd">    fpr : float</span>
 <span class="sd">        false positive rate at which to compute true positive rate</span>
-<span class="sd">    fpr_perc: bool</span>
+<span class="sd">    fpr_perc : bool</span>
 <span class="sd">        if the fpr is defined as a percentage</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    tpr: float</span>
+<span class="sd">    tpr : float</span>
 <span class="sd">        true positive rate at fpr</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -164,22 +165,22 @@
 
 
 <span class="k">def</span> <span class="nf">_expected_auc_var</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; &quot;Compute variance of AUC under assumption of uniform probabilities</span>
-<span class="sd">    uses the expression given as eqn (2) in  https://cs.nyu.edu/~mohri/pub/area.pdf</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute variance of AUC under assumption of uniform probabilities</span>
+<span class="sd">    uses the expression given as eqn (2) in  https://cs.nyu.edu/~mohri/pub/area.pdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    auc: float</span>
+<span class="sd">    auc : float</span>
 <span class="sd">        auc value at which to compute the variance</span>
-<span class="sd">    num_pos: int</span>
+<span class="sd">    num_pos : int</span>
 <span class="sd">        number of positive examples</span>
-<span class="sd">    num_neg: int</span>
+<span class="sd">    num_neg : int</span>
 <span class="sd">        number of negative examples</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    var: float</span>
+<span class="sd">    var : float</span>
 <span class="sd">        null variance of AUC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_xxy</span> <span class="o">=</span> <span class="n">p_xyy</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span>
@@ -208,27 +209,27 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    y: np.ndarray</span>
+<span class="sd">    y : np.ndarray</span>
 <span class="sd">        true labels</span>
-<span class="sd">    yp: np.ndarray</span>
+<span class="sd">    yp : np.ndarray</span>
 <span class="sd">        probabilities of labels, or monotonic transformation of probabilties</span>
-<span class="sd">    xprop: float</span>
+<span class="sd">    xprop : float</span>
 <span class="sd">        proportion of samples with highest- and lowest- probability of membership to be</span>
 <span class="sd">        considered</span>
-<span class="sd">    logp: bool</span>
+<span class="sd">    logp : bool</span>
 <span class="sd">        convert p-values to log(p).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    maxd: float</span>
+<span class="sd">    maxd : float</span>
 <span class="sd">        frequency of y=1 amongst proportion xprop of individuals with highest assessed</span>
 <span class="sd">        membership probability</span>
-<span class="sd">    mind: float</span>
+<span class="sd">    mind : float</span>
 <span class="sd">        frequency of y=1 amongst proportion xprop of individuals with lowest assessed</span>
 <span class="sd">        membership probability</span>
-<span class="sd">    mmd: float</span>
+<span class="sd">    mmd : float</span>
 <span class="sd">        difference between maxd and mind</span>
-<span class="sd">    pval: float</span>
+<span class="sd">    pval : float</span>
 <span class="sd">        p-value or log-p value corresponding to mmd against null hypothesis that random</span>
 <span class="sd">        variables corresponding to y and yp are independent.</span>
 
@@ -270,22 +271,22 @@
 
 
 <div class="viewcode-block" id="auc_p_val"><a class="viewcode-back" href="../../attacks.html#aisdc.metrics.auc_p_val">[docs]</a><span class="k">def</span> <span class="nf">auc_p_val</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the p-value for a given AUC</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the p-value for a given AUC.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    auc: float</span>
+<span class="sd">    auc : float</span>
 <span class="sd">        Observed AUC value</span>
-<span class="sd">    n_pos: int</span>
+<span class="sd">    n_pos : int</span>
 <span class="sd">        Number of positive examples</span>
-<span class="sd">    n_neg: int</span>
+<span class="sd">    n_neg : int</span>
 <span class="sd">        Number of negative examples</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    auc_p: float</span>
+<span class="sd">    auc_p : float</span>
 <span class="sd">        p-value of observing an AUC &gt; auc by chance</span>
-<span class="sd">    auc_std: float</span>
+<span class="sd">    auc_std : float</span>
 <span class="sd">        standard deviation of the NULL AUC diustribution (mean = 0.5)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">auc_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">_expected_auc_var</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_pos</span><span class="p">,</span> <span class="n">n_neg</span><span class="p">))</span>
@@ -305,18 +306,18 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    clf: sklearn.Model</span>
+<span class="sd">    clf : sklearn.Model</span>
 <span class="sd">        trained model</span>
-<span class="sd">    X_test: np.ndarray</span>
+<span class="sd">    X_test : np.ndarray</span>
 <span class="sd">        test data matrix</span>
-<span class="sd">    y_test: np.ndarray</span>
+<span class="sd">    y_test : np.ndarray</span>
 <span class="sd">        test data labels</span>
-<span class="sd">    permute_rows: boolean</span>
+<span class="sd">    permute_rows : boolean</span>
 <span class="sd">        a flag to indicate whether rows should be permuted</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    y_pred_proba: a list of probabilities for each sample in the dataset</span>
+<span class="sd">    y_pred_proba : a list of probabilities for each sample in the dataset</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -347,19 +348,20 @@
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate metrics, including attacker advantage for MIA binary.</span>
+
 <span class="sd">    Implemented as Definition 4 on https://arxiv.org/pdf/1709.01604.pdf</span>
-<span class="sd">    which is also implemented in tensorFlow-privacy https://github.com/tensorflow/privacy</span>
+<span class="sd">    which is also implemented in tensorFlow-privacy https://github.com/tensorflow/privacy.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    y_test: np.ndarray</span>
+<span class="sd">    y_test : np.ndarray</span>
 <span class="sd">        test data labels</span>
-<span class="sd">    y_pred_proba: np.ndarray of shape [x,2] and type float</span>
+<span class="sd">    y_pred_proba : np.ndarray of shape [x,2] and type float</span>
 <span class="sd">        predicted probabilities</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    metrics: dict</span>
+<span class="sd">    metrics : dict</span>
 <span class="sd">        dictionary of metric values</span>
 
 <span class="sd">    Notes</span>

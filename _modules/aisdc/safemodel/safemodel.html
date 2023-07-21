@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.0.5 documentation</title>
+  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -96,15 +96,12 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">joblib</span>
-
-<span class="c1"># import tensorflow as tf</span>
 <span class="kn">from</span> <span class="nn">dictdiffer</span> <span class="kn">import</span> <span class="n">diff</span>
 
-<span class="kn">from</span> <span class="nn">aisdc.attacks</span> <span class="kn">import</span> <span class="n">attribute_attack</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">worst_case_attack</span>
-<span class="kn">from</span> <span class="nn">aisdc.attacks.likelihood_attack</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># pylint: disable = import-error</span>
-    <span class="n">LIRAAttack</span><span class="p">,</span>
-    <span class="n">LIRAAttackArgs</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">aisdc.attacks.attribute_attack</span> <span class="kn">import</span> <span class="n">AttributeAttack</span>
+<span class="kn">from</span> <span class="nn">aisdc.attacks.likelihood_attack</span> <span class="kn">import</span> <span class="n">LIRAAttack</span>
+<span class="kn">from</span> <span class="nn">aisdc.attacks.target</span> <span class="kn">import</span> <span class="n">Target</span>
+<span class="kn">from</span> <span class="nn">aisdc.attacks.worst_case_attack</span> <span class="kn">import</span> <span class="n">WorstCaseAttack</span>
 
 <span class="c1"># pylint : disable=too-many-branches</span>
 <span class="kn">from</span> <span class="nn">.reporting</span> <span class="kn">import</span> <span class="n">get_reporting_string</span>
@@ -119,26 +116,24 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    key: string</span>
+<span class="sd">    key : string</span>
 <span class="sd">         The dictionary key to examine.</span>
-<span class="sd">    val: Any Type</span>
+<span class="sd">    val : Any Type</span>
 <span class="sd">         The expected value of the key.</span>
-<span class="sd">    cur_val: Any Type</span>
+<span class="sd">    cur_val : Any Type</span>
 <span class="sd">         The current value of the key.</span>
 <span class="sd">    ..</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    msg: string</span>
+<span class="sd">    msg : string</span>
 <span class="sd">         A message string.</span>
-<span class="sd">    disclosive: bool</span>
+<span class="sd">    disclosive : bool</span>
 <span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">cur_val</span> <span class="o">&lt;</span> <span class="n">val</span><span class="p">:</span>
@@ -164,26 +159,23 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    key: string</span>
+<span class="sd">    key : string</span>
 <span class="sd">         The dictionary key to examine.</span>
-<span class="sd">    val: Any Type</span>
+<span class="sd">    val : Any Type</span>
 <span class="sd">         The expected value of the key.</span>
-<span class="sd">    cur_val: Any Type</span>
+<span class="sd">    cur_val : Any Type</span>
 <span class="sd">         The current value of the key.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    msg: string</span>
+<span class="sd">    msg : string</span>
 <span class="sd">         A message string.</span>
-<span class="sd">    disclosive: bool</span>
+<span class="sd">    disclosive : bool</span>
 <span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
-
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">cur_val</span> <span class="o">&gt;</span> <span class="n">val</span><span class="p">:</span>
@@ -206,31 +198,26 @@
 <div class="viewcode-block" id="check_equal"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.check_equal">[docs]</a><span class="k">def</span> <span class="nf">check_equal</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cur_val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks equality value constraint.</span>
 
-
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    key: string</span>
+<span class="sd">    key : string</span>
 <span class="sd">         The dictionary key to examine.</span>
-<span class="sd">    val: Any Type</span>
+<span class="sd">    val : Any Type</span>
 <span class="sd">         The expected value of the key.</span>
-<span class="sd">    cur_val: Any Type</span>
+<span class="sd">    cur_val : Any Type</span>
 <span class="sd">         The current value of the key.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    msg: string</span>
+<span class="sd">    msg : string</span>
 <span class="sd">         A message string.</span>
-<span class="sd">    disclosive: bool</span>
+<span class="sd">    disclosive : bool</span>
 <span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
-
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cur_val</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
@@ -249,25 +236,23 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    key: string</span>
+<span class="sd">    key : string</span>
 <span class="sd">         The dictionary key to examine.</span>
-<span class="sd">    val: Any Type</span>
+<span class="sd">    val : Any Type</span>
 <span class="sd">         The expected value of the key.</span>
-<span class="sd">    cur_val: Any Type</span>
+<span class="sd">    cur_val : Any Type</span>
 <span class="sd">         The current value of the key.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    msg: string</span>
+<span class="sd">    msg : string</span>
 <span class="sd">         A message string.</span>
-<span class="sd">    disclosive: bool</span>
+<span class="sd">    disclosive : bool</span>
 <span class="sd">         A boolean value indicating whether the model is potentially disclosive.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cur_val</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
@@ -286,24 +271,22 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    model_type: string</span>
+<span class="sd">    model_type : string</span>
 <span class="sd">          A string describing the type of model. Default is &quot;None&quot;.</span>
 <span class="sd">    model:</span>
 <span class="sd">          The Machine Learning Model.</span>
 <span class="sd">    saved_model:</span>
 <span class="sd">          A saved copy of the Machine Learning Model used for comparison.</span>
-<span class="sd">    ignore_items: list</span>
+<span class="sd">    ignore_items : list</span>
 <span class="sd">          A list of items to ignore when comparing the model with the</span>
 <span class="sd">          saved_model.</span>
-<span class="sd">    examine_separately_items: list</span>
+<span class="sd">    examine_separately_items : list</span>
 <span class="sd">          A list of items to examine separately. These items are more</span>
 <span class="sd">          complex datastructures that cannot be compared directly.</span>
-<span class="sd">    filename: string</span>
+<span class="sd">    filename : string</span>
 <span class="sd">          A filename to save the model.</span>
-<span class="sd">    researcher: string</span>
+<span class="sd">    researcher : string</span>
 <span class="sd">          The researcher user-id used for logging</span>
-
-
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -314,16 +297,12 @@
 <span class="sd">    &gt;&gt;&gt; safeRFModel.fit(X, y)</span>
 <span class="sd">    &gt;&gt;&gt; safeRFModel.save(name=&quot;safe.pkl&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; safeRFModel.preliminary_check()</span>
-<span class="sd">    &gt;&gt;&gt; safeRFModel.request_release(filename=&quot;safe.pkl&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; safeRFModel.request_release(path=&quot;safe&quot;, ext=&quot;pkl&quot;, target=target)</span>
 <span class="sd">    WARNING: model parameters may present a disclosure risk:</span>
 <span class="sd">    - parameter min_samples_leaf = 1 identified as less than the recommended min value of 5.</span>
 <span class="sd">    Changed parameter min_samples_leaf = 5.</span>
 
 <span class="sd">    Model parameters are within recommended ranges.</span>
-
-
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SafeModel.__init__"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -345,7 +324,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span></div>
 
 <div class="viewcode-block" id="SafeModel.get_params"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;gets dictionary of parameter values</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets dictionary of parameter values</span>
 <span class="sd">        restricted to those expected by base classifier.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">the_params</span> <span class="o">=</span> <span class="p">{}</span>
@@ -367,7 +346,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
-<span class="sd">        name: string</span>
+<span class="sd">        name : string</span>
 <span class="sd">             The name of the file to save</span>
 
 <span class="sd">        Returns</span>
@@ -377,7 +356,6 @@
 <span class="sd">        -----</span>
 
 <span class="sd">        No return value</span>
-
 
 <span class="sd">        Optimizer is deliberately excluded.</span>
 <span class="sd">        To prevent possible to restart training and thus</span>
@@ -510,7 +488,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether a current model parameter violates a safe rule.</span>
-<span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
+<span class="sd">        Optionally fixes violations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;operator&quot;</span><span class="p">]</span>
@@ -537,7 +516,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">apply_constraints</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate a logical AND rule.</span>
-<span class="sd">        Optionally fixes violations.&quot;&quot;&quot;</span>
+<span class="sd">        Optionally fixes violations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;subexpr&quot;</span><span class="p">]:</span>
@@ -564,31 +544,27 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether current model parameters violate the safe rules.</span>
 <span class="sd">        Optionally fixes violations.</span>
 
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
-<span class="sd">        verbose: bool</span>
+<span class="sd">        verbose : bool</span>
 <span class="sd">             A boolean value to determine increased output level.</span>
 
-<span class="sd">        apply_constraints: bool</span>
+<span class="sd">        apply_constraints : bool</span>
 <span class="sd">             A boolean to determine whether identified constraints are</span>
 <span class="sd">             to be upheld and applied.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        msg: string</span>
+<span class="sd">        msg : string</span>
 <span class="sd">           A message string</span>
-<span class="sd">        disclosive: bool</span>
+<span class="sd">        disclosive : bool</span>
 <span class="sd">           A boolean value indicating whether the model is potentially</span>
 <span class="sd">           disclosive.</span>
 
-
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">disclosive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -620,7 +596,7 @@
 
 <div class="viewcode-block" id="SafeModel.get_current_and_saved_models"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.get_current_and_saved_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_and_saved_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes a copy of self.__dict__</span>
-<span class="sd">        and splits it into dicts for the current and saved versions</span>
+<span class="sd">        and splits it into dicts for the current and saved versions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_model</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -656,9 +632,10 @@
 <div class="viewcode-block" id="SafeModel.examine_seperate_items"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.examine_seperate_items">[docs]</a>    <span class="k">def</span> <span class="nf">examine_seperate_items</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_vals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_vals</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;comparison of more complex structures</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Comparison of more complex structures</span>
 <span class="sd">        in the super class we just check these model-specific items exist</span>
-<span class="sd">        in both current and saved copies&quot;&quot;&quot;</span>
+<span class="sd">        in both current and saved copies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -681,7 +658,7 @@
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 
 <div class="viewcode-block" id="SafeModel.posthoc_check"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.posthoc_check">[docs]</a>    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run.&quot;&quot;&quot;</span>
 
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -738,32 +715,28 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder function for additional posthoc checks e.g. keras this</span>
-<span class="sd">        version just checks that any lists have the same contents</span>
-
+<span class="sd">        version just checks that any lists have the same contents.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
-<span class="sd">        curr_separate: python dictionary</span>
+<span class="sd">        curr_separate : python dictionary</span>
 
-<span class="sd">        saved_separate: python dictionary</span>
-
+<span class="sd">        saved_separate : python dictionary</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        msg: string</span>
+<span class="sd">        msg : string</span>
 <span class="sd">        A message string</span>
-<span class="sd">        disclosive: bool</span>
+<span class="sd">        disclosive : bool</span>
 <span class="sd">        A boolean value to indicate whether the model is potentially disclosive.</span>
-
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 
 <span class="sd">        posthoc checking makes sure that the two dicts have the same set of</span>
 <span class="sd">        keys as defined in the list self.examine_separately</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -790,128 +763,81 @@
 
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 
-<div class="viewcode-block" id="SafeModel.request_release"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.request_release">[docs]</a>    <span class="k">def</span> <span class="nf">request_release</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span> <span class="n">data_obj</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
+<div class="viewcode-block" id="SafeModel.request_release"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.request_release">[docs]</a>    <span class="k">def</span> <span class="nf">request_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves model to filename specified and creates a report for the TRE</span>
 <span class="sd">        output checkers.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-
-<span class="sd">        filename: string</span>
-<span class="sd">        The filename used to save the model</span>
-
-<span class="sd">        dataobj: object of type Data</span>
-<span class="sd">        Contains train/test data and encoding dictionary needed to run attacks</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-
+<span class="sd">        path : string</span>
+<span class="sd">            Path to save the outputs.</span>
+<span class="sd">        ext : str</span>
+<span class="sd">            File extension defining the model saved format, e.g., &quot;pkl&quot; or &quot;sav&quot;.</span>
+<span class="sd">        target : attacks.target.Target</span>
+<span class="sd">            Contains model and dataset information.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">         1. The dataset object is saved in a file called filebase_data.json</span>
-<span class="sd">         (where filebase= filename without the extension)</span>
-<span class="sd">         for reference/use by the TRE.</span>
-<span class="sd">         Data should never be held or stored with the model.</span>
-<span class="sd">         Clearly filebase_data.json mst never leave the TRE.</span>
-<span class="sd">         2. If data_obj is not null, then worst case MIA and attribute inference</span>
-<span class="sd">         attacks are called via run_attack.</span>
-<span class="sd">         Outputs from the attacks will be stored in filebase_attack_res.json</span>
-
-
-
+<span class="sd">        If target is not null, then worst case MIA and attribute inference</span>
+<span class="sd">        attacks are called via run_attack.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You must provide the name of the file you want to save your model&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For security reasons, this will overwrite previous versions&quot;</span><span class="p">)</span>
+        <span class="c1"># perform checks</span>
+        <span class="n">msg_prel</span><span class="p">,</span> <span class="n">disclosive_prel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">msg_post</span><span class="p">,</span> <span class="n">disclosive_post</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posthoc_check</span><span class="p">()</span>
+        <span class="c1"># prepare results</span>
+        <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;researcher&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span><span class="p">,</span>
+            <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">msg_prel</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;k_anonymity&quot;</span><span class="p">):</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;k_anonymity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">disclosive_prel</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">disclosive_post</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Proceed to next step of checking&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="n">msg_prel</span><span class="p">,</span> <span class="n">disclosive_prel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">msg_post</span><span class="p">,</span> <span class="n">disclosive_post</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posthoc_check</span><span class="p">()</span>
-
-            <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;researcher&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span><span class="p">,</span>
-                <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
-                <span class="s2">&quot;model_save_file&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span>
-                <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">msg_prel</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;k_anonymity&quot;</span><span class="p">):</span>
-                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;k_anonymity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">disclosive_prel</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">disclosive_post</span><span class="p">:</span>
-                <span class="n">output</span><span class="p">[</span>
-                    <span class="s2">&quot;recommendation&quot;</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Run file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> through next step of checking procedure&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Do not allow release&quot;</span>
-                <span class="n">output</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg_prel</span> <span class="o">+</span> <span class="n">msg_post</span>
-
-            <span class="c1">##Run attacks programmatically if possible</span>
-            <span class="k">if</span> <span class="n">data_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># make filenames and save a copy of the data</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_data.pickle&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span>
-                <span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data_obj</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
-
-                <span class="k">for</span> <span class="n">attack_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;worst_case&quot;</span><span class="p">,</span> <span class="s2">&quot;lira&quot;</span><span class="p">,</span> <span class="s2">&quot;attribute&quot;</span><span class="p">]:</span>
-                    <span class="n">output</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_attack</span><span class="p">(</span>
-                        <span class="n">data_obj</span><span class="p">,</span>
-                        <span class="n">attack_name</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">_res&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-
-            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
-            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span>
-
-            <span class="n">outputfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">researcher</span> <span class="o">+</span> <span class="s2">&quot;_checkfile.json&quot;</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span>
-            <span class="c1"># load existing results</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">outputfilename</span><span class="p">):</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputfilename</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-                        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                            <span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> could not be loaded - overwiting&quot;</span><span class="p">,</span> <span class="n">outputfilename</span>
-                        <span class="p">)</span>
-
-            <span class="c1"># write to disk</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputfilename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">report</span><span class="o">.</span><span class="n">NumpyArrayEncoder</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Error: safemodel could not write non-serialisable &quot;</span>
-                    <span class="s2">&quot; outputs to file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">outputfilename</span><span class="p">,</span>
-                <span class="p">)</span></div>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Do not allow release&quot;</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg_prel</span> <span class="o">+</span> <span class="n">msg_post</span>
+        <span class="c1"># Run attacks programmatically if possible</span>
+        <span class="n">attack_results_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/attack_results.json&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">attack_results_filename</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attack_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;worst_case&quot;</span><span class="p">,</span> <span class="s2">&quot;lira&quot;</span><span class="p">,</span> <span class="s2">&quot;attribute&quot;</span><span class="p">]:</span>
+                <span class="n">output</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_attack</span><span class="p">(</span>
+                    <span class="n">target</span><span class="p">,</span> <span class="n">attack_name</span><span class="p">,</span> <span class="n">attack_results_filename</span>
+                <span class="p">)</span>
+        <span class="c1"># add timestamp</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span>
+        <span class="c1"># save output</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">Target</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">add_safemodel_results</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SafeModel.run_attack"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.run_attack">[docs]</a>    <span class="k">def</span> <span class="nf">run_attack</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data_obj</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">Target</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">attack_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;worst_case&quot;</span><span class="p">,</span>
+        <span class="n">outputdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RES&quot;</span><span class="p">,</span>
         <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a specified attack on the trained model and saves a report to file</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a specified attack on the trained model and saves a report to file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        data_obj: Data</span>
-<span class="sd">        the dataset in the form of a Data object</span>
-
-<span class="sd">        attack_name: string</span>
-
-<span class="sd">        filebasename: string</span>
-<span class="sd">        Report will be saved to filebasename.json</span>
-
+<span class="sd">        target : Target</span>
+<span class="sd">            The target in the form of a Target object.</span>
+<span class="sd">        attack_name : str</span>
+<span class="sd">            Name of the attack to run.</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            Name of a .json file to save report.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        dict of meta data results</span>
+<span class="sd">        dict</span>
+<span class="sd">            Metadata results.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -921,61 +847,45 @@
 <span class="sd">        Single Attribute Inference: attributes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;worst_case&quot;</span><span class="p">:</span>
-            <span class="n">attack_args</span> <span class="o">=</span> <span class="n">worst_case_attack</span><span class="o">.</span><span class="n">WorstCaseAttackArgs</span><span class="p">(</span>
+            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">WorstCaseAttack</span><span class="p">(</span>
                 <span class="n">n_reps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="c1"># number of baseline (dummy) experiments to do</span>
                 <span class="n">n_dummy_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="c1"># Threshold to determine significance of things</span>
                 <span class="n">p_thresh</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-                <span class="c1"># Filename arguments needed by the code, meaningless if run programmatically</span>
-                <span class="n">in_sample_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">out_sample_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="c1"># Proportion of data to use as a test set for the attack model;</span>
+                <span class="n">training_preds_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">test_preds_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">test_prop</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                <span class="c1"># Report name is None - don&#39;t make json or pdf files</span>
-                <span class="n">report_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">worst_case_attack</span><span class="o">.</span><span class="n">WorstCaseAttack</span><span class="p">(</span><span class="n">attack_args</span><span class="p">)</span>
-            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">data_obj</span><span class="p">,</span> <span class="n">target_model</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
             <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
-
         <span class="k">elif</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;lira&quot;</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="n">LIRAAttackArgs</span><span class="p">(</span>
-                <span class="n">n_shadow_models</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">report_name</span><span class="o">=</span><span class="s2">&quot;lira_example_report&quot;</span>
+            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
+                <span class="n">n_shadow_models</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">data_obj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>  <span class="c1"># also makes .pdf and .json files</span>
-            <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
-
-        <span class="k">elif</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;attribute&quot;</span><span class="p">:</span>
-            <span class="n">attack_args</span> <span class="o">=</span> <span class="n">attribute_attack</span><span class="o">.</span><span class="n">AttributeAttackArgs</span><span class="p">(</span>
-                <span class="n">report_name</span><span class="o">=</span><span class="s2">&quot;aia_example&quot;</span>
-            <span class="p">)</span>
-            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">attribute_attack</span><span class="o">.</span><span class="n">AttributeAttack</span><span class="p">(</span><span class="n">attack_args</span><span class="p">)</span>
-            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">data_obj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
             <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
-
+        <span class="k">elif</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;attribute&quot;</span><span class="p">:</span>
+            <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">AttributeAttack</span><span class="p">(</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;outcome&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;unrecognised attack type requested&quot;</span>
-
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;attack </span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">, metadata </span><span class="si">{</span><span class="n">metadata</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">report</span><span class="o">.</span><span class="n">NumpyArrayEncoder</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="c1"># not covered in tests as all atttacks prodice simple json so far</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;couldn&#39;t serialise metadata </span><span class="si">{</span><span class="n">metadata</span><span class="si">}</span><span class="s2"> for attack </span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">metadata</span></div>
 
 <div class="viewcode-block" id="SafeModel.__str__"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns string with model description.</span>
-<span class="sd">        No point writing a test, especially as it depends on username</span>
+<span class="sd">        No point writing a test, especially as it depends on username.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">+</span> <span class="s2">&quot; with parameters: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div></div>
 </pre></div>
