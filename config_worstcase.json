@@ -1,1 +1,0 @@
-{"n_reps": 20, "n_dummy_reps": 1, "p_thresh": 0.05, "test_prop": 0.5, "train_beta": 5, "test_beta": 2, "output_dir": "outputs_worstcase"}

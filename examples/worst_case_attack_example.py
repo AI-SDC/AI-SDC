@@ -235,3 +235,100 @@ print(
 print("Programmatic example2 finished")
 print("****************************")
 
+print()
+print()
+print("Command line example starting")
+print("*****************************")
+# Command line version. The same functionality as above, but the attack is run from
+# the command line rather than programmatically
+
+# [Researcher] Dump the training and test predictions to .csv files
+np.savetxt("train_preds.csv", train_preds, delimiter=",")
+np.savetxt("test_preds.csv", test_preds, delimiter=",")
+
+# [Researcher] Dump the target model and target data
+target.save(path="target_model_worstcase")
+
+# [TRE] Runs the attack. This would be done on the command line, here we do that with os.system
+# [TRE] First they access the help to work out which parameters they need to set
+os.system(f"{sys.executable} -m aisdc.attacks.worst_case_attack run-attack --help")
+
+# [TRE] Then they run the attack
+# Example 1: Worstcase attack through commandline by passing parameters
+os.system(
+    f"{sys.executable} -m aisdc.attacks.worst_case_attack run-attack "
+    "--training-preds-filename train_preds.csv "
+    "--test-preds-filename test_preds.csv "
+    "--n-reps 10 "
+    "--output-dir outputs_worstcase "
+    # "--report-name commandline_report_worstcase "
+    "--n-dummy-reps 1 "
+    "--test-prop 0.1 "
+    "--train-beta 5 "
+    "--test-beta 2 "
+    "--attack-metric-success-name P_HIGHER_AUC "
+    "--attack-metric-success-thresh 0.05 "
+    "--attack-metric-success-comp-type lte "
+    "--attack-metric-success-count-thresh 2 "
+    "--attack-fail-fast "
+)
+
+# [TRE] Runs the attack. This would be done on the command line, here we do that with os.system
+# [TRE] First they access the help to work out which parameters they need to set
+os.system(
+    f"{sys.executable} -m aisdc.attacks.worst_case_attack run-attack-from-configfile --help"
+)
+
+# Example 2: Worstcase attack by passing a configuratation file name for loading parameters
+config = {
+    "n_reps": 10,
+    "n_dummy_reps": 1,
+    "p_thresh": 0.05,
+    "test_prop": 0.5,
+    "train_beta": 5,
+    "test_beta": 2,
+    "output_dir": "outputs_worstcase",
+    # "report_name": "report_worstcase",
+    "training_preds_filename": "train_preds.csv",
+    "test_preds_filename": "test_preds.csv",
+    "attack_metric_success_name": "P_HIGHER_AUC",
+    "attack_metric_success_thresh": 0.05,
+    "attack_metric_success_comp_type": "lte",
+    "attack_metric_success_count_thresh": 2,
+    "attack_fail_fast": True,
+}
+
+with open("config_worstcase_cmd.json", "w", encoding="utf-8") as f:
+    f.write(json.dumps(config))
+
+os.system(
+    f"{sys.executable} -m aisdc.attacks.worst_case_attack run-attack-from-configfile "
+    "--attack-config-json-file-name config_worstcase_cmd.json "
+    "--attack-target-folder-path target_model_worstcase "
+)
+
+# Example 3: Worstcase attack by passing a configuratation file name for loading parameters
+config = {
+    "n_reps": 10,
+    "n_dummy_reps": 1,
+    "p_thresh": 0.05,
+    "test_prop": 0.5,
+    "train_beta": 5,
+    "test_beta": 2,
+    "output_dir": "outputs_worstcase",
+    # "report_name": "report_worstcase",
+    "training_preds_filename": "train_preds.csv",
+    "test_preds_filename": "test_preds.csv",
+}
+
+with open("config_worstcase_cmd.json", "w", encoding="utf-8") as f:
+    f.write(json.dumps(config))
+
+os.system(
+    f"{sys.executable} -m aisdc.attacks.worst_case_attack run-attack-from-configfile "
+    "--attack-config-json-file-name config_worstcase_cmd.json "
+    "--attack-target-folder-path target_model_worstcase "
+)
+
+# [TRE] The code produces a .pdf report (example_report.pdf) and a .json file (example_report.json)
+# that can be injesetd by the shiny app
