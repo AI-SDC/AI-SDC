@@ -16,7 +16,6 @@ from typing import Any
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
 
 from aisdc import metrics
 from aisdc.attacks import report
@@ -33,9 +32,9 @@ P_THRESH = 0.05
 class WorstCaseAttack(Attack):
     """Class to wrap the worst case attack code."""
 
-    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-instance-attributes, too-many-lines
 
-    def __init__(  # pylint: disable = too-many-arguments, too-many-locals
+    def __init__(  # pylint: disable = too-many-arguments, too-many-locals, too-many-statements
         self,
         n_reps: int = 10,
         p_thresh: float = 0.05,
@@ -326,22 +325,56 @@ class WorstCaseAttack(Attack):
             train_preds, test_preds, train_correct, test_correct
         )
 
+        indices = np.arange(0, self.n_rows_in + self.n_rows_out, 1)
+
+        row_to_confidence = {i: [] for i in range(self.n_rows_in + self.n_rows_out)}
+
         mia_metrics = []
 
         failfast_metric_summary = FailFast(self)
 
         for rep in range(self.n_reps):
             logger.info("Rep %d of %d", rep + 1, self.n_reps)
-            mi_train_x, mi_test_x, mi_train_y, mi_test_y = train_test_split(
-                mi_x, mi_y, test_size=self.test_prop, stratify=mi_y
-            )
+            # mi_train_x, mi_test_x, mi_train_y, mi_test_y = train_test_split(
+            #     mi_x, mi_y, test_size=self.test_prop, stratify=mi_y
+            # )
+
+            np.random.seed(rep)  # Reproducibility
+            these_idx = np.random.choice(indices, self.n_rows_in, replace=False)
+            mi_train_x = mi_x[these_idx, :]
+            mi_train_y = mi_y[these_idx]
+
+            mi_test_x = mi_x [np.setdiff1d(indices,these_idx),]
+            mi_test_y = mi_y [np.setdiff1d(indices,these_idx)]
+
             attack_classifier = self.mia_attack_model(**self.mia_attack_model_hyp)
             attack_classifier.fit(mi_train_x, mi_train_y)
-            y_pred_proba, y_test = metrics.get_probabilities(
-                attack_classifier, mi_test_x, mi_test_y, permute_rows=True
+
+            # y_pred_proba_train = metrics.get_probabilities(
+            #     attack_classifier, mi_train_x#, mi_train_y#, permute_rows=True
+            # )
+            _ = metrics.get_probabilities(
+                attack_classifier, mi_train_x#, mi_train_y#, permute_rows=True
             )
 
-            mia_metrics.append(metrics.get_metrics(y_pred_proba, y_test))
+            y_pred_train =attack_classifier.predict(mi_train_x)
+
+            y_pred_proba = metrics.get_probabilities(
+                attack_classifier, mi_test_x#, mi_test_y#, permute_rows=True
+            )
+
+            y_pred = attack_classifier.predict(mi_test_x)
+
+            idx_train = 0
+            idx_test = 0
+            for i in range(self.n_rows_in + self.n_rows_out):
+                if i in these_idx:
+                    row_to_confidence[i].append(y_pred_train[idx_train])
+                    idx_train+=1
+                else:
+                    row_to_confidence[i].append(y_pred[idx_test])
+                    idx_test+=1
+            mia_metrics.append(metrics.get_metrics(y_pred_proba, mi_test_y))
 
             if self.include_model_correct_feature and train_correct is not None:
                 # Compute the Yeom TPR and FPR
@@ -362,7 +395,10 @@ class WorstCaseAttack(Attack):
                 break
 
         logger.info("Finished simulating attacks")
-
+        print("Hellossss")
+        # print(mi_y)
+        print(row_to_confidence)
+        print("Hellossss")
         mia_metrics_dict = {}
         mia_metrics_dict["mia_metrics"] = mia_metrics
         mia_metrics_dict["failfast_metric_summary"] = failfast_metric_summary

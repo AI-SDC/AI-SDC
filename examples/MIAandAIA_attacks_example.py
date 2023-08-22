@@ -202,13 +202,13 @@ if __name__ == "__main__":
 
     # [TRE] Runs the attack. This would be done on the command line, here we do that with os.system
     # [TRE] First they access the help to work out which parameters they need to set
-    os.system(
-        f"{sys.executable} -m aisdc.attacks.multiple_attacks run-attack-from-configfile --help"
-    )
+    # os.system(
+    #     f"{sys.executable} -m aisdc.attacks.multiple_attacks run-attack-from-configfile --help"
+    # )
 
-    # # [TRE] Then they run the attack
-    os.system(
-        f"{sys.executable} -m aisdc.attacks.multiple_attacks run-attack-from-configfile "
-        "--attack-config-json-file-name single_config.json "
-        "--attack-target-folder-path target "
-    )
+    # # # [TRE] Then they run the attack
+    # os.system(
+    #     f"{sys.executable} -m aisdc.attacks.multiple_attacks run-attack-from-configfile "
+    #     "--attack-config-json-file-name single_config.json "
+    #     "--attack-target-folder-path target "
+    # )
