@@ -4,25 +4,24 @@ This will create a combination of hyperparameters for each
 classifier and generate a results table to summarise them.
 """
 
+import importlib
+import logging
 import argparse
 import hashlib
 import json
 import os
 import sys
 from itertools import product
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-import importlib
-import logging
 from typing import TypedDict
-
 import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
-
 from aisdc.attacks import worst_case_attack  # pylint: disable = import-error
+from aisdc.attacks.likelihood_attack import LIRAAttack  # pylint: disable = import-error
 from aisdc.attacks.target import Target  # pylint: disable = import-error
 from aisdc.preprocessing import loaders  # pylint: disable = import-error
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 logger = logging.getLogger(__file__)
 
@@ -30,8 +29,8 @@ logger = logging.getLogger(__file__)
 class ResultsEntry:  # pylint: disable=too-few-public-methods
     """Class that experimental results are put into. Provides them back as a dataframe."""
 
-    def __init__(
-        self,  # pylint: disable=too-many-arguments, too-many-locals
+    def __init__(# pylint: disable=too-many-arguments, too-many-locals
+        self,
         model_data_param_id,
         param_id,
         dataset_name,
@@ -57,16 +56,16 @@ class ResultsEntry:  # pylint: disable=too-few-public-methods
             target_metrics = {f"target_{k}": v for k, v in target_metrics.items()}
         if lira_metrics is None:
             lira_metrics = {}
-        else:
-            lira_metrics = {f"lira_{k}": v for k, v in lira_metrics.items()}
+        #else:
+        #    lira_metrics = {f"lira_{k}": v for k, v in lira_metrics.items()}
         if mia_metrics is None:
             mia_metrics = {}
-        else:
-            mia_metrics = {f"mia_{k}": v for k, v in mia_metrics.items()}
+        #else:
+        #    mia_metrics = {f"mia_{k}": v for k, v in mia_metrics.items()}
         if aia_metrics is None:
             aia_metrics = {}
-        else:
-            aia_metrics = {f"aia_{k}": v for k, v in aia_metrics.items()}
+        #else:
+        #    aia_metrics = {f"aia_{k}": v for k, v in aia_metrics.items()}
         if mia_hyp is None:
             mia_hyp = {}
         else:
@@ -119,9 +118,9 @@ def read_experiment_config_file(experiment_config_file: str) -> TypedDict:
         return json.loads(config_handle.read())
 
 
-def run_loop(
+def run_loop(# pylint: disable=too-many-locals, too-many-arguments, too-many-statements
     experiment_config_file: str,
-) -> pd.DataFrame:  # pylint: disable=too-many-locals
+) -> pd.DataFrame:
     """
     Run the experimental loop defined in the json config_file. Return
     a dataframe of results (which is also saved as a file).
@@ -199,7 +198,7 @@ def run_loop(
                     target_model_path, f"{target_model_id}.pkl"
                 )  # pylint: disable = line-too-long
                 create_directory(target_model_path)
-
+                print(f"new set of hyperparameters for {classifier_name} {params}")
                 # LOAD or CREATE target model
                 if os.path.isfile(target_model_filename):
                     # load the target model file
@@ -220,7 +219,8 @@ def run_loop(
                 target.add_processed_data(train_X, train_y, test_X, test_y)
 
                 for scenario in scenarios:
-                    if scenario == "worst_case" or scenario == "WorstCase":
+                    print(f"attack scenario {scenario}")
+                    if scenario in ("worst_case", "WorstCase"):
                         attack_obj = worst_case_attack.WorstCaseAttack(
                             # How many attacks to run -- in each the attack model is
                             #  trained on a different
@@ -242,7 +242,7 @@ def run_loop(
                                 dataset_name=dataset,
                                 scenario_name=scenario,
                                 classifier_name=classifier_name,
-                                target_generalisation_error=target._Target__ge(),
+                                target_generalisation_error=target._Target__ge(),  # pylint: disable=protected-access
                                 target_clf_file=target_model_filename,
                                 attack_classifier_name=str(
                                     attack_obj.get_params()["mia_attack_model"]()
@@ -252,7 +252,6 @@ def run_loop(
                                 params=params,
                                 target_metrics=None,
                                 mia_metrics=repetition,
-                                aia_metrics=None,
                                 mia_hyp=attack_obj.get_params()["mia_attack_model_hyp"],
                             )
                             results = pd.concat(
@@ -260,7 +259,32 @@ def run_loop(
                                 ignore_index=True,
                                 sort=False,
                             )
-                    # elif lira
+                    elif scenario == "lira":
+                        # [TRE] Example 1: sets up the attack
+                        attack_obj = LIRAAttack(
+                            n_shadow_models=100,
+                            output_dir="outputs_lira"
+                        )
+                        attack_obj.attack(target)
+                        l = ['fpr', 'tpr', 'roc_thresh']
+                        lira_metrics = {k:v for k,v in attack_obj.attack_metrics[0].items() if k not in l} # pylint: disable = line-too-long
+                        attack_results = ResultsEntry(  # f'full_id_{i}',
+                            model_data_param_id=target_model_id,
+                            param_id=param_id,
+                            dataset_name=dataset,
+                            scenario_name=scenario,
+                            classifier_name=classifier_name,
+                            target_generalisation_error=target._Target__ge(), # pylint: disable=protected-access
+                            target_clf_file=target_model_filename,
+                            params=params,
+                            target_metrics=None,
+                            lira_metrics=lira_metrics
+                        )
+                        results = pd.concat(
+                                [results, attack_results.to_dataframe()],
+                                ignore_index=True,
+                                sort=False,
+                            )
     results.to_csv(results_filename, index=False)
     return results
 
