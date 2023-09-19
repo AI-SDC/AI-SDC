@@ -13,15 +13,17 @@ import os
 import sys
 from itertools import product
 from typing import TypedDict
+import numpy as np
 import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from aisdc.attacks import worst_case_attack  # pylint: disable = import-error
-from aisdc.attacks.likelihood_attack import LIRAAttack  # pylint: disable = import-error
-from aisdc.attacks.target import Target  # pylint: disable = import-error
-from aisdc.preprocessing import loaders  # pylint: disable = import-error
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) # pylint: disable = wrong-import-order
+from aisdc.attacks import worst_case_attack  # pylint: disable = import-error, wrong-import-position
+from aisdc.attacks.likelihood_attack import LIRAAttack  # pylint: disable = import-error, wrong-import-position
+from aisdc.attacks.target import Target  # pylint: disable = import-error, wrong-import-position
+from aisdc.preprocessing import loaders  # pylint: disable = import-error, wrong-import-position
+
 
 logger = logging.getLogger(__file__)
 
@@ -118,7 +120,7 @@ def read_experiment_config_file(experiment_config_file: str) -> TypedDict:
         return json.loads(config_handle.read())
 
 
-def run_loop(# pylint: disable=too-many-locals, too-many-arguments, too-many-statements
+def run_loop(# pylint: disable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
     experiment_config_file: str,
 ) -> pd.DataFrame:
     """
@@ -205,6 +207,14 @@ def run_loop(# pylint: disable=too-many-locals, too-many-arguments, too-many-sta
                     target_model = joblib.load(target_model_filename)
                 else:
                     target_model = clf_class(**params)
+                    if 'dp' in classifier_name.lower():
+                        # if data is not binary stop
+                        try:
+                            if not isinstance(train_X, np.ndarray):
+                                # transform features to ndarray
+                                train_X = train_X.values
+                        except ValueError as e:
+                            print(e)
                     # Train the target model
                     target_model.fit(train_X, train_y)
                     # save the target model
