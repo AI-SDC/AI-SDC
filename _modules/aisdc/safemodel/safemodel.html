@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.0.6 documentation</title>
+  <title>aisdc.safemodel.safemodel &mdash; GRAIMATTER 1.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -89,7 +89,6 @@
 <span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">PicklingError</span>
@@ -798,12 +797,11 @@
             <span class="n">output</span><span class="p">[</span><span class="s2">&quot;recommendation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Do not allow release&quot;</span>
             <span class="n">output</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg_prel</span> <span class="o">+</span> <span class="n">msg_post</span>
         <span class="c1"># Run attacks programmatically if possible</span>
-        <span class="n">attack_results_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/attack_results.json&quot;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">attack_results_filename</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">attack_results_filename</span> <span class="o">=</span> <span class="s2">&quot;attack_results&quot;</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">attack_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;worst_case&quot;</span><span class="p">,</span> <span class="s2">&quot;lira&quot;</span><span class="p">,</span> <span class="s2">&quot;attribute&quot;</span><span class="p">]:</span>
                 <span class="n">output</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">attack_name</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_attack</span><span class="p">(</span>
-                    <span class="n">target</span><span class="p">,</span> <span class="n">attack_name</span><span class="p">,</span> <span class="n">attack_results_filename</span>
+                    <span class="n">target</span><span class="p">,</span> <span class="n">attack_name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">attack_results_filename</span>
                 <span class="p">)</span>
         <span class="c1"># add timestamp</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -819,9 +817,9 @@
 <div class="viewcode-block" id="SafeModel.run_attack"><a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.run_attack">[docs]</a>    <span class="k">def</span> <span class="nf">run_attack</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">Target</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">attack_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;worst_case&quot;</span><span class="p">,</span>
-        <span class="n">outputdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RES&quot;</span><span class="p">,</span>
-        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span>
+        <span class="n">attack_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;RES&quot;</span><span class="p">,</span>
+        <span class="n">report_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a specified attack on the trained model and saves a report to file.</span>
 
@@ -831,7 +829,9 @@
 <span class="sd">            The target in the form of a Target object.</span>
 <span class="sd">        attack_name : str</span>
 <span class="sd">            Name of the attack to run.</span>
-<span class="sd">        filename : str</span>
+<span class="sd">        output_dir : str</span>
+<span class="sd">            Name of the directory to store .json and .pdf output reports</span>
+<span class="sd">        report_name : str</span>
 <span class="sd">            Name of a .json file to save report.</span>
 
 <span class="sd">        Returns</span>
@@ -854,8 +854,8 @@
                 <span class="n">training_preds_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">test_preds_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">test_prop</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
-                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">report_name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
@@ -863,16 +863,16 @@
         <span class="k">elif</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;lira&quot;</span><span class="p">:</span>
             <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
                 <span class="n">n_shadow_models</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
-                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">report_name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
             <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;attribute&quot;</span><span class="p">:</span>
             <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">AttributeAttack</span><span class="p">(</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
-                <span class="n">report_name</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">report_name</span><span class="o">=</span><span class="n">report_name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>

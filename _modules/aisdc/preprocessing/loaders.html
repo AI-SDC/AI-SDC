@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.preprocessing.loaders &mdash; GRAIMATTER 1.0.6 documentation</title>
+  <title>aisdc.preprocessing.loaders &mdash; GRAIMATTER 1.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -658,10 +658,10 @@
             <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="c1"># merge data</span>
             <span class="n">tx_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">tx_data</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
-        <span class="c1"># remove uncessary variables</span>
+        <span class="c1"># remove unnecessary variables</span>
         <span class="k">del</span> <span class="n">df</span>
 
-        <span class="c1"># Risk moratality, make it binary</span>
+        <span class="c1"># Risk mortality, make it binary</span>
         <span class="c1"># 1 Minor</span>
         <span class="c1"># 2 Moderate</span>
         <span class="c1"># 3 Major</span>

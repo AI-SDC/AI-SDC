@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.attacks.worst_case_attack &mdash; GRAIMATTER 1.0.6 documentation</title>
+  <title>aisdc.attacks.worst_case_attack &mdash; GRAIMATTER 1.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -84,7 +84,7 @@
 <span class="sd">Worst_case_attack.py.</span>
 
 <span class="sd">Runs a worst case attack based upon predictive probabilities stored in two .csv files</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># pylint: disable = too-many-lines</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -93,7 +93,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
@@ -117,9 +117,10 @@
 
     <span class="c1"># pylint: disable=too-many-instance-attributes</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-arguments, too-many-locals</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-arguments, too-many-locals, too-many-statements</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">reproduce_split</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
         <span class="n">p_thresh</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">n_dummy_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">train_beta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -150,6 +151,9 @@
 <span class="sd">        n_reps : int</span>
 <span class="sd">            number of attacks to run -- in each iteration an attack model</span>
 <span class="sd">            is trained on a different subset of the data</span>
+<span class="sd">        reproduce_split : int</span>
+<span class="sd">            variable that controls the reproducibility of the data split.</span>
+<span class="sd">            It can be an integer or a list of integers of length n_reps. Default : 5.</span>
 <span class="sd">        p_thresh : float</span>
 <span class="sd">            threshold to determine significance of things. For instance auc_p_value and pdif_vals</span>
 <span class="sd">        n_dummy_reps : int</span>
@@ -208,6 +212,36 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_reps</span> <span class="o">=</span> <span class="n">n_reps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reproduce_split</span> <span class="o">=</span> <span class="n">reproduce_split</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">reproduce_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">reproduce_split</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">,</span> <span class="n">reproduce_split</span> <span class="o">+</span> <span class="n">n_reps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">]</span>  <span class="c1"># pylint: disable = line-too-long</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">reproduce_split</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># remove potential duplicates</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_reps</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_reps</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;split&quot;</span><span class="p">,</span> <span class="n">reproduce_split</span><span class="p">,</span> <span class="s2">&quot;nreps&quot;</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">)</span>
+                <span class="n">reproduce_split</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_reps</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;WARNING: the length of the parameter &#39;reproduce_split&#39;</span><span class="se">\</span>
+<span class="s2">                     is longer than n_reps. Values have been removed.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># assign values to match length of n_reps</span>
+                <span class="n">reproduce_split</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">reproduce_split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">n_reps</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">reproduce_split</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;WARNING: the length of the parameter &#39;reproduce_split&#39;</span><span class="se">\</span>
+<span class="s2">                     is shorter than n_reps. Vales have been added.&quot;</span>
+                <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reproduce split now&quot;</span><span class="p">,</span> <span class="n">reproduce_split</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reproduce_split</span> <span class="o">=</span> <span class="n">reproduce_split</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p_thresh</span> <span class="o">=</span> <span class="n">p_thresh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_dummy_reps</span> <span class="o">=</span> <span class="n">n_dummy_reps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_beta</span> <span class="o">=</span> <span class="n">train_beta</span>
@@ -413,9 +447,16 @@
         <span class="n">failfast_metric_summary</span> <span class="o">=</span> <span class="n">FailFast</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_reps</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Rep </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reps</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Rep </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%d</span><span class="s2"> split </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reproduce_split</span><span class="p">[</span><span class="n">rep</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="n">mi_train_x</span><span class="p">,</span> <span class="n">mi_test_x</span><span class="p">,</span> <span class="n">mi_train_y</span><span class="p">,</span> <span class="n">mi_test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-                <span class="n">mi_x</span><span class="p">,</span> <span class="n">mi_y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_prop</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">mi_y</span>
+                <span class="n">mi_x</span><span class="p">,</span>
+                <span class="n">mi_y</span><span class="p">,</span>
+                <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_prop</span><span class="p">,</span>
+                <span class="n">stratify</span><span class="o">=</span><span class="n">mi_y</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reproduce_split</span><span class="p">[</span><span class="n">rep</span><span class="p">],</span>
+                <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">attack_classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mia_attack_model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_attack_model_hyp</span><span class="p">)</span>
             <span class="n">attack_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mi_train_x</span><span class="p">,</span> <span class="n">mi_train_y</span><span class="p">)</span>
