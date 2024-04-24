@@ -358,9 +358,7 @@
 
 <div class="viewcode-block" id="SafeModel.save">
 <a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
 
 <span class="sd">        Note this is overloaded in SafeKerasClassifer</span>
@@ -692,7 +690,7 @@
 
 <div class="viewcode-block" id="SafeModel.posthoc_check">
 <a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.posthoc_check">[docs]</a>
-    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>  <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model has been interfered with since fit() was last run.&quot;&quot;&quot;</span>
 
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
@@ -749,7 +747,7 @@
 
 <div class="viewcode-block" id="SafeModel.additional_checks">
 <a class="viewcode-back" href="../../../safemodel.html#aisdc.safemodel.safemodel.SafeModel.additional_checks">[docs]</a>
-    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder function for additional posthoc checks e.g. keras this</span>
