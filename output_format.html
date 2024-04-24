@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JSON Output for MIA attacks &mdash; GRAIMATTER 1.1.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>JSON Output for MIA attacks &mdash; GRAIMATTER 1.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=cb7bf70b"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -87,10 +89,10 @@
            <div itemprop="articleBody">
              
   <section id="json-output-for-mia-attacks">
-<h1>JSON Output for MIA attacks<a class="headerlink" href="#json-output-for-mia-attacks" title="Permalink to this heading"></a></h1>
+<h1>JSON Output for MIA attacks<a class="headerlink" href="#json-output-for-mia-attacks" title="Link to this heading"></a></h1>
 <p>We standaridised the JSON output both for worst_case and LIRA attacks where possible. A generic JSON output structure is presented as under:</p>
 <section id="general-structure">
-<h2>General Structure<a class="headerlink" href="#general-structure" title="Permalink to this heading"></a></h2>
+<h2>General Structure<a class="headerlink" href="#general-structure" title="Link to this heading"></a></h2>
 <p>Key components of JSON output across attacks will be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">log_id</span><span class="p">:</span> <span class="n">Log</span> <span class="n">identifier</span> <span class="o">-</span> <span class="n">a</span> <span class="n">random</span> <span class="n">unique</span> <span class="nb">id</span> <span class="k">for</span> <span class="n">each</span> <span class="n">entry</span>
 <span class="n">log_time</span><span class="p">:</span> <span class="n">the</span> <span class="n">time</span> <span class="n">when</span> <span class="n">the</span> <span class="n">log</span> <span class="n">was</span> <span class="n">created</span>
@@ -100,7 +102,7 @@
 </div>
 </section>
 <section id="worst-case-attack">
-<h2>Worst-Case Attack<a class="headerlink" href="#worst-case-attack" title="Permalink to this heading"></a></h2>
+<h2>Worst-Case Attack<a class="headerlink" href="#worst-case-attack" title="Link to this heading"></a></h2>
 <p>A worst case attack will have the following components in a metadata component of JSON output.</p>
 <p>metadata:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">experiment_details</span><span class="p">:</span> <span class="n">this</span> <span class="n">will</span> <span class="n">have</span> <span class="n">attack</span> <span class="nb">type</span> <span class="n">parameters</span>
@@ -192,7 +194,7 @@
 <p>Example JSON output for worst case attack is accessible from <a class="reference download internal" download="" href="_downloads/b777f9fc6002c74fbc3602e78e84f0e9/programmatically_worstcase_example1_report.json"><code class="xref download docutils literal notranslate"><span class="pre">link</span></code></a></p>
 </section>
 <section id="lira-attack">
-<h2>LIRA Attack<a class="headerlink" href="#lira-attack" title="Permalink to this heading"></a></h2>
+<h2>LIRA Attack<a class="headerlink" href="#lira-attack" title="Link to this heading"></a></h2>
 <p>A LIRA attack will have the following components in a metadata component of JSON output.</p>
 <p>metadata:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">experiment_details</span><span class="p">:</span> <span class="n">this</span> <span class="n">will</span> <span class="n">have</span> <span class="n">attack</span> <span class="nb">type</span> <span class="n">parameters</span>
@@ -233,7 +235,7 @@
 </section>
 </section>
 <section id="running-mia-attacks-from-config-file">
-<h1>Running MIA Attacks from Config File<a class="headerlink" href="#running-mia-attacks-from-config-file" title="Permalink to this heading"></a></h1>
+<h1>Running MIA Attacks from Config File<a class="headerlink" href="#running-mia-attacks-from-config-file" title="Link to this heading"></a></h1>
 <p>Both for worst case and LIRA attacks, examples presented <a class="reference external" href="https://github.com/AI-SDC/AI-SDC/blob/development/examples/worst_case_attack_example.py/">worst_case_attack_example</a>
 and <a class="reference external" href="https://github.com/AI-SDC/AI-SDC/blob/development/examples/lira_attack_example.py/">lira_attack_example</a> in the AI-SDC explains most of the possible use of configuration files.</p>
 </section>
@@ -248,7 +250,7 @@ and <a class="reference external" href="https://github.com/AI-SDC/AI-SDC/blob/de
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, GRAIMATTER and SACRO Project Team.</p>
+    <p>&#169; Copyright 2024, GRAIMATTER and SACRO Project Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

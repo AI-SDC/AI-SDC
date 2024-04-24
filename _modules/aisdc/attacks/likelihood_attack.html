@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.attacks.likelihood_attack &mdash; GRAIMATTER 1.1.2 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>aisdc.attacks.likelihood_attack &mdash; GRAIMATTER 1.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=cb7bf70b"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +83,7 @@
              
   <h1>Source code for aisdc.attacks.likelihood_attack</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Likelihood testing scenario from https://arxiv.org/pdf/2112.03570.pdf.&quot;&quot;&quot;</span>
+
 <span class="c1"># pylint: disable = invalid-name</span>
 <span class="c1"># pylint: disable = too-many-branches</span>
 
@@ -115,16 +118,25 @@
 <span class="n">P_THRESH</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># default significance threshold</span>
 
 
-<div class="viewcode-block" id="DummyClassifier"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier">[docs]</a><span class="k">class</span> <span class="nc">DummyClassifier</span><span class="p">:</span>
+<div class="viewcode-block" id="DummyClassifier">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier">[docs]</a>
+<span class="k">class</span> <span class="nc">DummyClassifier</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A Dummy Classifier to allow this code to work with get_metrics.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DummyClassifier.predict"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
+<div class="viewcode-block" id="DummyClassifier.predict">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an array of 1/0 depending on value in second column.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">test_X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DummyClassifier.predict_proba"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DummyClassifier.predict_proba">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Simply return the test_X.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">test_X</span></div></div>
+        <span class="k">return</span> <span class="n">test_X</span></div>
+</div>
+
 
 
 <span class="k">def</span> <span class="nf">_logit</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -145,14 +157,16 @@
 <span class="sd">    If p is close to 0 or 1, evaluating the log will result in numerical instabilities.</span>
 <span class="sd">    This code thresholds p at EPS and 1 - EPS where EPS defaults at 1e-16.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># pylint:disable=consider-using-min-builtin</span>
         <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span>
     <span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>
     <span class="n">li</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">li</span>
 
 
-<div class="viewcode-block" id="LIRAAttack"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack">[docs]</a><span class="k">class</span> <span class="nc">LIRAAttack</span><span class="p">(</span><span class="n">Attack</span><span class="p">):</span>
+<div class="viewcode-block" id="LIRAAttack">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack">[docs]</a>
+<span class="k">class</span> <span class="nc">LIRAAttack</span><span class="p">(</span><span class="n">Attack</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The main LIRA Attack class.&quot;&quot;&quot;</span>
 
     <span class="c1"># pylint: disable=too-many-instance-attributes</span>
@@ -237,7 +251,9 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;LIRA Attack&quot;</span>
 
-<div class="viewcode-block" id="LIRAAttack.attack"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="LIRAAttack.attack">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack">[docs]</a>
+    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Programmatic attack running</span>
 <span class="sd">        Runs a LIRA attack from a Target object and a target model.</span>
 
@@ -261,6 +277,7 @@
             <span class="n">target</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">),</span>
         <span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_check_and_update_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Target</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -300,7 +317,9 @@
 
         <span class="k">return</span> <span class="n">target</span>
 
-<div class="viewcode-block" id="LIRAAttack.run_scenario_from_preds"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">[docs]</a>    <span class="k">def</span> <span class="nf">run_scenario_from_preds</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-statements, too-many-arguments, too-many-locals</span>
+<div class="viewcode-block" id="LIRAAttack.run_scenario_from_preds">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_scenario_from_preds</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-statements, too-many-arguments, too-many-locals</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">shadow_clf</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span>
         <span class="n">X_target_train</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
@@ -480,7 +499,10 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="LIRAAttack.example"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.example">[docs]</a>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
+
+<div class="viewcode-block" id="LIRAAttack.example">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.example">[docs]</a>
+    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs an example attack using data from sklearn.</span>
 
 <span class="sd">        Generates example data, trains a classifier and tuns the attack</span>
@@ -500,6 +522,7 @@
             <span class="n">test_y</span><span class="p">,</span>
             <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_X</span><span class="p">),</span>
         <span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_construct_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs the metadata object. Called by the reporting method.&quot;&quot;&quot;</span>
@@ -533,7 +556,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;attack&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LIRAAttack.make_report"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.make_report">[docs]</a>    <span class="k">def</span> <span class="nf">make_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="LIRAAttack.make_report">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.make_report">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the report.</span>
 
 <span class="sd">        Creates the output report. If self.args.report_name is not None, it will also save the</span>
@@ -573,6 +598,7 @@
 
         <span class="k">return</span> <span class="n">output</span></div>
 
+
     <span class="k">def</span> <span class="nf">_get_attack_metrics_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs the metadata object, after attacks.&quot;&quot;&quot;</span>
         <span class="n">attack_metrics_experiment</span> <span class="o">=</span> <span class="p">{}</span>
@@ -587,7 +613,9 @@
         <span class="n">attack_metrics_experiment</span><span class="p">[</span><span class="s2">&quot;attack_instance_logger&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attack_metrics_instances</span>
         <span class="k">return</span> <span class="n">attack_metrics_experiment</span>
 
-<div class="viewcode-block" id="LIRAAttack.setup_example_data"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data">[docs]</a>    <span class="k">def</span> <span class="nf">setup_example_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="LIRAAttack.setup_example_data">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup_example_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to create example data and save (including config). Intended to allow users</span>
 <span class="sd">        to see how they would need to setup their own data.</span>
 
@@ -623,7 +651,10 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="LIRAAttack.attack_from_config"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">attack_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
+
+<div class="viewcode-block" id="LIRAAttack.attack_from_config">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">attack_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs an attack based on the args parsed from the command line.&quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;run-attack&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading training data csv from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span><span class="p">)</span>
@@ -656,7 +687,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
             <span class="n">clf</span><span class="p">,</span> <span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_y</span><span class="p">,</span> <span class="n">test_preds</span>
         <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing metrics&quot;</span><span class="p">)</span></div></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing metrics&quot;</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1"># Methods invoked by command line script</span>
@@ -716,7 +749,9 @@
     <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.likelihood_attack.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Main method to parse args and invoke relevant code.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -848,6 +883,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid command. Try --help to get more details&quot;</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma:no cover</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
@@ -859,7 +895,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, GRAIMATTER and SACRO Project Team.</p>
+    <p>&#169; Copyright 2024, GRAIMATTER and SACRO Project Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
