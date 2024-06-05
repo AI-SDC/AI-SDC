@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -96,7 +88,7 @@
 
 
 <div class="viewcode-block" id="SafeSVC">
-<a class="viewcode-back" href="../../../../safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC">[docs]</a>
 <span class="k">class</span> <span class="nc">SafeSVC</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">DPSVC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Support Vector Classifier.&quot;&quot;&quot;</span>
 
@@ -118,7 +110,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">examine_seperately_items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;platt_transform&quot;</span><span class="p">,</span> <span class="s2">&quot;svc&quot;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="SafeSVC.fit">
-<a class="viewcode-back" href="../../../../safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC.fit">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store model dict.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_features</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">)</span>
@@ -126,7 +118,7 @@
 
 
 <div class="viewcode-block" id="SafeSVC.additional_checks">
-<a class="viewcode-back" href="../../../../safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC.additional_checks">[docs]</a>
     <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>

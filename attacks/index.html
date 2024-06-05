@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; GRAIMATTER 1.1.3 documentation</title>
+  <title>Attacks &mdash; GRAIMATTER 1.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -19,7 +20,9 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="LiRA Attack" href="likelihood.html" />
+    <link rel="prev" title="Introduction" href="../introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,9 +45,20 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Attacks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="likelihood.html">LiRA Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="worst_case.html">Worst Case Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structural.html">Structural Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute.html">Attribute Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="target.html">Target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../safemodel/index.html">Safemodel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing/index.html">Preprocessing</a></li>
 </ul>
@@ -63,8 +77,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="breadcrumb-item active">Attacks</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/attacks/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -72,25 +87,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="aisdc/attacks/attribute_attack.html">aisdc.attacks.attribute_attack</a></li>
-<li><a href="aisdc/attacks/likelihood_attack.html">aisdc.attacks.likelihood_attack</a></li>
-<li><a href="aisdc/attacks/report.html">aisdc.attacks.report</a></li>
-<li><a href="aisdc/attacks/structural_attack.html">aisdc.attacks.structural_attack</a></li>
-<li><a href="aisdc/attacks/target.html">aisdc.attacks.target</a></li>
-<li><a href="aisdc/attacks/worst_case_attack.html">aisdc.attacks.worst_case_attack</a></li>
-<li><a href="aisdc/metrics.html">aisdc.metrics</a></li>
-<li><a href="aisdc/preprocessing/loaders.html">aisdc.preprocessing.loaders</a></li>
-<li><a href="aisdc/safemodel/classifiers/safedecisiontreeclassifier.html">aisdc.safemodel.classifiers.safedecisiontreeclassifier</a></li>
-<li><a href="aisdc/safemodel/classifiers/safekeras.html">aisdc.safemodel.classifiers.safekeras</a></li>
-<li><a href="aisdc/safemodel/classifiers/saferandomforestclassifier.html">aisdc.safemodel.classifiers.saferandomforestclassifier</a></li>
-<li><a href="aisdc/safemodel/classifiers/safesvc.html">aisdc.safemodel.classifiers.safesvc</a></li>
-<li><a href="aisdc/safemodel/safemodel.html">aisdc.safemodel.safemodel</a></li>
+  <section id="attacks">
+<h1>Attacks<a class="headerlink" href="#attacks" title="Link to this heading"></a></h1>
+<p>Examples showing how to run the code can be found in the examples folder.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="likelihood.html">LiRA Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="worst_case.html">Worst Case Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structural.html">Structural Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute.html">Attribute Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target.html">Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
 </ul>
+</div>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="likelihood.html" class="btn btn-neutral float-right" title="LiRA Attack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

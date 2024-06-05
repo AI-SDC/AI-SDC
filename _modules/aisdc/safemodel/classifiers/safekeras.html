@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -128,7 +120,7 @@
 
 
 <div class="viewcode-block" id="same_configs">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.same_configs">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.same_configs">[docs]</a>
 <span class="k">def</span> <span class="nf">same_configs</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if two models havethe same architecture.&quot;&quot;&quot;</span>
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
@@ -164,7 +156,7 @@
 
 
 <div class="viewcode-block" id="same_weights">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.same_weights">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.same_weights">[docs]</a>
 <span class="k">def</span> <span class="nf">same_weights</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if two nets with same architecture havethe same weights.&quot;&quot;&quot;</span>
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
@@ -187,7 +179,7 @@
 
 
 <div class="viewcode-block" id="check_checkpoint_equality">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.check_checkpoint_equality">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_checkpoint_equality">[docs]</a>
 <span class="k">def</span> <span class="nf">check_checkpoint_equality</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compares two checkpoints saved with tensorflow save_model</span>
 <span class="sd">    On the assumption that the optimiser is not going to be saved,</span>
@@ -227,7 +219,7 @@
 
 
 <div class="viewcode-block" id="check_DP_used">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.check_DP_used">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_DP_used">[docs]</a>
 <span class="k">def</span> <span class="nf">check_DP_used</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether the DP optimizer was actually the one used.&quot;&quot;&quot;</span>
 
@@ -257,7 +249,7 @@
 
 
 <div class="viewcode-block" id="check_optimizer_allowed">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_allowed">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_allowed">[docs]</a>
 <span class="k">def</span> <span class="nf">check_optimizer_allowed</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the model&#39;s optimizer is in our white-list</span>
 <span class="sd">    default setting is not allowed.</span>
@@ -274,7 +266,7 @@
 
 
 <div class="viewcode-block" id="check_optimizer_is_DP">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_is_DP">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_is_DP">[docs]</a>
 <span class="k">def</span> <span class="nf">check_optimizer_is_DP</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether optimizer is one of tensorflow&#39;s DP versions.&quot;&quot;&quot;</span>
     <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
@@ -289,7 +281,7 @@
 
 
 <div class="viewcode-block" id="load_safe_keras_model">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.load_safe_keras_model">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.load_safe_keras_model">[docs]</a>
 <span class="k">def</span> <span class="nf">load_safe_keras_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads model from file in appropriate format.</span>
@@ -324,7 +316,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel">[docs]</a>
 <span class="k">class</span> <span class="nc">SafeKerasModel</span><span class="p">(</span><span class="n">KerasModel</span><span class="p">,</span> <span class="n">SafeModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy Protected Wrapper around  tf.keras.Model class from tensorflow 2.8</span>
 <span class="sd">    disabling pylont warnings about number of instance attributes</span>
@@ -398,7 +390,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">preliminary_check</span><span class="p">(</span><span class="n">apply_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SafeKerasModel.dp_epsilon_met">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met">[docs]</a>
     <span class="k">def</span> <span class="nf">dp_epsilon_met</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -417,7 +409,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel.check_epsilon">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon">[docs]</a>
     <span class="k">def</span> <span class="nf">check_epsilon</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -449,7 +441,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel.compile">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile">[docs]</a>
     <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
     <span class="p">):</span>  <span class="c1"># pylint:disable=dangerous-default-value)</span>
@@ -504,7 +496,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel.fit">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>  <span class="c1"># pylint:disable=too-many-arguments</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
@@ -559,7 +551,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel.posthoc_check">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">[docs]</a>
     <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model should be considered unsafe</span>
 <span class="sd">        for example, has been changed since fit() was last run,</span>
@@ -634,7 +626,7 @@
 
 
 <div class="viewcode-block" id="SafeKerasModel.save">
-<a class="viewcode-back" href="../../../../safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save">[docs]</a>
     <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
 

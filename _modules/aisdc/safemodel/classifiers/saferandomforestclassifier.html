@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -100,7 +92,7 @@
 
 
 <div class="viewcode-block" id="SafeRandomForestClassifier">
-<a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier">[docs]</a>
 <span class="k">class</span> <span class="nc">SafeRandomForestClassifier</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Random Forest classifier.&quot;&quot;&quot;</span>
 
@@ -145,7 +137,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SafeRandomForestClassifier.additional_checks">
-<a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.additional_checks">[docs]</a>
     <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-nested-blocks</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -206,7 +198,7 @@
 
     <span class="c1"># pylint: disable=arguments-differ</span>
 <div class="viewcode-block" id="SafeRandomForestClassifier.fit">
-<a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.fit">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store model dict.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -215,7 +207,7 @@
 
 
 <div class="viewcode-block" id="SafeRandomForestClassifier.get_k_anonymity">
-<a class="viewcode-back" href="../../../../saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.get_k_anonymity">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/saferandomforest.html#aisdc.safemodel.classifiers.saferandomforestclassifier.SafeRandomForestClassifier.get_k_anonymity">[docs]</a>
     <span class="k">def</span> <span class="nf">get_k_anonymity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the k-anonymity of a random forest model</span>
 <span class="sd">        as the minimum of the anonymity for each record.</span>

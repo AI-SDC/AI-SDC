@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loaders &mdash; GRAIMATTER 1.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=cb7bf70b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Preprocessing" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GRAIMATTER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Preprocessing</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Loaders</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GRAIMATTER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Preprocessing</a></li>
+      <li class="breadcrumb-item active">Loaders</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/preprocessing/loaders.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aisdc.preprocessing.loaders">
+<span id="loaders"></span><h1>Loaders<a class="headerlink" href="#module-aisdc.preprocessing.loaders" title="Link to this heading"></a></h1>
+<p>A set of useful handlers to pull in datasets common to the project and perform
+the appropriate pre-processing.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.DataNotAvailable">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">DataNotAvailable</span></span><a class="reference internal" href="../_modules/aisdc/preprocessing/loaders.html#DataNotAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.DataNotAvailable" title="Link to this definition"></a></dt>
+<dd><p>Exception raised if the user asks for a dataset that they do not have the data for. I.e.
+some datasets require a .csv file to have been downloaded.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.UnknownDataset">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">UnknownDataset</span></span><a class="reference internal" href="../_modules/aisdc/preprocessing/loaders.html#UnknownDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.UnknownDataset" title="Link to this definition"></a></dt>
+<dd><p>Exception raised if the user passes a name that we don’t recognise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.preprocessing.loaders.get_data_sklearn">
+<span class="sig-prename descclassname"><span class="pre">aisdc.preprocessing.loaders.</span></span><span class="sig-name descname"><span class="pre">get_data_sklearn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/AI-SDC/AI-SDC/aisdc/data'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/preprocessing/loaders.html#get_data_sklearn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.preprocessing.loaders.get_data_sklearn" title="Link to this definition"></a></dt>
+<dd><p>Main entry method to return data in format sensible for sklearn. User passes a name and that
+dataset is returned as a tuple of pandas DataFrames (data, labels).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dataset_name</strong><span class="classifier">str</span></dt><dd><p>The name of the dataset to load</p>
+</dd>
+<dt><strong>data_folder</strong><span class="classifier">str</span></dt><dd><p>The name of the local folder in which data is stored.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">pd.DataFrame</span></dt><dd><p>The input dataframe – rows are examples, columns variables</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">pd.DataFrame</span></dt><dd><p>the target dataframe – has a single column containing the target values</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The following datasets are available:
+mimic2-iaccd (requires data download)
+in-hospital-mortality (requires data download)
+medical-mnist-ab-v-br-100 (requires data download)
+medical-mnist-ab-v-br-500 (requires data download)
+medical-mnist-all-100 (requires data download)
+indian liver (requires data download)
+synth-ae (requires data download)
+synth-ae-small (requires data download)
+nursery (downloads automatically)
+iris (available out of the box via sklearn)</p>
+<p>Datasets can be normalised by adding the following prefixes:
+standard: standardises all columns to have zero mean and unit variance.
+minmax: standardises all columns to have values between 0 and 1.
+round: rounds continues features to have 3dp</p>
+<p>These can be nested.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">get_data_sklearn</span><span class="p">(</span><span class="s2">&quot;mimic2-iaccd&quot;</span><span class="p">)</span> <span class="c1"># pull the mimic2-iaccd data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">get_data_sklearn</span><span class="p">(</span><span class="s2">&quot;minmax iris&quot;</span><span class="p">)</span> <span class="c1"># pull the iris data and round continuous features</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Preprocessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, GRAIMATTER and SACRO Project Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

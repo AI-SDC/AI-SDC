@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -82,11 +74,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for aisdc.attacks.worst_case_attack</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Worst_case_attack.py.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Runs a worst case attack based upon predictive probabilities.&quot;&quot;&quot;</span>
 
-<span class="sd">Runs a worst case attack based upon predictive probabilities stored in two .csv files</span>
-<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># pylint: disable = too-many-lines</span>
+<span class="c1"># pylint: disable = too-many-lines</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -115,7 +105,7 @@
 
 
 <div class="viewcode-block" id="WorstCaseAttack">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack">[docs]</a>
 <span class="k">class</span> <span class="nc">WorstCaseAttack</span><span class="p">(</span><span class="n">Attack</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to wrap the worst case attack code.&quot;&quot;&quot;</span>
 
@@ -290,7 +280,7 @@
         <span class="k">return</span> <span class="s2">&quot;WorstCase attack&quot;</span>
 
 <div class="viewcode-block" id="WorstCaseAttack.attack">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack">[docs]</a>
     <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Programmatic attack entry point.</span>
 
@@ -318,7 +308,7 @@
 
 
 <div class="viewcode-block" id="WorstCaseAttack.attack_from_prediction_files">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files">[docs]</a>
     <span class="k">def</span> <span class="nf">attack_from_prediction_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an attack from saved prediction files.</span>
 
@@ -333,7 +323,7 @@
 
 
 <div class="viewcode-block" id="WorstCaseAttack.attack_from_preds">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">[docs]</a>
     <span class="k">def</span> <span class="nf">attack_from_preds</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -424,7 +414,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">mi_x</span><span class="p">,</span> <span class="n">mi_y</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WorstCaseAttack.run_attack_reps">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps">[docs]</a>
     <span class="k">def</span> <span class="nf">run_attack_reps</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-locals</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_preds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -603,7 +593,7 @@
         <span class="k">return</span> <span class="n">preds</span>
 
 <div class="viewcode-block" id="WorstCaseAttack.generate_arrays">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays">[docs]</a>
     <span class="k">def</span> <span class="nf">generate_arrays</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_rows_in</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -637,7 +627,7 @@
 
 
 <div class="viewcode-block" id="WorstCaseAttack.make_dummy_data">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data">[docs]</a>
     <span class="k">def</span> <span class="nf">make_dummy_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes dummy data for testing functionality.</span>
 
@@ -734,7 +724,7 @@
         <span class="k">return</span> <span class="n">dummy_attack_metrics_experiments</span>
 
 <div class="viewcode-block" id="WorstCaseAttack.make_report">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report">[docs]</a>
     <span class="k">def</span> <span class="nf">make_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates output dictionary structure and generates</span>
 <span class="sd">        pdf and json outputs if filenames are given.</span>
@@ -816,7 +806,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../attacks.html#aisdc.attacks.worst_case_attack.main">[docs]</a>
+<a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Main method to parse arguments and invoke relevant method.&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>

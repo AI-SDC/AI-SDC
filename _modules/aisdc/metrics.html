@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -195,7 +187,7 @@
 
 
 <div class="viewcode-block" id="min_max_disc">
-<a class="viewcode-back" href="../../attacks.html#aisdc.metrics.min_max_disc">[docs]</a>
+<a class="viewcode-back" href="../../attacks/metrics.html#aisdc.metrics.min_max_disc">[docs]</a>
 <span class="k">def</span> <span class="nf">min_max_disc</span><span class="p">(</span>
     <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x_prop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">log_p</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
@@ -276,7 +268,7 @@
 
 
 <div class="viewcode-block" id="auc_p_val">
-<a class="viewcode-back" href="../../attacks.html#aisdc.metrics.auc_p_val">[docs]</a>
+<a class="viewcode-back" href="../../attacks/metrics.html#aisdc.metrics.auc_p_val">[docs]</a>
 <span class="k">def</span> <span class="nf">auc_p_val</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the p-value for a given AUC.</span>
 
@@ -303,7 +295,7 @@
 
 
 <div class="viewcode-block" id="get_probabilities">
-<a class="viewcode-back" href="../../attacks.html#aisdc.metrics.get_probabilities">[docs]</a>
+<a class="viewcode-back" href="../../attacks/metrics.html#aisdc.metrics.get_probabilities">[docs]</a>
 <span class="k">def</span> <span class="nf">get_probabilities</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals</span>
     <span class="n">clf</span><span class="p">,</span>
     <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -355,7 +347,7 @@
 
 
 <div class="viewcode-block" id="get_metrics">
-<a class="viewcode-back" href="../../attacks.html#aisdc.metrics.get_metrics">[docs]</a>
+<a class="viewcode-back" href="../../attacks/metrics.html#aisdc.metrics.get_metrics">[docs]</a>
 <span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals, too-many-statements</span>
     <span class="n">y_pred_proba</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">):</span>

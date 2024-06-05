@@ -44,17 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../attacks.html">Attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel.html">Base Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safedecisiontree.html">SafeDecisionTree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../saferandomforest.html">SafeRandomForest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safekeras.html">SafeKerasModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../safesvc.html">SafeSVC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SafeModel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html">JSON Output for MIA attacks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../attacks/index.html">Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../preprocessing/index.html">Preprocessing</a></li>
 </ul>
 
         </div>
@@ -98,7 +90,7 @@
 
 
 <div class="viewcode-block" id="decision_trees_are_equal">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.decision_trees_are_equal">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.decision_trees_are_equal">[docs]</a>
 <span class="k">def</span> <span class="nf">decision_trees_are_equal</span><span class="p">(</span>
     <span class="n">tree1</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">tree2</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -146,7 +138,7 @@
 
 
 <div class="viewcode-block" id="decision_tree_internal_trees_are_equal">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.decision_tree_internal_trees_are_equal">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.decision_tree_internal_trees_are_equal">[docs]</a>
 <span class="k">def</span> <span class="nf">decision_tree_internal_trees_are_equal</span><span class="p">(</span>
     <span class="n">tree1_tree</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tree2_tree</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -208,7 +200,7 @@
 
 
 <div class="viewcode-block" id="get_tree_k_anonymity">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.get_tree_k_anonymity">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.get_tree_k_anonymity">[docs]</a>
 <span class="k">def</span> <span class="nf">get_tree_k_anonymity</span><span class="p">(</span><span class="n">thetree</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the smallest number of data items in any leaf.&quot;&quot;&quot;</span>
     <span class="n">leaves</span> <span class="o">=</span> <span class="n">thetree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -221,7 +213,7 @@
 
 
 <div class="viewcode-block" id="SafeDecisionTreeClassifier">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier">[docs]</a>
 <span class="k">class</span> <span class="nc">SafeDecisionTreeClassifier</span><span class="p">(</span>
     <span class="n">SafeModel</span><span class="p">,</span> <span class="n">DecisionTreeClassifier</span>
 <span class="p">):</span>  <span class="c1"># pylint: disable=too-many-ancestors</span>
@@ -262,7 +254,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">k_anonymity</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SafeDecisionTreeClassifier.additional_checks">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier.additional_checks">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier.additional_checks">[docs]</a>
     <span class="k">def</span> <span class="nf">additional_checks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">curr_separate</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">saved_separate</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -288,7 +280,7 @@
 
 
 <div class="viewcode-block" id="SafeDecisionTreeClassifier.fit">
-<a class="viewcode-back" href="../../../../safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier.fit">[docs]</a>
+<a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.SafeDecisionTreeClassifier.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>  <span class="c1"># pylint: disable=arguments-differ</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

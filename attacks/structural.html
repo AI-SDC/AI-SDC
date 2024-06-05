@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Structural Attack &mdash; GRAIMATTER 1.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=cb7bf70b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Attribute Attack" href="attribute.html" />
+    <link rel="prev" title="Worst Case Attack" href="worst_case.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            GRAIMATTER
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Attacks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="likelihood.html">LiRA Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="worst_case.html">Worst Case Attack</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Structural Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute.html">Attribute Attack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="target.html">Target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report.html">Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_format.html">JSON Output for MIA attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output_format.html#running-mia-attacks-from-config-file">Running MIA Attacks from Config File</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safemodel/index.html">Safemodel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing/index.html">Preprocessing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GRAIMATTER</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Attacks</a></li>
+      <li class="breadcrumb-item active">Structural Attack</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/attacks/structural.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-aisdc.attacks.structural_attack">
+<span id="structural-attack"></span><h1>Structural Attack<a class="headerlink" href="#module-aisdc.attacks.structural_attack" title="Link to this heading"></a></h1>
+<p>Runs a number of ‘static’ structural attacks based on:
+(i) the target model’s properties
+(ii) the TREs risk appetite as applied to tables and standard regressions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.StructuralAttack">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.structural_attack.</span></span><span class="sig-name descname"><span class="pre">StructuralAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_config_json_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_appetite_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'outputs_structural'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'report_structural'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#StructuralAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.StructuralAttack" title="Link to this definition"></a></dt>
+<dd><p>Class to wrap a number of attacks based on the static structure of a model.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.structural_attack.StructuralAttack.attack" title="aisdc.attacks.structural_attack.StructuralAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
+<td><p>Programmatic attack entry point.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.structural_attack.StructuralAttack.dt_get_equivalence_classes" title="aisdc.attacks.structural_attack.StructuralAttack.dt_get_equivalence_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dt_get_equivalence_classes</span></code></a>()</p></td>
+<td><p>Gets details of equivalence classes based on white box inspection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.structural_attack.StructuralAttack.get_equivalence_classes" title="aisdc.attacks.structural_attack.StructuralAttack.get_equivalence_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_equivalence_classes</span></code></a>()</p></td>
+<td><p>Gets details of equivalence classes based on black box observation of probabilities.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>()</p></td>
+<td><p>Get parameters for this attack.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.structural_attack.StructuralAttack.make_report" title="aisdc.attacks.structural_attack.StructuralAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
+<td><p>Creates output dictionary structure and generates pdf and json outputs if filenames are given.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.StructuralAttack.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="target.html#aisdc.attacks.target.Target" title="aisdc.attacks.target.Target"><span class="pre">Target</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#StructuralAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.StructuralAttack.attack" title="Link to this definition"></a></dt>
+<dd><p>Programmatic attack entry point.</p>
+<p>To be used when code has access to Target class and trained target model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong><span class="classifier">attacks.target.Target</span></dt><dd><p>target as a Target class object</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.StructuralAttack.dt_get_equivalence_classes">
+<span class="sig-name descname"><span class="pre">dt_get_equivalence_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#StructuralAttack.dt_get_equivalence_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.StructuralAttack.dt_get_equivalence_classes" title="Link to this definition"></a></dt>
+<dd><p>Gets details of equivalence classes
+based on white box inspection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.StructuralAttack.get_equivalence_classes">
+<span class="sig-name descname"><span class="pre">get_equivalence_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#StructuralAttack.get_equivalence_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.StructuralAttack.get_equivalence_classes" title="Link to this definition"></a></dt>
+<dd><p>Gets details of equivalence classes
+based on black box observation of probabilities.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.StructuralAttack.make_report">
+<span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#StructuralAttack.make_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.StructuralAttack.make_report" title="Link to this definition"></a></dt>
+<dd><p>Creates output dictionary structure and generates
+pdf and json outputs if filenames are given.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.get_model_param_count">
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.structural_attack.</span></span><span class="sig-name descname"><span class="pre">get_model_param_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#get_model_param_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.get_model_param_count" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of trained parameters in a model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.get_tree_parameter_count">
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.structural_attack.</span></span><span class="sig-name descname"><span class="pre">get_tree_parameter_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DecisionTreeClassifier</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#get_tree_parameter_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.get_tree_parameter_count" title="Link to this definition"></a></dt>
+<dd><p>Reads the tree structure a returns the number of learned parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.get_unnecessary_risk">
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.structural_attack.</span></span><span class="sig-name descname"><span class="pre">get_unnecessary_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#get_unnecessary_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.get_unnecessary_risk" title="Link to this definition"></a></dt>
+<dd><p>Checks whether a model’s hyper-parameters against
+a set of rules that predict the top 20% most risky.</p>
+<p>This check is designed to assess whether a model is
+likely to be <strong>unnecessarily</strong> risky, i.e.,
+whether it is highly likely that a different combination of hyper-parameters
+would have led to model with similar or better accuracy on the task
+but with lower membership inference risk.</p>
+<p>The rules applied from an experimental study using a grid search in which:
+- max_features was one-hot encoded from the set [None, log2, sqrt]
+- splitter was encoded using 0=best, 1=random</p>
+<p>The target models created were then subject to membership inference attacks (MIA)
+and the hyper-param combinations rank-ordered according to MIA AUC.
+Then a decision tree trained to recognise whether
+hyper-params combintions were in the 20% most risky.
+The rules below were extracted from that tree for the ‘least risky’ nodes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aisdc.attacks.structural_attack.main">
+<span class="sig-prename descclassname"><span class="pre">aisdc.attacks.structural_attack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/structural_attack.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.structural_attack.main" title="Link to this definition"></a></dt>
+<dd><p>Main method to parse arguments and invoke relevant method.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="worst_case.html" class="btn btn-neutral float-left" title="Worst Case Attack" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="attribute.html" class="btn btn-neutral float-right" title="Attribute Attack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, GRAIMATTER and SACRO Project Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
