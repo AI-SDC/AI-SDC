@@ -93,7 +93,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Support Vector Classifier.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">dhat</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialises a differentially private SVC.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise a differentially private SVC.&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">DPSVC</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">dhat</span><span class="o">=</span><span class="n">dhat</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SVC&quot;</span>
@@ -112,7 +112,7 @@
 <div class="viewcode-block" id="SafeSVC.fit">
 <a class="viewcode-back" href="../../../../safemodel/safesvc.html#aisdc.safemodel.classifiers.safesvc.SafeSVC.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store model dict.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit model and store model dict.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_features</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saved_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
 
@@ -132,11 +132,9 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffs_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;structure </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> has one difference.</span><span class="se">\n</span><span class="s2">&quot;</span>  <span class="c1">#: {diffs_list}&quot;</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;structure </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> has one difference.</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;structure </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> has several differences.</span><span class="se">\n</span><span class="s2">&quot;</span>  <span class="c1">#: {diffs_list}&quot;</span>
-                    <span class="p">)</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;structure </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> has several differences.</span><span class="se">\n</span><span class="s2">&quot;</span>
 
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 </div>

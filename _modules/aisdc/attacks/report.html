@@ -291,7 +291,6 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-
 <span class="sd">    attack_output : dict</span>
 <span class="sd">        dictionary with following items</span>
 
@@ -306,7 +305,6 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-
 <span class="sd">    pdf : fpdf.FPDF</span>
 <span class="sd">        fpdf document object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -403,7 +401,7 @@
 <div class="viewcode-block" id="add_output_to_pdf">
 <a class="viewcode-back" href="../../../attacks/report.html#aisdc.attacks.report.add_output_to_pdf">[docs]</a>
 <span class="k">def</span> <span class="nf">add_output_to_pdf</span><span class="p">(</span><span class="n">report_dest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pdf_report</span><span class="p">:</span> <span class="n">FPDF</span><span class="p">,</span> <span class="n">attack_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates pdf and appends contents if it already exists.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create pdf and append contents if it already exists.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">):</span>
         <span class="n">old_pdf</span> <span class="o">=</span> <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span>
         <span class="n">new_pdf</span> <span class="o">=</span> <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;_new.pdf&quot;</span>
@@ -455,7 +453,6 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-
 <span class="sd">    output : dict</span>
 <span class="sd">        dictionary with following items</span>
 
@@ -470,7 +467,6 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-
 <span class="sd">    pdf : fpdf.FPDF</span>
 <span class="sd">        fpdf document object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -478,7 +474,6 @@
         <span class="n">v</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;attack_experiment_logger&quot;</span><span class="p">][</span><span class="s2">&quot;attack_instance_logger&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># mia_metrics = output[&quot;attack_metrics&quot;][0]</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
     <span class="n">dest_log_roc</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>

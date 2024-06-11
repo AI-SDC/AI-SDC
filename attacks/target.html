@@ -90,11 +90,11 @@
              
   <section id="module-aisdc.attacks.target">
 <span id="target"></span><h1>Target<a class="headerlink" href="#module-aisdc.attacks.target" title="Link to this heading"></a></h1>
-<p>Stores information about the target model and data.</p>
+<p>Store information about the target model and data.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.target.Target">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.target.</span></span><span class="sig-name descname"><span class="pre">Target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/target.html#Target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.target.Target" title="Link to this definition"></a></dt>
-<dd><p>Stores information about the target model and data.</p>
+<dd><p>Store information about the target model and data.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -108,13 +108,13 @@
 <td><p>Add original unprocessed dataset.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.target.Target.add_safemodel_results" title="aisdc.attacks.target.Target.add_safemodel_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_safemodel_results</span></code></a>(data)</p></td>
-<td><p>Adds the results of safemodel disclosure checking.</p></td>
+<td><p>Add the results of safemodel disclosure checking.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.target.Target.load" title="aisdc.attacks.target.Target.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>([path])</p></td>
-<td><p>Loads the target class from persistent storage.</p></td>
+<td><p>Load the target class from persistent storage.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.target.Target.save" title="aisdc.attacks.target.Target.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([path, ext])</p></td>
-<td><p>Saves the target class to persistent storage.</p></td>
+<td><p>Save the target class to persistent storage.</p></td>
 </tr>
 </tbody>
 </table>
@@ -139,7 +139,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.target.Target.add_safemodel_results">
 <span class="sig-name descname"><span class="pre">add_safemodel_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/target.html#Target.add_safemodel_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.target.Target.add_safemodel_results" title="Link to this definition"></a></dt>
-<dd><p>Adds the results of safemodel disclosure checking.</p>
+<dd><p>Add the results of safemodel disclosure checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -153,7 +153,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.target.Target.load">
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'target'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/target.html#Target.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.target.Target.load" title="Link to this definition"></a></dt>
-<dd><p>Loads the target class from persistent storage.</p>
+<dd><p>Load the target class from persistent storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -167,7 +167,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.target.Target.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'target'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pkl'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/target.html#Target.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.target.Target.save" title="Link to this definition"></a></dt>
-<dd><p>Saves the target class to persistent storage.</p>
+<dd><p>Save the target class to persistent storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">

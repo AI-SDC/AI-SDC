@@ -89,9 +89,7 @@
   <section id="safekerasmodel">
 <h1>SafeKerasModel<a class="headerlink" href="#safekerasmodel" title="Link to this heading"></a></h1>
 <p>An example Python Notebook is available  <a class="reference external" href="https://github.com/AI-SDC/AI-SDC/blob/main/examples/notebooks/example-notebook-keras.ipynb">Here</a></p>
-<p id="module-aisdc.safemodel.classifiers.safekeras">Safekeras.py:
-Jim Smith, Andrew McCarty and Richard Preen
-UWE 2022.</p>
+<p id="module-aisdc.safemodel.classifiers.safekeras">Privacy protected Keras model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">SafeKerasModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel" title="Link to this definition"></a></dt>
@@ -192,7 +190,7 @@ UWE 2022.</p>
 <td><p>Adds a new variable to the layer.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">additional_checks</span></code>(curr_separate, saved_separate)</p></td>
-<td><p>Placeholder function for additional posthoc checks e.g. keras this version just checks that any lists have the same contents.</p></td>
+<td><p>Perform additional posthoc checks.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code>(input_shape)</p></td>
 <td><p>Builds the model based on input shapes received.</p></td>
@@ -204,10 +202,10 @@ UWE 2022.</p>
 <td><p>Calls the model on new inputs and returns the outputs as tensors.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_epsilon</span></code></a>(num_samples, batch_size, epochs)</p></td>
-<td><p>Computes the level of privacy guarantee is within recommended limits, and produces feedback&quot;.</p></td>
+<td><p>Check if the level of privacy guarantee is within recommended limits.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics])</p></td>
-<td><p>Replaces the optimiser with a DP variant if needed and creates the necessary DP params in the opt and loss dict, then calls tf compile.</p></td>
+<td><p>Compile the safe Keras model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_from_config</span></code>(config)</p></td>
 <td><p>Compiles the model with the information given in config.</p></td>
@@ -231,7 +229,7 @@ UWE 2022.</p>
 <td><p>Count the total number of scalars composing the weights.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dp_epsilon_met</span></code></a>(num_examples[, batch_size, ...])</p></td>
-<td><p>Checks if epsilon is sufficient for Differential Privacy Provides feedback to user if epsilon is not sufficient.</p></td>
+<td><p>Check if epsilon is sufficient for Differential Privacy.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code>([x, y, batch_size, verbose, ...])</p></td>
 <td><p>Returns the loss value &amp; metrics values for the model in test mode.</p></td>
@@ -240,7 +238,7 @@ UWE 2022.</p>
 <td><p>Evaluates the model on a data generator.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">examine_seperate_items</span></code>(curr_vals, saved_vals)</p></td>
-<td><p>Comparison of more complex structures in the super class we just check these model-specific items exist in both current and saved copies.</p></td>
+<td><p>Check model-specific items exist in both current and saved copies.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export</span></code>(filepath)</p></td>
 <td><p>Create a SavedModel artifact for inference (e.g. via TF-Serving).</p></td>
@@ -249,7 +247,7 @@ UWE 2022.</p>
 <td><p>Finalizes the layers state after updating layer weights.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, Y, validation_data, epochs, batch_size)</p></td>
-<td><p>Overrides the tensorflow fit() method with some extra functionality: (i) records number of samples for checking DP epsilon values.</p></td>
+<td><p>Fit a safe Keras model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_generator</span></code>(generator[, steps_per_epoch, ...])</p></td>
 <td><p>Fits the model on data yielded batch-by-batch by a Python generator.</p></td>
@@ -267,7 +265,7 @@ UWE 2022.</p>
 <td><p>Returns the config of the <cite>Model</cite>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_current_and_saved_models</span></code>()</p></td>
-<td><p>Makes a copy of self.__dict__ and splits it into dicts for the current and saved versions.</p></td>
+<td><p>Copy self.__dict__ and split into dicts for current and saved versions.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code>(node_index)</p></td>
 <td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
@@ -294,7 +292,7 @@ UWE 2022.</p>
 <td><p>Retrieves the output shape(s) of a layer at a given node.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>([deep])</p></td>
-<td><p>Gets dictionary of parameter values restricted to those expected by base classifier.</p></td>
+<td><p>Get a dictionary of parameter values restricted to those expected.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight_paths</span></code>()</p></td>
 <td><p>Retrieve all the variables and their paths for the model.</p></td>
@@ -318,7 +316,7 @@ UWE 2022.</p>
 <td><p>Creates a function that executes one step of training.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posthoc_check</span></code></a>([verbose])</p></td>
-<td><p>Checks whether model should be considered unsafe for example, has been changed since fit() was last run, or does not meet DP policy.</p></td>
+<td><p>Check whether the model should be considered unsafe.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
@@ -333,19 +331,19 @@ UWE 2022.</p>
 <td><p>The logic for one inference step.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preliminary_check</span></code>([verbose, apply_constraints])</p></td>
-<td><p>Checks whether current model parameters violate the safe rules.</p></td>
+<td><p>Check whether current model parameters violate the safe rules.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_release</span></code>(path, ext[, target])</p></td>
-<td><p>Saves model to filename specified and creates a report for the TRE output checkers.</p></td>
+<td><p>Save model and create a report for the TRE output checkers.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_metrics</span></code>()</p></td>
 <td><p>Resets the state of all the metrics in the model.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack</span></code>([target, attack_name, ...])</p></td>
-<td><p>Runs a specified attack on the trained model and saves a report to file.</p></td>
+<td><p>Run a specified attack on the trained model and save report to file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save" title="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([name])</p></td>
-<td><p>Writes model to file in appropriate format.</p></td>
+<td><p>Write model to file in appropriate format.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_own_variables</span></code>(store)</p></td>
 <td><p>Saves the state of the layer.</p></td>
@@ -398,14 +396,14 @@ UWE 2022.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon">
 <span class="sig-name descname"><span class="pre">check_epsilon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.check_epsilon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.check_epsilon" title="Link to this definition"></a></dt>
-<dd><p>Computes the level of privacy guarantee is within recommended limits,
-and produces feedback”.</p>
+<dd><p>Check if the level of privacy guarantee is within recommended limits.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile">
 <span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorical_crossentropy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['accuracy']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.compile" title="Link to this definition"></a></dt>
-<dd><p>Replaces the optimiser with a DP variant if needed and creates the
+<dd><p>Compile the safe Keras model.</p>
+<p>Replaces the optimiser with a DP variant if needed and creates the
 necessary DP params in the opt and loss dict, then calls tf compile.
 Allow None as default value for optimizer param because we explicitly
 deal with it.</p>
@@ -414,14 +412,15 @@ deal with it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met">
 <span class="sig-name descname"><span class="pre">dp_epsilon_met</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_examples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.dp_epsilon_met"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.dp_epsilon_met" title="Link to this definition"></a></dt>
-<dd><p>Checks if epsilon is sufficient for Differential Privacy
-Provides feedback to user if epsilon is not sufficient.</p>
+<dd><p>Check if epsilon is sufficient for Differential Privacy.</p>
+<p>Provides feedback to user if epsilon is not sufficient.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refine_epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.fit" title="Link to this definition"></a></dt>
-<dd><p>Overrides the tensorflow fit() method with some extra functionality:
+<dd><p>Fit a safe Keras model.</p>
+<p>Overrides the tensorflow fit() method with some extra functionality:
 (i) records number of samples for checking DP epsilon values.
 (ii) does an automatic epsilon check and reports.
 (iia) if user sets refine_epsilon = true, return without fitting the model.
@@ -432,15 +431,15 @@ Provides feedback to user if epsilon is not sufficient.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">
 <span class="sig-name descname"><span class="pre">posthoc_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.posthoc_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check" title="Link to this definition"></a></dt>
-<dd><p>Checks whether model should be considered unsafe
-for example, has been changed since fit() was last run,
+<dd><p>Check whether the model should be considered unsafe.</p>
+<p>For example, has been changed since fit() was last run,
 or does not meet DP policy.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#SafeKerasModel.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save" title="Link to this definition"></a></dt>
-<dd><p>Writes model to file in appropriate format.</p>
+<dd><p>Write model to file in appropriate format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -448,11 +447,8 @@ or does not meet DP policy.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"></dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>No return value</p>
 <p>Optimizer is deliberately excluded.
 To prevent possible to restart training and thus
 possible back door into attacks.</p>
@@ -463,14 +459,14 @@ possible back door into attacks.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.check_DP_used">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_DP_used</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#check_DP_used"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.check_DP_used" title="Link to this definition"></a></dt>
-<dd><p>Checks whether the DP optimizer was actually the one used.</p>
+<dd><p>Check whether the DP optimizer was actually the one used.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.check_checkpoint_equality">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_checkpoint_equality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#check_checkpoint_equality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.check_checkpoint_equality" title="Link to this definition"></a></dt>
-<dd><p>Compares two checkpoints saved with tensorflow save_model
-On the assumption that the optimiser is not going to be saved,
+<dd><p>Compare two checkpoints saved with tensorflow save_model.</p>
+<p>On the assumption that the optimiser is not going to be saved,
 and that the model is going to be saved in frozen form
 this only checks the architecture and weights layer by layer.</p>
 </dd></dl>
@@ -478,21 +474,21 @@ this only checks the architecture and weights layer by layer.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.check_optimizer_allowed">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_optimizer_allowed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#check_optimizer_allowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.check_optimizer_allowed" title="Link to this definition"></a></dt>
-<dd><p>Checks if the model’s optimizer is in our white-list
-default setting is not allowed.</p>
+<dd><p>Check if the model’s optimizer is in our white-list.</p>
+<p>Default setting is not allowed.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.check_optimizer_is_DP">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">check_optimizer_is_DP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#check_optimizer_is_DP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.check_optimizer_is_DP" title="Link to this definition"></a></dt>
-<dd><p>Checks whether optimizer is one of tensorflow’s DP versions.</p>
+<dd><p>Check whether optimizer is one of tensorflow’s DP versions.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.load_safe_keras_model">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">load_safe_keras_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#load_safe_keras_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.load_safe_keras_model" title="Link to this definition"></a></dt>
-<dd><p>Reads model from file in appropriate format.
-Optimizer is deliberately excluded in the save.
+<dd><p>Read model from file in appropriate format.</p>
+<p>Optimizer is deliberately excluded in the save.
 This is to prevent possibility of restarting training,
 which could offer possible back door into attacks.
 Thus optimizer cannot be loaded.</p>
@@ -501,13 +497,13 @@ Thus optimizer cannot be loaded.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.same_configs">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">same_configs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#same_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.same_configs" title="Link to this definition"></a></dt>
-<dd><p>Checks if two models havethe same architecture.</p>
+<dd><p>Check if two models have the same architecture.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.safemodel.classifiers.safekeras.same_weights">
 <span class="sig-prename descclassname"><span class="pre">aisdc.safemodel.classifiers.safekeras.</span></span><span class="sig-name descname"><span class="pre">same_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/classifiers/safekeras.html#same_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.classifiers.safekeras.same_weights" title="Link to this definition"></a></dt>
-<dd><p>Checks if two nets with same architecture havethe same weights.</p>
+<dd><p>Check if two nets with same architecture have the same weights.</p>
 </dd></dl>
 
 </section>

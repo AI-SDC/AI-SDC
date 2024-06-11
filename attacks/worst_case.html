@@ -90,22 +90,22 @@
              
   <section id="module-aisdc.attacks.worst_case_attack">
 <span id="worst-case-attack"></span><h1>Worst Case Attack<a class="headerlink" href="#module-aisdc.attacks.worst_case_attack" title="Link to this heading"></a></h1>
-<p>Runs a worst case attack based upon predictive probabilities.</p>
+<p>Run a worst case attack based upon predictive probabilities.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">WorstCaseAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_reps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reproduce_split:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[int]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dummy_reps:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_beta:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_beta:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_prop:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_in:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rows_out:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_preds_filename:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds_filename:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'output_worstcase'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'report_worstcase'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_model_correct_feature:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_probs:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mia_attack_model:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'sklearn.ensemble._forest.RandomForestClassifier'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mia_attack_model_hyp:</span> <span class="pre">dict</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'P_HIGHER_AUC'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_thresh:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_comp_type:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'lte'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_metric_success_count_thresh:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_fail_fast:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_json_file_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack" title="Link to this definition"></a></dt>
-<dd><p>Class to wrap the worst case attack code.</p>
+<dd><p>Worst case attack.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
-<td><p>Programmatic attack entry point.</p></td>
+<td><p>Run worst case attack.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack_from_prediction_files</span></code></a>()</p></td>
-<td><p>Start an attack from saved prediction files.</p></td>
+<td><p>Run attack from saved prediction files.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack_from_preds</span></code></a>(train_preds, test_preds[, ...])</p></td>
-<td><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params stored in self.args.</p></td>
+<td><p>Run attack based upon the predictions in train_preds and test_preds.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.generate_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_arrays</span></code></a>(n_rows_in, n_rows_out[, ...])</p></td>
 <td><p>Generate train and test prediction arrays, used when computing baseline.</p></td>
@@ -114,10 +114,10 @@
 <td><p>Get parameters for this attack.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_dummy_data</span></code></a>()</p></td>
-<td><p>Makes dummy data for testing functionality.</p></td>
+<td><p>Make dummy data for testing functionality.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_report</span></code></a>()</p></td>
-<td><p>Creates output dictionary structure and generates pdf and json outputs if filenames are given.</p></td>
+<td><p>Create output dict and generate pdf and json if filenames are given.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps" title="aisdc.attacks.worst_case_attack.WorstCaseAttack.run_attack_reps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_attack_reps</span></code></a>(train_preds, test_preds[, ...])</p></td>
 <td><p>Run actual attack reps from train and test predictions.</p></td>
@@ -127,8 +127,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack">
 <span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="target.html#aisdc.attacks.target.Target" title="aisdc.attacks.target.Target"><span class="pre">Target</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack" title="Link to this definition"></a></dt>
-<dd><p>Programmatic attack entry point.</p>
-<p>To be used when code has access to Target class and trained target model</p>
+<dd><p>Run worst case attack.</p>
+<p>To be used when code has access to Target class and trained target model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -142,23 +142,22 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files">
 <span class="sig-name descname"><span class="pre">attack_from_prediction_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack_from_prediction_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files" title="Link to this definition"></a></dt>
-<dd><p>Start an attack from saved prediction files.</p>
+<dd><p>Run attack from saved prediction files.</p>
 <p>To be used when only saved predictions are available.</p>
-<p>Filenames for the saved prediction files to be specified in the arguments provided
-in the constructor</p>
+<p>Filenames for the saved prediction files to be specified in the
+arguments provided in the constructor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds">
 <span class="sig-name descname"><span class="pre">attack_from_preds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_correct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.attack_from_preds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_preds" title="Link to this definition"></a></dt>
-<dd><p>Runs the attack based upon the predictions in train_preds and test_preds, and the params
-stored in self.args.</p>
+<dd><p>Run attack based upon the predictions in train_preds and test_preds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of train predictions. One row per example, one column per class (i.e. 2)</p>
+<dt><strong>train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of train predictions. One row per example, one column per class.</p>
 </dd>
-<dt><strong>test_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of test predictions. One row per example, one column per class (i.e. 2)</p>
+<dt><strong>test_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of test predictions. One row per example, one column per class.</p>
 </dd>
 </dl>
 </dd>
@@ -196,7 +195,7 @@ stored in self.args.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data">
 <span class="sig-name descname"><span class="pre">make_dummy_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.make_dummy_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_dummy_data" title="Link to this definition"></a></dt>
-<dd><p>Makes dummy data for testing functionality.</p>
+<dd><p>Make dummy data for testing functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -204,18 +203,15 @@ stored in self.args.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"></dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Returns nothing but saves two .csv files</p>
+<p>Returns nothing but saves two .csv files.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report">
 <span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#WorstCaseAttack.make_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.WorstCaseAttack.make_report" title="Link to this definition"></a></dt>
-<dd><p>Creates output dictionary structure and generates
-pdf and json outputs if filenames are given.</p>
+<dd><p>Create output dict and generate pdf and json if filenames are given.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -248,7 +244,7 @@ fail/success of attacks for a given metric of failfast option</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.worst_case_attack.main">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.worst_case_attack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/worst_case_attack.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.worst_case_attack.main" title="Link to this definition"></a></dt>
-<dd><p>Main method to parse arguments and invoke relevant method.</p>
+<dd><p>Parse arguments and invoke relevant method.</p>
 </dd></dl>
 
 </section>

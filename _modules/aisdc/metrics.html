@@ -144,7 +144,6 @@
 <span class="sd">    tpr : float</span>
 <span class="sd">        true positive rate at fpr</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">fpr_perc</span><span class="p">:</span>
         <span class="n">fpr</span> <span class="o">/=</span> <span class="mf">100.0</span>
 
@@ -159,12 +158,12 @@
 
 
 <span class="k">def</span> <span class="nf">_expected_auc_var</span><span class="p">(</span><span class="n">auc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">num_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_neg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute variance of AUC under assumption of uniform probabilities</span>
-<span class="sd">    uses the expression given as eqn (2) in  https://cs.nyu.edu/~mohri/pub/area.pdf.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute variance of AUC under assumption of uniform probabilities.</span>
+
+<span class="sd">    Uses the expression given as eqn (2) in  https://cs.nyu.edu/~mohri/pub/area.pdf.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-
 <span class="sd">    auc : float</span>
 <span class="sd">        auc value at which to compute the variance</span>
 <span class="sd">    num_pos : int</span>
@@ -191,17 +190,19 @@
 <span class="k">def</span> <span class="nf">min_max_disc</span><span class="p">(</span>
     <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x_prop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">log_p</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Non-average-case methods for MIA attacks. Considers actual frequency of membership</span>
-<span class="sd">    amongst samples with highest- and lowest- assessed probability of membership. If an</span>
-<span class="sd">    MIA method confidently asserts that 5% of samples are members and 5% of samples are</span>
-<span class="sd">    not, but cannot tell for the remaining 90% of samples, then these metrics will flag</span>
-<span class="sd">    this behaviour, but AUC/advantage may not. Since the difference may be noisy, a</span>
-<span class="sd">    p-value against a null of independence of true membership and assessed membership</span>
-<span class="sd">    probability (that is, membership probabilities are essentially random) is also used</span>
-<span class="sd">    as a metric (using a usual Gaussian approximation to binomial). If the p-value is</span>
-<span class="sd">    low and the frequency difference is high (&gt;0.5) then the MIA attack is successful</span>
-<span class="sd">    for some samples.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return non-average-case methods for MIA attacks.</span>
+
+<span class="sd">    Considers actual frequency of membership amongst samples with highest- and</span>
+<span class="sd">    lowest- assessed probability of membership. If an MIA method confidently</span>
+<span class="sd">    asserts that 5% of samples are members and 5% of samples are not, but</span>
+<span class="sd">    cannot tell for the remaining 90% of samples, then these metrics will flag</span>
+<span class="sd">    this behaviour, but AUC/advantage may not. Since the difference may be</span>
+<span class="sd">    noisy, a p-value against a null of independence of true membership and</span>
+<span class="sd">    assessed membership probability (that is, membership probabilities are</span>
+<span class="sd">    essentially random) is also used as a metric (using a usual Gaussian</span>
+<span class="sd">    approximation to binomial). If the p-value is low and the frequency</span>
+<span class="sd">    difference is high (&gt;0.5) then the MIA attack is successful for some</span>
+<span class="sd">    samples.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -229,16 +230,12 @@
 <span class="sd">        p-value or log-p value corresponding to mmd against null hypothesis that random</span>
 <span class="sd">        variables corresponding to y and yp are independent.</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; y = np.random.choice(2, 100)</span>
 <span class="sd">    &gt;&gt;&gt; yp = np.random.rand(100)</span>
 <span class="sd">    &gt;&gt;&gt; maxd, mind, mmd, pval = min_max_desc(y, yp, xprop=0.2, logp=True)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">n_examples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_prop</span><span class="p">))</span>
     <span class="n">pos_frequency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>  <span class="c1"># average frequency</span>
     <span class="n">y_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span>  <span class="c1"># ordering permutation</span>
@@ -302,9 +299,7 @@
     <span class="n">y_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span>
     <span class="n">permute_rows</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Given a prediction model and a dataset, calculate the predictions of the model for</span>
-<span class="sd">    each data sample in probability format.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get probabilities for a given model and dataset.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -326,7 +321,6 @@
 <span class="sd">    If permute_rows is set to true, y_test must also be supplied.</span>
 <span class="sd">    The function will then return both the predicted probabilities and corresponding y_test</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">permute_rows</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If permute_rows is set to True, y_test must be supplied&quot;</span><span class="p">)</span>
 
@@ -351,11 +345,11 @@
 <span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals, too-many-statements</span>
     <span class="n">y_pred_proba</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate metrics, including attacker advantage for MIA binary.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate metrics, including attacker advantage for MIA binary.</span>
 
 <span class="sd">    Implemented as Definition 4 on https://arxiv.org/pdf/1709.01604.pdf</span>
-<span class="sd">    which is also implemented in tensorFlow-privacy https://github.com/tensorflow/privacy.</span>
+<span class="sd">    which is also implemented in tensorFlow-privacy</span>
+<span class="sd">    https://github.com/tensorflow/privacy.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -386,7 +380,6 @@
 <span class="sd">    * F1 Score - harmonic mean of precision and recall.</span>
 <span class="sd">    * Advantage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">invalid_format</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;y_pred must be an array of shape [x,2] with elements of type float&quot;</span>
     <span class="p">)</span>

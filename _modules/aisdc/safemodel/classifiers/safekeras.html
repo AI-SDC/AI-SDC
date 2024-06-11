@@ -74,34 +74,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for aisdc.safemodel.classifiers.safekeras</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Safekeras.py:</span>
-<span class="sd">Jim Smith, Andrew McCarty and Richard Preen</span>
-<span class="sd">UWE 2022.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># general imports</span>
+<span></span><span class="sd">&quot;&quot;&quot;Privacy protected Keras model.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-
-<span class="c1"># import sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="c1"># tensorflow imports</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">tensorflow_privacy</span> <span class="k">as</span> <span class="nn">tfp</span>
 <span class="kn">from</span> <span class="nn">dictdiffer</span> <span class="kn">import</span> <span class="n">diff</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">KerasModel</span>  <span class="c1"># pylint: disable = import-error</span>
 <span class="kn">from</span> <span class="nn">tensorflow_privacy</span> <span class="kn">import</span> <span class="n">compute_dp_sgd_privacy</span>
 
-<span class="c1"># safemodel superclass</span>
 <span class="kn">from</span> <span class="nn">..reporting</span> <span class="kn">import</span> <span class="n">get_reporting_string</span>
 <span class="kn">from</span> <span class="nn">..safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
 
-<span class="c1"># suppress numerous deprecatino warnings</span>
-<span class="c1"># shut tensorflow up</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
 
@@ -121,7 +109,7 @@
 <div class="viewcode-block" id="same_configs">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.same_configs">[docs]</a>
 <span class="k">def</span> <span class="nf">same_configs</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if two models havethe same architecture.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two models have the same architecture.&quot;&quot;&quot;</span>
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_layers</span><span class="p">:</span>
         <span class="n">errstr</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;different_layer_count&quot;</span><span class="p">)</span>
@@ -157,7 +145,7 @@
 <div class="viewcode-block" id="same_weights">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.same_weights">[docs]</a>
 <span class="k">def</span> <span class="nf">same_weights</span><span class="p">(</span><span class="n">m1</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">m2</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if two nets with same architecture havethe same weights.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two nets with same architecture have the same weights.&quot;&quot;&quot;</span>
     <span class="n">num_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num_layers</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m2</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;different numbers of layers&quot;</span>
@@ -170,7 +158,6 @@
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m1layer</span><span class="p">)):</span>  <span class="c1"># pylint: disable=consider-using-enumerate</span>
             <span class="n">m1d</span> <span class="o">=</span> <span class="n">m1layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
             <span class="n">m2d</span> <span class="o">=</span> <span class="n">m2layer</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
-            <span class="c1"># print(type(m1d), m1d.shape)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">m1d</span><span class="p">,</span> <span class="n">m2d</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
                 <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> of layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2"> differs&quot;</span>
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;weights match&quot;</span></div>
@@ -180,7 +167,8 @@
 <div class="viewcode-block" id="check_checkpoint_equality">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_checkpoint_equality">[docs]</a>
 <span class="k">def</span> <span class="nf">check_checkpoint_equality</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compares two checkpoints saved with tensorflow save_model</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare two checkpoints saved with tensorflow save_model.</span>
+
 <span class="sd">    On the assumption that the optimiser is not going to be saved,</span>
 <span class="sd">    and that the model is going to be saved in frozen form</span>
 <span class="sd">    this only checks the architecture and weights layer by layer.</span>
@@ -192,13 +180,11 @@
         <span class="n">model1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_reloading_model_v1&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
-        <span class="c1"># f&quot;Error re-loading  model from {v1}:  {e}&quot;</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">model2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_reloading_model_v2&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
-        <span class="c1"># f&quot;Error re-loading  model from {v2}: {e}&quot;</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">msg</span>
 
     <span class="n">same_config</span><span class="p">,</span> <span class="n">config_message</span> <span class="o">=</span> <span class="n">same_configs</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">)</span>
@@ -220,8 +206,7 @@
 <div class="viewcode-block" id="check_DP_used">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_DP_used">[docs]</a>
 <span class="k">def</span> <span class="nf">check_DP_used</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether the DP optimizer was actually the one used.&quot;&quot;&quot;</span>
-
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether the DP optimizer was actually the one used.&quot;&quot;&quot;</span>
     <span class="n">key_needed</span> <span class="o">=</span> <span class="s2">&quot;_was_dp_gradients_called&quot;</span>
     <span class="n">critical_val</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key_needed</span><span class="p">,</span> <span class="s2">&quot;missing&quot;</span><span class="p">)</span>
 
@@ -238,10 +223,8 @@
         <span class="c1"># not currently reachable because optimizer class does</span>
         <span class="c1"># not support assignment</span>
         <span class="c1"># but leave in to future-proof</span>
-        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unrecognised_combination&quot;</span>
-        <span class="p">)</span>  <span class="c1"># pragma: no cover</span>
-        <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">reason</span> <span class="o">=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;unrecognised_combination&quot;</span><span class="p">)</span>
+        <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="n">DPused</span><span class="p">,</span> <span class="n">reason</span></div>
 
@@ -250,8 +233,9 @@
 <div class="viewcode-block" id="check_optimizer_allowed">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_allowed">[docs]</a>
 <span class="k">def</span> <span class="nf">check_optimizer_allowed</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the model&#39;s optimizer is in our white-list</span>
-<span class="sd">    default setting is not allowed.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the model&#39;s optimizer is in our white-list.</span>
+
+<span class="sd">    Default setting is not allowed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">allowed</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">opt_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">optimizer</span><span class="p">))</span>
@@ -267,7 +251,7 @@
 <div class="viewcode-block" id="check_optimizer_is_DP">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.check_optimizer_is_DP">[docs]</a>
 <span class="k">def</span> <span class="nf">check_optimizer_is_DP</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether optimizer is one of tensorflow&#39;s DP versions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether optimizer is one of tensorflow&#39;s DP versions.&quot;&quot;&quot;</span>
     <span class="n">DPused</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;_was_dp_gradients_called&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
@@ -282,8 +266,8 @@
 <div class="viewcode-block" id="load_safe_keras_model">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.load_safe_keras_model">[docs]</a>
 <span class="k">def</span> <span class="nf">load_safe_keras_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Reads model from file in appropriate format.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read model from file in appropriate format.</span>
+
 <span class="sd">    Optimizer is deliberately excluded in the save.</span>
 <span class="sd">    This is to prevent possibility of restarting training,</span>
 <span class="sd">    which could offer possible back door into attacks.</span>
@@ -297,9 +281,7 @@
 
     <span class="k">elif</span> <span class="n">model_load_file</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.tf&quot;</span><span class="p">:</span>
         <span class="c1"># load from tf</span>
-        <span class="n">the_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
-            <span class="n">model_load_file</span>  <span class="c1"># , custom_objects={&quot;SafeKerasModel&quot;}</span>
-        <span class="p">)</span>
+        <span class="n">the_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_load_file</span><span class="p">)</span>
         <span class="n">load</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_load_file</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="p">)</span>
         <span class="n">the_model</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">load</span><span class="o">.</span><span class="n">get_weights</span><span class="p">())</span>
 
@@ -309,7 +291,6 @@
 
     <span class="k">if</span> <span class="n">the_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">the_model</span><span class="p">)</span>
-    <span class="c1"># else</span>
     <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></div>
 
 
@@ -321,29 +302,20 @@
 
     <span class="c1"># pylint: disable=too-many-instance-attributes</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params.&quot;&quot;&quot;</span>
-
-        <span class="c1"># the_args = args</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create model and apply constraints to params.&quot;&quot;&quot;</span>
         <span class="n">the_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="c1"># initialise all the values that get provided as options to keras</span>
         <span class="c1"># and also l2 norm clipping and learning rates, batch sizes</span>
-        <span class="c1">##inputs = kwargs.get(&quot;inputs&quot;,&quot;notFound&quot;)</span>
-        <span class="c1">##if inputs==&quot;notFound&quot;:</span>
-        <span class="c1">##    inputs = args[0] if len(args) == 3 else None</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;inputs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># pylint: disable=consider-iterating-dictionary</span>
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">the_kwargs</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># defaults is for Model(input,outputs,names)</span>
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1">##outputs = kwargs.get(&quot;outputs&quot;,&quot;notFound&quot;)</span>
-        <span class="c1">##if outputs==&quot;notFound&quot;:</span>
-        <span class="c1">##    outputs = args[1] if len(args) == 3 else None</span>
         <span class="k">if</span> <span class="s2">&quot;outputs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># pylint: disable=consider-iterating-dictionary</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="n">the_kwargs</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="c1"># self.outputs = args[1]</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># call the keras super class first as this comes first in chain</span>
@@ -392,7 +364,8 @@
     <span class="k">def</span> <span class="nf">dp_epsilon_met</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if epsilon is sufficient for Differential Privacy</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if epsilon is sufficient for Differential Privacy.</span>
+
 <span class="sd">        Provides feedback to user if epsilon is not sufficient.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">privacy</span> <span class="o">=</span> <span class="n">compute_dp_sgd_privacy</span><span class="p">(</span>
@@ -411,9 +384,7 @@
     <span class="k">def</span> <span class="nf">check_epsilon</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the level of privacy guarantee is within recommended limits,</span>
-<span class="sd">        and produces feedback&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the level of privacy guarantee is within recommended limits.&quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">batch_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -443,7 +414,8 @@
     <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
     <span class="p">):</span>  <span class="c1"># pylint:disable=dangerous-default-value)</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compile the safe Keras model.</span>
+
 <span class="sd">        Replaces the optimiser with a DP variant if needed and creates the</span>
 <span class="sd">        necessary DP params in the opt and loss dict, then calls tf compile.</span>
 <span class="sd">        Allow None as default value for optimizer param because we explicitly</span>
@@ -504,7 +476,8 @@
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">refine_epsilon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit a safe Keras model.</span>
+
 <span class="sd">        Overrides the tensorflow fit() method with some extra functionality:</span>
 <span class="sd">        (i) records number of samples for checking DP epsilon values.</span>
 <span class="sd">        (ii) does an automatic epsilon check and reports.</span>
@@ -512,8 +485,6 @@
 <span class="sd">        (iii) then calls the tensorflow fit() function.</span>
 <span class="sd">        (iv) finally makes a saved copy of the newly fitted model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># pylint can&#39;t cope that we first declared these via a dict :(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
@@ -551,11 +522,11 @@
 <div class="viewcode-block" id="SafeKerasModel.posthoc_check">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.posthoc_check">[docs]</a>
     <span class="k">def</span> <span class="nf">posthoc_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether model should be considered unsafe</span>
-<span class="sd">        for example, has been changed since fit() was last run,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the model should be considered unsafe.</span>
+
+<span class="sd">        For example, has been changed since fit() was last run,</span>
 <span class="sd">        or does not meet DP policy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -626,34 +597,25 @@
 <div class="viewcode-block" id="SafeKerasModel.save">
 <a class="viewcode-back" href="../../../../safemodel/safekeras.html#aisdc.safemodel.classifiers.safekeras.SafeKerasModel.save">[docs]</a>
     <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes model to file in appropriate format.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write model to file in appropriate format.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-
 <span class="sd">        name : string</span>
 <span class="sd">             The name of the file to save</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-
-<span class="sd">        No return value</span>
-
 <span class="sd">        Optimizer is deliberately excluded.</span>
 <span class="sd">        To prevent possible to restart training and thus</span>
 <span class="sd">        possible back door into attacks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_filename_with_extension&quot;</span><span class="p">))</span>
             <span class="k">return</span>
 
         <span class="n">thename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-        <span class="c1"># print(f&#39;in save(), parsed filename is {thename}&#39;)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;filename_must_indicate_type&quot;</span><span class="p">))</span>
             <span class="c1"># &quot;file name must indicate type as a suffix&quot;)</span>
@@ -666,7 +628,6 @@
                         <span class="bp">self</span><span class="p">,</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span>
                         <span class="n">include_optimizer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="c1"># save_traces=False,</span>
                         <span class="n">save_format</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="c1"># pragma:no cover</span>
@@ -676,7 +637,6 @@
                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;error_saving_file&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">er</span><span class="o">=</span><span class="n">er</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
-                    <span class="c1"># f&quot;saving as a {suffix} file gave this error message:  {er}&quot;)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="n">get_reporting_string</span><span class="p">(</span>
@@ -685,8 +645,6 @@
                 <span class="p">)</span></div>
 </div>
 
-                <span class="c1"># f&quot;{suffix} file suffix  not supported &quot;</span>
-                <span class="c1"># f&quot;for models of type {self.model_type}.\n&quot;</span>
 </pre></div>
 
            </div>

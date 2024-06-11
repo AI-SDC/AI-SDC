@@ -94,12 +94,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.AttributeAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">AttributeAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'output_attribute'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'aia_report'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_json_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#AttributeAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.AttributeAttack" title="Link to this definition"></a></dt>
-<dd><p>Class to wrap the attribute inference attack code.</p>
+<dd><p>Attribute inference attack.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.attribute_attack.AttributeAttack.attack" title="aisdc.attacks.attribute_attack.AttributeAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
-<td><p>Programmatic attack entry point.</p></td>
+<td><p>Run attribute inference attack.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>()</p></td>
 <td><p>Get parameters for this attack.</p></td>
@@ -112,8 +112,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.AttributeAttack.attack">
 <span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="target.html#aisdc.attacks.target.Target" title="aisdc.attacks.target.Target"><span class="pre">Target</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#AttributeAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.AttributeAttack.attack" title="Link to this definition"></a></dt>
-<dd><p>Programmatic attack entry point.</p>
-<p>To be used when code has access to Target class and trained target model</p>
+<dd><p>Run attribute inference attack.</p>
+<p>To be used when code has access to Target class and trained target model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -128,8 +128,8 @@
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.AttributeAttack.make_report">
 <span class="sig-name descname"><span class="pre">make_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#AttributeAttack.make_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.AttributeAttack.make_report" title="Link to this definition"></a></dt>
 <dd><p>Create the report.</p>
-<p>Creates the output report. If self.report_name is not None, it will also save the
-information in json and pdf formats.</p>
+<p>Creates the output report. If self.report_name is not None, it will
+also save the information in json and pdf formats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -145,43 +145,43 @@ information in json and pdf formats.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.create_aia_report">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">create_aia_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'aia_report'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">FPDF</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#create_aia_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.create_aia_report" title="Link to this definition"></a></dt>
-<dd><p>Creates PDF report.</p>
+<dd><p>Create PDF report.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.main">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.main" title="Link to this definition"></a></dt>
-<dd><p>Main method to parse args and invoke relevant code.</p>
+<dd><p>Parse args and invoke relevant code.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.plot_categorical_fraction">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">plot_categorical_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#plot_categorical_fraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.plot_categorical_fraction" title="Link to this definition"></a></dt>
-<dd><p>Generates bar chart showing fraction of dataset inferred.</p>
+<dd><p>Generate a bar chart showing fraction of dataset inferred.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.plot_categorical_risk">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">plot_categorical_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#plot_categorical_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.plot_categorical_risk" title="Link to this definition"></a></dt>
-<dd><p>Generates bar chart showing categorical risk scores.</p>
+<dd><p>Generate a bar chart showing categorical risk scores.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.plot_quantitative_risk">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">plot_quantitative_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#plot_quantitative_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.plot_quantitative_risk" title="Link to this definition"></a></dt>
-<dd><p>Generates bar chart showing quantitative value risk scores.</p>
+<dd><p>Generate a bar chart showing quantitative value risk scores.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.report_categorical">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">report_categorical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#report_categorical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.report_categorical" title="Link to this definition"></a></dt>
-<dd><p>Returns a string report of the categorical results.</p>
+<dd><p>Return a string report of the categorical results.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.attacks.attribute_attack.report_quantitative">
 <span class="sig-prename descclassname"><span class="pre">aisdc.attacks.attribute_attack.</span></span><span class="sig-name descname"><span class="pre">report_quantitative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/attribute_attack.html#report_quantitative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.attribute_attack.report_quantitative" title="Link to this definition"></a></dt>
-<dd><p>Returns a string report of the quantitative results.</p>
+<dd><p>Return a string report of the quantitative results.</p>
 </dd></dl>
 
 </section>

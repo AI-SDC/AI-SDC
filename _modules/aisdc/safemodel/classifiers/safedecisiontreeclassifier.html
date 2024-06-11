@@ -94,9 +94,7 @@
 <span class="k">def</span> <span class="nf">decision_trees_are_equal</span><span class="p">(</span>
     <span class="n">tree1</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">tree2</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compares two estimators of type sklearn.tree</span>
-<span class="sd">    e.g. two decisionTreeClassifiers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare two estimators of type sklearn.tree.&quot;&quot;&quot;</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">same</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -114,7 +112,6 @@
             <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;basic_params_differ&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">num_differences</span>
             <span class="p">)</span>
-            <span class="c1"># f&quot;Warning: basic parameters differ in {len(match)} places:\n&quot;</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_differences</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;change&quot;</span><span class="p">:</span>
                     <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;parameter </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> changed from </span><span class="si">{</span><span class="n">match</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -130,7 +127,6 @@
 
     <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except  #pragma:no cover</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;unable_to_check&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
-        <span class="c1"># f&quot;Unable to check as an exception occurred: {error}&quot;</span>
         <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="n">same</span><span class="p">,</span> <span class="n">msg</span></div>
@@ -142,10 +138,10 @@
 <span class="k">def</span> <span class="nf">decision_tree_internal_trees_are_equal</span><span class="p">(</span>
     <span class="n">tree1_tree</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tree2_tree</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for equality of the internal structures in a sklearn.tree._tree</span>
-<span class="sd">    e.g. the structure, feature and threshold in each internal node etc.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test for equality of the internal structures in a sklearn.tree._tree.</span>
 
+<span class="sd">    For example, the structure, feature and threshold in each internal node etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">same</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">tree_internal_att_names</span> <span class="o">=</span> <span class="p">(</span>
@@ -183,18 +179,15 @@
                         <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;internal_attribute_differs&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">attr</span>
                         <span class="p">)</span>
-                        <span class="c1"># f&quot;internal tree attribute {attr} differs\n&quot;</span>
                         <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">t1val</span> <span class="o">!=</span> <span class="n">t2val</span><span class="p">:</span>
                         <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;internal_attribute_differs&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">attr</span>
                         <span class="p">)</span>
-                        <span class="c1"># f&quot;internal tree attribute {attr} differs\n&quot;</span>
                         <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except #pragma:no cover</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;exception_occurred&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
-        <span class="c1"># f&quot;An exception occurred: {error}&quot;</span>
     <span class="k">return</span> <span class="n">same</span><span class="p">,</span> <span class="n">msg</span></div>
 
 
@@ -202,12 +195,10 @@
 <div class="viewcode-block" id="get_tree_k_anonymity">
 <a class="viewcode-back" href="../../../../safemodel/safedecisiontree.html#aisdc.safemodel.classifiers.safedecisiontreeclassifier.get_tree_k_anonymity">[docs]</a>
 <span class="k">def</span> <span class="nf">get_tree_k_anonymity</span><span class="p">(</span><span class="n">thetree</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the smallest number of data items in any leaf.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the smallest number of data items in any leaf.&quot;&quot;&quot;</span>
     <span class="n">leaves</span> <span class="o">=</span> <span class="n">thetree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">uniqs_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">k_anonymity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">uniqs_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="c1"># print(f&#39; leaf ids {uniqs_counts[0]} and counts {uniqs_counts[1]}&#39;</span>
-    <span class="c1">#        f&#39;the  k-anonymity of the tree is {k_anonymity}&#39;)</span>
     <span class="k">return</span> <span class="n">k_anonymity</span></div>
 
 
@@ -218,7 +209,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Decision Tree classifier.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates model and applies constraints to params.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create model and apply constraints to params.&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;criterion&quot;</span><span class="p">,</span>
@@ -269,11 +260,6 @@
             <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_separate</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;unexpected_item&quot;</span><span class="p">)</span>
-            <span class="c1"># (</span>
-            <span class="c1">#    &quot;unexpected item in curr_seperate dict &quot;</span>
-            <span class="c1">#    &quot; passed by generic additional checks.&quot;</span>
-            <span class="c1"># )</span>
-
         <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">disclosive</span></div>
 
 
@@ -282,7 +268,7 @@
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>  <span class="c1"># pylint: disable=arguments-differ</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do fit and then store k-anonymity and  model dict.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit model and store k-anonymity and model dict.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="c1"># calculate k-anonymity her since we have the tainigf data</span>
         <span class="n">leaves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
