@@ -76,12 +76,10 @@
   <h1>Source code for aisdc.preprocessing.loaders</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Handlers to pull in datasets and perform preprocessing.&quot;&quot;&quot;</span>
 
-<span class="c1"># pylint: disable=import-error, invalid-name, consider-using-with, too-many-return-statements</span>
+<span class="c1"># pylint: disable=consider-using-with, too-many-return-statements</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">BadZipFile</span><span class="p">,</span> <span class="n">ZipFile</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -89,10 +87,6 @@
 <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_openml</span><span class="p">,</span> <span class="n">load_iris</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
-
-<span class="c1"># Following is to stop pylint always sqwarking at pandas things</span>
-<span class="c1"># pylint: disable = no-member, unsubscriptable-object</span>
-
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
 
@@ -121,7 +115,7 @@
 <a class="viewcode-back" href="../../../preprocessing/loaders.html#aisdc.preprocessing.loaders.get_data_sklearn">[docs]</a>
 <span class="k">def</span> <span class="nf">get_data_sklearn</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-branches</span>
     <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT_FOLDER</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get data in a format sensible for sklearn.</span>
 
 <span class="sd">    User passes a name and that dataset is returned as a tuple of pandas</span>
@@ -198,7 +192,7 @@
         <span class="n">sub_name</span> <span class="o">=</span> <span class="n">dataset_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;round&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sub_name</span><span class="p">)</span>
         <span class="n">feature_df</span><span class="p">,</span> <span class="n">target_df</span> <span class="o">=</span> <span class="n">get_data_sklearn</span><span class="p">(</span><span class="n">sub_name</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">)</span>
-        <span class="n">column_dtype</span> <span class="o">=</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">dtypes</span>  <span class="c1"># pylint: disable = no-member</span>
+        <span class="n">column_dtype</span> <span class="o">=</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">dtypes</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">column_dtype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;float64&quot;</span><span class="p">:</span>
@@ -236,12 +230,12 @@
     <span class="k">if</span> <span class="n">dataset_name</span> <span class="o">==</span> <span class="s2">&quot;iris&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_iris</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">dataset_name</span> <span class="o">==</span> <span class="s2">&quot;RDMP&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_RDMP</span><span class="p">(</span><span class="n">data_folder</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_rdmp</span><span class="p">(</span><span class="n">data_folder</span><span class="p">)</span>
     <span class="k">raise</span> <span class="n">UnknownDataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_iris</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_iris</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Sklearn iris data - just first two classes.&quot;&quot;&quot;</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span>
@@ -249,7 +243,7 @@
     <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_nursery</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_nursery</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sklearn nursery dataset.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">26</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -268,7 +262,7 @@
 
 <span class="k">def</span> <span class="nf">_images_to_ndarray</span><span class="p">(</span>
     <span class="n">images_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number_to_load</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">flatten</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get number_to_load images from the images_dir and create arrays.</span>
 
 <span class="sd">    Patched to support non-flattened images.</span>
@@ -278,7 +272,7 @@
     <span class="n">images_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">))</span>
     <span class="n">images_names</span> <span class="o">=</span> <span class="n">images_names</span><span class="p">[:</span><span class="n">number_to_load</span><span class="p">]</span>
     <span class="c1"># fix f or macosx</span>
-    <span class="k">if</span> <span class="s2">&quot;.DS_Store&quot;</span> <span class="ow">in</span> <span class="n">images_names</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">if</span> <span class="s2">&quot;.DS_Store&quot;</span> <span class="ow">in</span> <span class="n">images_names</span><span class="p">:</span>
         <span class="n">images_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;.DS_Store&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">flatten</span><span class="p">:</span>
@@ -292,8 +286,8 @@
 
 
 <span class="k">def</span> <span class="nf">_medical_mnist_loader</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-locals</span>
-    <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_per_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_per_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Medical MNIST into pandas format.</span>
 
 <span class="sd">    Borrows heavily from: https://www.kaggle.com/harelshattenstein/medical-mnist-knn</span>
@@ -323,7 +317,7 @@
             <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_handle</span><span class="p">:</span>
                 <span class="n">zip_handle</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">base_folder</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Extracted all&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">BadZipFile</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">except</span> <span class="n">BadZipFile</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Encountered bad zip file&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
@@ -356,7 +350,7 @@
 
 <span class="k">def</span> <span class="nf">_synth_ae</span><span class="p">(</span>
     <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get synth ae data.</span>
 
 <span class="sd">    First norws (default 5000) rows from the Synthetic A&amp;E data from NHS England</span>
@@ -412,7 +406,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_indian_liver</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_indian_liver</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Indian Liver Patient Dataset.</span>
 
 <span class="sd">    https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian%20Liver%20Patient%20Dataset%20(ILPD).csv # pylint: disable=line-too-long.</span>
@@ -456,7 +450,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">liver_data</span><span class="p">,</span> <span class="n">liver_labels</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_in_hospital_mortality</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_in_hospital_mortality</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get In-hospital mortality data.</span>
 
 <span class="sd">    See: https://datadryad.org/stash/dataset/doi:10.5061/dryad.0p2ngf1zd.</span>
@@ -468,9 +462,7 @@
     <span class="n">file_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>  <span class="c1"># pylint: disable=use-a-generator</span>
-        <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="k">for</span> <span class="n">fp</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">]</span>
-    <span class="p">):</span>  <span class="c1"># pylint: disable=use-a-generator</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="k">for</span> <span class="n">fp</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">):</span>
         <span class="n">help_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Data file </span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> does not exist. Please download the file from:</span>
 <span class="s2">https://datadryad.org/stash/dataset/doi:10.5061/dryad.0p2ngf1zd</span>
@@ -497,7 +489,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_mimic_iaccd</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_mimic_iaccd</span><span class="p">(</span><span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the mimic_iaccd data and perform preprocessing.&quot;&quot;&quot;</span>
     <span class="c1"># Check the data has been downloaded.</span>
     <span class="c1"># If not throw an exception with instructions on how to</span>
@@ -550,12 +542,12 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_RDMP</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals, too-many-statements</span>
+<span class="k">def</span> <span class="nf">_rdmp</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals, too-many-statements</span>
     <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the RDMP dataset.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">find_age</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_age</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">date_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;01/06/2020&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">date_of_death</span> <span class="o">!=</span> <span class="n">row</span><span class="o">.</span><span class="n">date_of_death</span><span class="p">:</span>
             <span class="n">age</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">date_</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">date_of_birth</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span><span class="p">)</span>
@@ -563,7 +555,7 @@
             <span class="n">age</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">row</span><span class="o">.</span><span class="n">date_of_death</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">date_of_birth</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">age</span>
 
-    <span class="k">def</span> <span class="nf">hospital_days</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hospital_days</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">DischargeDate</span> <span class="o">==</span> <span class="n">row</span><span class="o">.</span><span class="n">DischargeDate</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">DischargeDate</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">AdmissionDate</span>
             <span class="n">days</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">days</span> <span class="o">+</span> <span class="nb">round</span><span class="p">(((</span><span class="n">t</span><span class="o">.</span><span class="n">seconds</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span> <span class="o">/</span> <span class="mi">24</span><span class="p">)</span>
@@ -606,7 +598,7 @@
             <span class="s2">&quot;R_CC_STEN_B&quot;</span><span class="p">,</span>
             <span class="s2">&quot;R_CC_STEN_C&quot;</span><span class="p">,</span>
             <span class="s2">&quot;R_CC_STEN_D&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;R_CC_STEN_S&quot;</span><span class="p">,</span>  <span class="c1"># pylint: disable=unreachable</span>
+            <span class="s2">&quot;R_CC_STEN_S&quot;</span><span class="p">,</span>
             <span class="s2">&quot;L_IC_STEN_A&quot;</span><span class="p">,</span>
             <span class="s2">&quot;L_IC_STEN_B&quot;</span><span class="p">,</span>
             <span class="s2">&quot;L_IC_STEN_C&quot;</span><span class="p">,</span>
@@ -703,12 +695,12 @@
             <span class="n">df__</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;chi&quot;</span><span class="p">])[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df__</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;Condition&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="p">)</span>  <span class="c1"># pylint: disable=line-too-long</span>
+        <span class="p">)</span>
         <span class="n">no</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">df__</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;chi&quot;</span><span class="p">])[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df__</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;Operation&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="p">)</span>  <span class="c1"># pylint: disable=line-too-long</span>
+        <span class="p">)</span>
         <span class="n">df__</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">x</span>
@@ -716,7 +708,7 @@
                 <span class="k">if</span> <span class="s2">&quot;Date&quot;</span> <span class="ow">in</span> <span class="n">x</span> <span class="ow">or</span> <span class="s2">&quot;Operation&quot;</span> <span class="ow">in</span> <span class="n">x</span> <span class="ow">or</span> <span class="s2">&quot;Condition&quot;</span> <span class="ow">in</span> <span class="n">x</span>
             <span class="p">],</span>
             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>  <span class="c1"># pylint: disable=line-too-long</span>
+        <span class="p">)</span>
         <span class="n">df__</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="n">df__</span><span class="p">[</span><span class="s2">&quot;days_in_hospital&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dih</span>
         <span class="n">df__</span><span class="p">[</span><span class="s2">&quot;average_number_conditions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nc</span>

@@ -145,7 +145,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the attack.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;Attribute inference attack&quot;</span>
 
@@ -240,7 +240,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dataset of each sample with the attributes to test.&quot;&quot;&quot;</span>
     <span class="n">attack_feature</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature_id</span><span class="p">]</span>
     <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">attack_feature</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]</span>
-    <span class="n">unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_orig</span><span class="p">[:,</span> <span class="n">feature_id</span><span class="p">])</span>
+    <span class="n">unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_orig</span><span class="p">[:,</span> <span class="n">feature_id</span><span class="p">])</span>
     <span class="n">n_unique</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">attack_feature</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
         <span class="n">onehot_enc</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">()</span>
@@ -250,12 +250,12 @@
         <span class="c1"># which is only called for categorical data</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">unique</span>
     <span class="c1"># samples after encoding (e.g. one-hot)</span>
-    <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_train</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_train</span>
     <span class="c1"># samples before encoding (e.g. str)</span>
-    <span class="n">samples_orig</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_train_orig</span>
+    <span class="n">samples_orig</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_train_orig</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">memberset</span><span class="p">:</span>
-        <span class="n">samples</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_test</span>
-        <span class="n">samples_orig</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_test_orig</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_test</span>
+        <span class="n">samples_orig</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_test_orig</span>
     <span class="n">n_samples</span><span class="p">,</span> <span class="n">x_dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
     <span class="n">x_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_unique</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">y_values</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
@@ -290,7 +290,7 @@
     <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># total number of inferences made</span>
     <span class="n">x_values</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">baseline</span> <span class="o">=</span> <span class="n">_get_inference_data</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">memberset</span><span class="p">)</span>
     <span class="n">n_unique</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">samples</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_train</span> <span class="k">if</span> <span class="n">memberset</span> <span class="k">else</span> <span class="n">target</span><span class="o">.</span><span class="n">x_test</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_train</span> <span class="k">if</span> <span class="n">memberset</span> <span class="k">else</span> <span class="n">target</span><span class="o">.</span><span class="n">X_test</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_values</span><span class="p">):</span>  <span class="c1"># each sample to perform inference on</span>
         <span class="c1"># get model confidence scores for all possible values for the sample</span>
         <span class="n">confidence</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -517,8 +517,7 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Brute force attacking categorical features&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[(</span><span class="n">target</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">attack_threshold</span><span class="p">)</span> <span class="k">for</span> <span class="n">feature_id</span> <span class="ow">in</span> <span class="n">features</span><span class="p">]</span>
     <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_infer_categorical</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">results</span>
+        <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_infer_categorical</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_bounds_risk_for_sample</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-locals,too-many-arguments</span>
@@ -626,14 +625,14 @@
     <span class="n">target_model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">,</span>
     <span class="n">feature_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">feature_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">x_train</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">x_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">X_train</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dict containing the dataset risks of a quantitative feature.&quot;&quot;&quot;</span>
     <span class="n">risk</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">feature_name</span><span class="p">,</span>
-        <span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">_get_bounds_risk_for_feature</span><span class="p">(</span><span class="n">target_model</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">x_train</span><span class="p">),</span>
-        <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="n">_get_bounds_risk_for_feature</span><span class="p">(</span><span class="n">target_model</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">x_test</span><span class="p">),</span>
+        <span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">_get_bounds_risk_for_feature</span><span class="p">(</span><span class="n">target_model</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">X_train</span><span class="p">),</span>
+        <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="n">_get_bounds_risk_for_feature</span><span class="p">(</span><span class="n">target_model</span><span class="p">,</span> <span class="n">feature_id</span><span class="p">,</span> <span class="n">X_test</span><span class="p">),</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">risk</span>
 
@@ -646,14 +645,13 @@
             <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature_id</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="n">feature_id</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">x_train</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">feature_id</span> <span class="ow">in</span> <span class="n">features</span>
     <span class="p">]</span>
     <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_get_bounds_risk</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">results</span>
+        <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_get_bounds_risk</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_attribute_inference</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -723,7 +721,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_run_attack_from_configfile</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_run_attack_from_configfile</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command line attack based on saved files described in .json file.&quot;&quot;&quot;</span>
     <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">AttributeAttack</span><span class="p">(</span>
         <span class="n">attack_config_json_file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">attack_config_json_file_name</span><span class="p">),</span>
@@ -737,7 +735,7 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../attacks/attribute.html#aisdc.attacks.attribute_attack.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse args and invoke relevant code.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 

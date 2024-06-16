@@ -76,7 +76,6 @@
   <h1>Source code for aisdc.attacks.likelihood_attack</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Likelihood testing scenario from https://arxiv.org/pdf/2112.03570.pdf.&quot;&quot;&quot;</span>
 
-<span class="c1"># pylint: disable = invalid-name</span>
 <span class="c1"># pylint: disable = too-many-branches</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -117,16 +116,16 @@
 
 <div class="viewcode-block" id="DummyClassifier.predict">
 <a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict">[docs]</a>
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an array of 1/0 depending on value in second column.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">test_X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">X_test</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DummyClassifier.predict_proba">
 <a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba">[docs]</a>
-    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simply return the test_X.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">test_X</span></div>
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simply return the X_test.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">X_test</span></div>
 </div>
 
 
@@ -153,8 +152,7 @@
     <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># pylint:disable=consider-using-min-builtin</span>
         <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span>
     <span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>
-    <span class="n">li</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">li</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="LIRAAttack">
@@ -250,7 +248,7 @@
     <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a LiRA attack from a Target object and a target model.</span>
 
-<span class="sd">        Needs to have x_train, x_test, y_train and y_test set.</span>
+<span class="sd">        Needs to have X_train, X_test, y_train and y_test set.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -263,12 +261,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
             <span class="n">shadow_clf</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">x_train</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_train</span><span class="p">),</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -300,8 +298,8 @@
                 <span class="n">ok_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
                 <span class="n">y_test_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_test_new</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">):</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">x_test</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">[</span><span class="n">ok_pos</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_test_new</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">):</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">[</span><span class="n">ok_pos</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">target</span><span class="o">.</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_test_new</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;new ytest has values and counts: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -357,19 +355,19 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; X, y = load_breast_cancer(return_X_y=True, as_frame=False)</span>
-<span class="sd">        &gt;&gt;&gt; train_X, test_X, train_y, test_y = train_test_split(</span>
+<span class="sd">        &gt;&gt;&gt; X_train, X_test, y_train, y_test = train_test_split(</span>
 <span class="sd">        &gt;&gt;&gt;   X, y, test_size=0.5, stratify=y</span>
 <span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &gt;&gt;&gt; rf = RandomForestClassifier(min_samples_leaf=1, min_samples_split=2)</span>
-<span class="sd">        &gt;&gt;&gt; rf.fit(train_X, train_y)</span>
+<span class="sd">        &gt;&gt;&gt; rf.fit(X_train, y_train)</span>
 <span class="sd">        &gt;&gt;&gt; mia_test_probs, mia_test_labels, mia_clf = likelihood_scenario(</span>
 <span class="sd">        &gt;&gt;&gt;     RandomForestClassifier(min_samples_leaf=1, min_samples_split=2, max_depth=10),</span>
-<span class="sd">        &gt;&gt;&gt;     train_X,</span>
-<span class="sd">        &gt;&gt;&gt;     train_y,</span>
-<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(train_X),</span>
-<span class="sd">        &gt;&gt;&gt;     test_X,</span>
-<span class="sd">        &gt;&gt;&gt;     test_y,</span>
-<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(test_X),</span>
+<span class="sd">        &gt;&gt;&gt;     X_train,</span>
+<span class="sd">        &gt;&gt;&gt;     y_train,</span>
+<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(X_train),</span>
+<span class="sd">        &gt;&gt;&gt;     X_test,</span>
+<span class="sd">        &gt;&gt;&gt;     y_test,</span>
+<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(X_test),</span>
 <span class="sd">        &gt;&gt;&gt;     n_shadow_models=100</span>
 <span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -380,7 +378,7 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_train_rows</span> <span class="o">+</span> <span class="n">n_shadow_rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Combine taregt and shadow train, from which to sample datasets</span>
-        <span class="n">combined_X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_target_train</span><span class="p">,</span> <span class="n">X_shadow_train</span><span class="p">))</span>
+        <span class="n">combined_x_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_target_train</span><span class="p">,</span> <span class="n">X_shadow_train</span><span class="p">))</span>
         <span class="n">combined_y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">y_target_train</span><span class="p">,</span> <span class="n">y_shadow_train</span><span class="p">))</span>
 
         <span class="n">train_row_to_confidence</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_train_rows</span><span class="p">)}</span>
@@ -394,19 +392,18 @@
             <span class="c1"># Pick the indices to use for training this one</span>
             <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">model_idx</span><span class="p">)</span>  <span class="c1"># Reproducibility</span>
             <span class="n">these_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">n_train_rows</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">temp_X_train</span> <span class="o">=</span> <span class="n">combined_X_train</span><span class="p">[</span><span class="n">these_idx</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">temp_x_train</span> <span class="o">=</span> <span class="n">combined_x_train</span><span class="p">[</span><span class="n">these_idx</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">temp_y_train</span> <span class="o">=</span> <span class="n">combined_y_train</span><span class="p">[</span><span class="n">these_idx</span><span class="p">]</span>
 
             <span class="c1"># Fit the shadow model</span>
             <span class="n">shadow_clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">model_idx</span><span class="p">)</span>
-            <span class="n">shadow_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">temp_X_train</span><span class="p">,</span> <span class="n">temp_y_train</span><span class="p">)</span>
+            <span class="n">shadow_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">temp_x_train</span><span class="p">,</span> <span class="n">temp_y_train</span><span class="p">)</span>
 
             <span class="c1"># map a class to a column</span>
             <span class="n">class_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shadow_clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">)}</span>
 
             <span class="c1"># Get the predicted probabilities on the training data</span>
             <span class="n">confidences</span> <span class="o">=</span> <span class="n">shadow_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_target_train</span><span class="p">)</span>
-            <span class="c1"># print(f&#39;shadow clf returned confidences with shape {confidences.shape}&#39;)</span>
 
             <span class="n">these_idx</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">these_idx</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_train_rows</span><span class="p">):</span>
@@ -486,10 +483,8 @@
 
         <span class="n">mia_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_scores</span><span class="p">)</span>
         <span class="n">mia_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mia_labels</span><span class="p">)</span>
-        <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get_probabilities</span><span class="p">(</span>
-            <span class="n">mia_clf</span><span class="p">,</span> <span class="n">mia_scores</span><span class="p">,</span> <span class="n">mia_labels</span><span class="p">,</span> <span class="n">permute_rows</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)]</span></div>
+        <span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">mia_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">mia_scores</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">mia_labels</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="LIRAAttack.example">
@@ -500,19 +495,19 @@
 <span class="sd">        Generates example data, trains a classifier and tuns the attack</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">train_X</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
         <span class="p">)</span>
         <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
             <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">rf</span><span class="p">),</span>
-            <span class="n">train_X</span><span class="p">,</span>
-            <span class="n">train_y</span><span class="p">,</span>
-            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">train_X</span><span class="p">),</span>
-            <span class="n">test_X</span><span class="p">,</span>
-            <span class="n">test_y</span><span class="p">,</span>
-            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_X</span><span class="p">),</span>
+            <span class="n">X_train</span><span class="p">,</span>
+            <span class="n">y_train</span><span class="p">,</span>
+            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span>
+            <span class="n">X_test</span><span class="p">,</span>
+            <span class="n">y_test</span><span class="p">,</span>
+            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -615,19 +610,19 @@
 <span class="sd">        the attack from the command line.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">train_X</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
         <span class="p">)</span>
         <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
-        <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
+        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;train_data.csv&quot;</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
-        <span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">test_X</span><span class="p">,</span> <span class="n">test_y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;test_data.csv&quot;</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
-        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">train_X</span><span class="p">)</span>
-        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_X</span><span class="p">)</span>
+        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;train_preds.csv&quot;</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;test_preds.csv&quot;</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
@@ -651,23 +646,23 @@
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;run-attack&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading training data csv from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span><span class="p">)</span>
         <span class="n">training_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">train_X</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">train_y</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_X</span><span class="p">))</span>
+        <span class="n">X_train</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_train</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading test data csv from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_data_filename</span><span class="p">)</span>
         <span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_data_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">test_X</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">test_y</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_X</span><span class="p">))</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading train predictions form </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_preds_filename</span><span class="p">)</span>
         <span class="n">train_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_preds_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_X</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading test predictions form </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span><span class="p">)</span>
         <span class="n">test_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_X</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Target model cannot be None&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model_hyp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -679,7 +674,7 @@
         <span class="n">clf</span> <span class="o">=</span> <span class="n">clf_class</span><span class="p">(</span><span class="o">**</span><span class="n">clf_params</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created model: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">clf</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
-            <span class="n">clf</span><span class="p">,</span> <span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_y</span><span class="p">,</span> <span class="n">test_preds</span>
+            <span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">test_preds</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing metrics&quot;</span><span class="p">)</span></div>
 </div>
@@ -716,7 +711,6 @@
 
 <span class="k">def</span> <span class="nf">_run_attack</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command line attack based on saved files described in .json file.&quot;&quot;&quot;</span>
-    <span class="c1"># attack_obj = LIRAAttack(**args.__dict__)</span>
     <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
         <span class="n">n_shadow_models</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_models</span><span class="p">,</span>
         <span class="n">n_shadow_rows_confidences_min</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span><span class="p">,</span>

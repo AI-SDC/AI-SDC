@@ -217,27 +217,27 @@ complex datastructures that cannot be compared directly.</p>
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.additional_checks">
 <span class="sig-name descname"><span class="pre">additional_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_separate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/safemodel.html#SafeModel.additional_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.additional_checks" title="Link to this definition"></a></dt>
 <dd><p>Perform additional posthoc checks.</p>
-<p>Placeholder function for additional posthoc checks e.g. keras this
+<p>Placeholder function for additional posthoc checks e.g. keras. This
 version just checks that any lists have the same contents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>curr_separate</strong><span class="classifier">python dictionary</span></dt><dd></dd>
-<dt><strong>saved_separate</strong><span class="classifier">python dictionary</span></dt><dd></dd>
+<dt><strong>curr_separate</strong><span class="classifier">dict</span></dt><dd></dd>
+<dt><strong>saved_separate</strong><span class="classifier">dict</span></dt><dd></dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>msg</strong><span class="classifier">string</span></dt><dd></dd>
-<dt>A message string</dt><dd></dd>
-<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd></dd>
-<dt>A boolean value to indicate whether the model is potentially disclosive.</dt><dd></dd>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
+</dd>
+<dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value to indicate whether the model is potentially disclosive.</p>
+</dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>posthoc checking makes sure that the two dicts have the same set of
-keys as defined in the list self.examine_separately</p>
+<p>Posthoc checking makes sure that the two dicts have the same set of
+keys as defined in the list self.examine_separately.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -254,7 +254,7 @@ keys as defined in the list self.examine_separately</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/safemodel/safemodel.html#SafeModel.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.get_params" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/safemodel.html#SafeModel.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.get_params" title="Link to this definition"></a></dt>
 <dd><p>Get a dictionary of parameter values restricted to those expected.</p>
 </dd></dl>
 
@@ -281,7 +281,7 @@ to be upheld and applied.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string</p>
+<dt><strong>msg</strong><span class="classifier">string</span></dt><dd><p>A message string.</p>
 </dd>
 <dt><strong>disclosive</strong><span class="classifier">bool</span></dt><dd><p>A boolean value indicating whether the model is potentially
 disclosive.</p>
@@ -337,30 +337,29 @@ attacks are called via run_attack.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Currently implement attack types are:
-Likelihood Ratio: lira
-Worst_Case Membership inference: worst_case
-Single Attribute Inference: attributes</p>
+<p>Currently implemented attack types are:
+- Likelihood Ratio: lira.
+- Worst_Case Membership inference: worst_case.
+- Single Attribute Inference: attribute.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="aisdc.safemodel.safemodel.SafeModel.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undefined'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/safemodel/safemodel.html#SafeModel.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.safemodel.safemodel.SafeModel.save" title="Link to this definition"></a></dt>
 <dd><p>Write model to file in appropriate format.</p>
-<p>Note this is overloaded in SafeKerasClassifer
+<p>Note this is overloaded in <cite>SafeKerasClassifer</cite>
 to deal with tensorflow specifics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>The name of the file to save</p>
+<dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>The name of the file to save.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Optimizer is deliberately excluded.
-To prevent possible to restart training and thus
-possible back door into attacks.</p>
+<p>Optimizer is deliberately excluded to prevent possible restart to
+training and thus possible back door into attacks.</p>
 </dd></dl>
 
 </dd></dl>

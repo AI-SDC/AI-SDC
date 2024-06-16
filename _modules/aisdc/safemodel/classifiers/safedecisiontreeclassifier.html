@@ -85,8 +85,8 @@
 <span class="kn">from</span> <span class="nn">dictdiffer</span> <span class="kn">import</span> <span class="n">diff</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
 
-<span class="kn">from</span> <span class="nn">..reporting</span> <span class="kn">import</span> <span class="n">get_reporting_string</span>
-<span class="kn">from</span> <span class="nn">..safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
+<span class="kn">from</span> <span class="nn">aisdc.safemodel.reporting</span> <span class="kn">import</span> <span class="n">get_reporting_string</span>
+<span class="kn">from</span> <span class="nn">aisdc.safemodel.safemodel</span> <span class="kn">import</span> <span class="n">SafeModel</span>
 
 
 <div class="viewcode-block" id="decision_trees_are_equal">
@@ -180,12 +180,11 @@
                             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;internal_attribute_differs&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">attr</span>
                         <span class="p">)</span>
                         <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">t1val</span> <span class="o">!=</span> <span class="n">t2val</span><span class="p">:</span>
-                        <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
-                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;internal_attribute_differs&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">attr</span>
-                        <span class="p">)</span>
-                        <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">t1val</span> <span class="o">!=</span> <span class="n">t2val</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;internal_attribute_differs&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">attr</span>
+                    <span class="p">)</span>
+                    <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pylint:disable=broad-except #pragma:no cover</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;exception_occurred&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">same</span><span class="p">,</span> <span class="n">msg</span></div>
@@ -198,8 +197,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the smallest number of data items in any leaf.&quot;&quot;&quot;</span>
     <span class="n">leaves</span> <span class="o">=</span> <span class="n">thetree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">uniqs_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">k_anonymity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">uniqs_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">k_anonymity</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">uniqs_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 
 
@@ -208,7 +206,7 @@
 <span class="k">class</span> <span class="nc">SafeDecisionTreeClassifier</span><span class="p">(</span><span class="n">SafeModel</span><span class="p">,</span> <span class="n">DecisionTreeClassifier</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-ancestors</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Privacy protected Decision Tree classifier.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create model and apply constraints to params.&quot;&quot;&quot;</span>
         <span class="n">SafeModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basemodel_paramnames</span> <span class="o">=</span> <span class="p">[</span>

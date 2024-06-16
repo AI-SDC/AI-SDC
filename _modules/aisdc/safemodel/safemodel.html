@@ -315,7 +315,7 @@
 
 <div class="viewcode-block" id="SafeModel.get_params">
 <a class="viewcode-back" href="../../../safemodel/safemodel.html#aisdc.safemodel.safemodel.SafeModel.get_params">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of parameter values restricted to those expected.&quot;&quot;&quot;</span>
         <span class="n">the_params</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -331,34 +331,30 @@
     <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write model to file in appropriate format.</span>
 
-<span class="sd">        Note this is overloaded in SafeKerasClassifer</span>
+<span class="sd">        Note this is overloaded in `SafeKerasClassifer`</span>
 <span class="sd">        to deal with tensorflow specifics.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : string</span>
-<span class="sd">             The name of the file to save</span>
+<span class="sd">             The name of the file to save.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Optimizer is deliberately excluded.</span>
-<span class="sd">        To prevent possible to restart training and thus</span>
-<span class="sd">        possible back door into attacks.</span>
+<span class="sd">        Optimizer is deliberately excluded to prevent possible restart to</span>
+<span class="sd">        training and thus possible back door into attacks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You must input a name with extension to save the model.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">thename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-            <span class="c1"># print(f&#39;in save(), parsed filename is {thename}&#39;)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thename</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;file name must indicate type as a suffix&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-                <span class="k">if</span> <span class="p">(</span>
-                    <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span>
-                <span class="p">):</span>  <span class="c1"># save to pickle</span>
+                <span class="c1"># save to pickle</span>
+                <span class="k">if</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span><span class="p">:</span>
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
@@ -368,10 +364,8 @@
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">.&quot;</span>
                                 <span class="sa">f</span><span class="s2">&quot;Error message was </span><span class="si">{</span><span class="n">type_err</span><span class="si">}</span><span class="s2">&quot;</span>
                             <span class="p">)</span>
-
-                <span class="k">elif</span> <span class="p">(</span>
-                    <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;sav&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span>
-                <span class="p">):</span>  <span class="c1"># save to joblib</span>
+                <span class="c1"># save to joblib</span>
+                <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;sav&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">&quot;KerasModel&quot;</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_save_file</span><span class="p">)</span>
                     <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="n">PicklingError</span><span class="p">)</span> <span class="k">as</span> <span class="n">type_err</span><span class="p">:</span>
@@ -493,7 +487,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        msg : string</span>
-<span class="sd">           A message string</span>
+<span class="sd">           A message string.</span>
 <span class="sd">        disclosive : bool</span>
 <span class="sd">           A boolean value indicating whether the model is potentially</span>
 <span class="sd">           disclosive.</span>
@@ -517,10 +511,7 @@
             <span class="k">if</span> <span class="n">temp_disc</span><span class="p">:</span>
                 <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">if</span> <span class="n">disclosive</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">notok_start</span> <span class="o">+</span> <span class="n">msg</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">ok_start</span> <span class="o">+</span> <span class="n">msg</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">notok_start</span> <span class="o">+</span> <span class="n">msg</span> <span class="k">if</span> <span class="n">disclosive</span> <span class="k">else</span> <span class="n">ok_start</span> <span class="o">+</span> <span class="n">msg</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preliminary checks: &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="p">)</span>
@@ -538,7 +529,7 @@
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">attribute_names_as_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_items</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>  <span class="c1"># jim added</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
                     <span class="n">current_model</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">except</span> <span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">key_type</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> cannot be copied&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
@@ -576,11 +567,11 @@
                 <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;both_item_removed&quot;</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;current_item_removed&quot;</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
 
-            <span class="k">if</span> <span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">saved_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Absent&quot;</span> <span class="ow">and</span> <span class="n">curr_vals</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Absent&quot;</span><span class="p">:</span>
                 <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">msg</span> <span class="o">+=</span> <span class="n">get_reporting_string</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;saved_item_removed&quot;</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
 
@@ -653,25 +644,25 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform additional posthoc checks.</span>
 
-<span class="sd">        Placeholder function for additional posthoc checks e.g. keras this</span>
+<span class="sd">        Placeholder function for additional posthoc checks e.g. keras. This</span>
 <span class="sd">        version just checks that any lists have the same contents.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        curr_separate : python dictionary</span>
-<span class="sd">        saved_separate : python dictionary</span>
+<span class="sd">        curr_separate : dict</span>
+<span class="sd">        saved_separate : dict</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        msg : string</span>
-<span class="sd">        A message string</span>
+<span class="sd">            A message string.</span>
 <span class="sd">        disclosive : bool</span>
-<span class="sd">        A boolean value to indicate whether the model is potentially disclosive.</span>
+<span class="sd">            A boolean value to indicate whether the model is potentially disclosive.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        posthoc checking makes sure that the two dicts have the same set of</span>
-<span class="sd">        keys as defined in the list self.examine_separately</span>
+<span class="sd">        Posthoc checking makes sure that the two dicts have the same set of</span>
+<span class="sd">        keys as defined in the list self.examine_separately.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">disclosive</span> <span class="o">=</span> <span class="kc">False</span>
@@ -781,10 +772,10 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Currently implement attack types are:</span>
-<span class="sd">        Likelihood Ratio: lira</span>
-<span class="sd">        Worst_Case Membership inference: worst_case</span>
-<span class="sd">        Single Attribute Inference: attributes</span>
+<span class="sd">        Currently implemented attack types are:</span>
+<span class="sd">        - Likelihood Ratio: lira.</span>
+<span class="sd">        - Worst_Case Membership inference: worst_case.</span>
+<span class="sd">        - Single Attribute Inference: attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">attack_name</span> <span class="o">==</span> <span class="s2">&quot;worst_case&quot;</span><span class="p">:</span>
             <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">WorstCaseAttack</span><span class="p">(</span>

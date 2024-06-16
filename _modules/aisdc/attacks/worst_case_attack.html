@@ -76,16 +76,15 @@
   <h1>Source code for aisdc.attacks.worst_case_attack</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Run a worst case attack based upon predictive probabilities.&quot;&quot;&quot;</span>
 
-<span class="c1"># pylint: disable = too-many-lines</span>
-
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
@@ -274,7 +273,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dummy_attack_metric_failfast_summary</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return name of attack.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;WorstCase attack&quot;</span>
 
@@ -290,13 +289,13 @@
 <span class="sd">        target : attacks.target.Target</span>
 <span class="sd">            target as a Target class object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_train</span><span class="p">)</span>
-        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">)</span>
+        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
         <span class="n">train_correct</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">test_correct</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_model_correct_feature</span><span class="p">:</span>
-            <span class="n">train_correct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">y_train</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_train</span><span class="p">))</span>
-            <span class="n">test_correct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">y_test</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">x_test</span><span class="p">))</span>
+            <span class="n">train_correct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">y_train</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">))</span>
+            <span class="n">test_correct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">y_test</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_from_preds</span><span class="p">(</span>
             <span class="n">train_preds</span><span class="p">,</span>
@@ -308,7 +307,7 @@
 
 <div class="viewcode-block" id="WorstCaseAttack.attack_from_prediction_files">
 <a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.WorstCaseAttack.attack_from_prediction_files">[docs]</a>
-    <span class="k">def</span> <span class="nf">attack_from_prediction_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">attack_from_prediction_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run attack from saved prediction files.</span>
 
 <span class="sd">        To be used when only saved predictions are available.</span>
@@ -463,11 +462,9 @@
             <span class="p">)</span>
             <span class="n">attack_classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mia_attack_model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_attack_model_hyp</span><span class="p">)</span>
             <span class="n">attack_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mi_train_x</span><span class="p">,</span> <span class="n">mi_train_y</span><span class="p">)</span>
-            <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get_probabilities</span><span class="p">(</span>
-                <span class="n">attack_classifier</span><span class="p">,</span> <span class="n">mi_test_x</span><span class="p">,</span> <span class="n">mi_test_y</span><span class="p">,</span> <span class="n">permute_rows</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
 
-            <span class="n">mia_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+            <span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">attack_classifier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">mi_test_x</span><span class="p">)</span>
+            <span class="n">mia_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">mi_test_y</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_model_correct_feature</span> <span class="ow">and</span> <span class="n">train_correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Compute the Yeom TPR and FPR</span>
@@ -543,7 +540,9 @@
 
         <span class="k">return</span> <span class="n">global_metrics</span>
 
-    <span class="k">def</span> <span class="nf">_get_n_significant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_val_list</span><span class="p">,</span> <span class="n">p_thresh</span><span class="p">,</span> <span class="n">bh_fdr_correction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_n_significant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">p_val_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">p_thresh</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bh_fdr_correction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return number of p-values significant at p_thresh.</span>
 
 <span class="sd">        Can perform multiple testing correction.</span>
@@ -554,11 +553,7 @@
         <span class="n">n_vals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_val_list</span><span class="p">)</span>
         <span class="n">hoch_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">k</span> <span class="o">/</span> <span class="n">n_vals</span><span class="p">)</span> <span class="o">*</span> <span class="n">P_THRESH</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_vals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
         <span class="n">bh_sig_list</span> <span class="o">=</span> <span class="n">p_val_list</span> <span class="o">&lt;=</span> <span class="n">hoch_vals</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">):</span>
-            <span class="n">n_sig_bh</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">n_sig_bh</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="n">n_sig_bh</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">bh_sig_list</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_generate_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate array of predictions, used when doing baseline experiments.</span>
@@ -622,11 +617,6 @@
     <span class="k">def</span> <span class="nf">make_dummy_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make dummy data for testing functionality.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        args : dict</span>
-<span class="sd">            Command line arguments</span>
-
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        Returns nothing but saves two .csv files.</span>
@@ -649,7 +639,7 @@
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_construct_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_construct_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct the metadata object after attacks.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Store all args</span>
@@ -739,7 +729,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_make_dummy_data</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_make_dummy_data</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise class and run dummy data creation.&quot;&quot;&quot;</span>
     <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;training_preds_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;train_preds.csv&quot;</span>
     <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;test_preds_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;test_preds.csv&quot;</span>
@@ -754,7 +744,7 @@
     <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_dummy_data</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_run_attack</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_run_attack</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise class and run attack from prediction files.&quot;&quot;&quot;</span>
     <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">WorstCaseAttack</span><span class="p">(</span>
         <span class="n">n_reps</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_reps</span><span class="p">,</span>
@@ -779,7 +769,7 @@
     <span class="n">_</span> <span class="o">=</span> <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_run_attack_from_configfile</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_run_attack_from_configfile</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise class and run attack from prediction files using config file.&quot;&quot;&quot;</span>
     <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">WorstCaseAttack</span><span class="p">(</span>
         <span class="n">attack_config_json_file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">attack_config_json_file_name</span><span class="p">),</span>
@@ -793,7 +783,7 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../attacks/worst_case.html#aisdc.attacks.worst_case_attack.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse arguments and invoke relevant method.&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>

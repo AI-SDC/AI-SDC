@@ -119,7 +119,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="aisdc.metrics.get_metrics">
-<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred_proba</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/metrics.html#get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_metrics" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred_proba</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permute_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/metrics.html#get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_metrics" title="Link to this definition"></a></dt>
 <dd><p>Calculate metrics, including attacker advantage for MIA binary.</p>
 <p>Implemented as Definition 4 on <a class="reference external" href="https://arxiv.org/pdf/1709.01604.pdf">https://arxiv.org/pdf/1709.01604.pdf</a>
 which is also implemented in tensorFlow-privacy
@@ -127,9 +127,11 @@ which is also implemented in tensorFlow-privacy
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>y_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data labels</p>
+<dt><strong>y_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>Test data labels.</p>
 </dd>
-<dt><strong>y_pred_proba</strong><span class="classifier">np.ndarray of shape [x,2] and type float</span></dt><dd><p>predicted probabilities</p>
+<dt><strong>y_pred_proba</strong><span class="classifier">np.ndarray of shape [x,2] and type float</span></dt><dd><p>Predicted probabilities.</p>
+</dd>
+<dt><strong>permute_rows</strong><span class="classifier">bool, default True</span></dt><dd><p>Whether to permute arrays, see: <a class="reference external" href="https://github.com/AI-SDC/AI-SDC/issues/106">https://github.com/AI-SDC/AI-SDC/issues/106</a></p>
 </dd>
 </dl>
 </dd>
@@ -154,34 +156,6 @@ which is also implemented in tensorFlow-privacy
 <li><p>F1 Score - harmonic mean of precision and recall.</p></li>
 <li><p>Advantage.</p></li>
 </ul>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="aisdc.metrics.get_probabilities">
-<span class="sig-prename descclassname"><span class="pre">aisdc.metrics.</span></span><span class="sig-name descname"><span class="pre">get_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">array([],</span> <span class="pre">dtype=float64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permute_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/metrics.html#get_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.metrics.get_probabilities" title="Link to this definition"></a></dt>
-<dd><p>Get probabilities for a given model and dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>clf</strong><span class="classifier">sklearn.Model</span></dt><dd><p>trained model</p>
-</dd>
-<dt><strong>X_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data matrix</p>
-</dd>
-<dt><strong>y_test</strong><span class="classifier">np.ndarray</span></dt><dd><p>test data labels</p>
-</dd>
-<dt><strong>permute_rows</strong><span class="classifier">boolean</span></dt><dd><p>a flag to indicate whether rows should be permuted</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>y_pred_proba</strong><span class="classifier">a list of probabilities for each sample in the dataset</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>If permute_rows is set to true, y_test must also be supplied.
-The function will then return both the predicted probabilities and corresponding y_test</p>
 </dd></dl>
 
 <dl class="py function">
