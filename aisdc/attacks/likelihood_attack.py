@@ -15,7 +15,7 @@ from datetime import datetime
 
 import numpy as np
 import sklearn
-from scipy.stats import norm
+from scipy.stats import norm, shapiro
 from sklearn.datasets import load_breast_cancer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -75,7 +75,7 @@ class LIRAAttack(Attack):
 
     # pylint: disable=too-many-instance-attributes
 
-    def __init__(  # pylint: disable = too-many-arguments
+    def __init__(  # pylint: disable = too-many-arguments,too-many-locals
         self,
         n_shadow_models: int = 100,
         p_thresh: float = 0.05,
@@ -91,6 +91,9 @@ class LIRAAttack(Attack):
         n_shadow_rows_confidences_min: int = 10,
         shadow_models_fail_fast: bool = False,
         target_path: str = None,
+        mode: str = "offline",
+        fix_variance: bool = False,
+        report_individual: bool = False,
     ) -> None:
         """Construct an object to execute a LiRA attack.
 
@@ -128,6 +131,12 @@ class LIRAAttack(Attack):
             number of confidences for each row in the test data
         target_path : str
             path to the saved trained target model and target data
+        mode : str
+            Attack mode: {"offline", "offline-carlini", "online-carlini"}
+        fix_variance : bool
+            Whether to use the global standard deviation or per record.
+        report_individual : bool
+            Whether to report metrics for each individual record.
         """
         super().__init__()
         self.n_shadow_models = n_shadow_models
@@ -144,6 +153,9 @@ class LIRAAttack(Attack):
         self.n_shadow_rows_confidences_min = n_shadow_rows_confidences_min
         self.shadow_models_fail_fast = shadow_models_fail_fast
         self.target_path = target_path
+        self.mode = mode
+        self.fix_variance = fix_variance
+        self.report_individual = report_individual
         if self.attack_config_json_file_name is not None:
             self._update_params_from_config_file()
         if not os.path.exists(self.output_dir):
@@ -227,10 +239,22 @@ class LIRAAttack(Attack):
         X_shadow_train: Iterable[float],
         y_shadow_train: Iterable[float],
         shadow_train_preds: Iterable[float],
-    ) -> tuple[np.ndarray, np.ndarray, sklearn.base.BaseEstimator]:
-        """Run the likelihood test, using the "offline" version.
+    ) -> None:
+        """Run the likelihood test.
 
         See p.6 (top of second column) for details.
+
+        With mode "offline", we measure the probability of observing a
+        confidence as high as the target model's under the null-hypothesis that
+        the target point is a non-member. That is we, use the norm CDF.
+
+        With mode "offline-carlini", we measure the probability that a target point
+        did not come from the non-member distribution. That is, we use Carlini's
+        implementation with a single norm (log) PDF.
+
+        With mode "online-carlini", we use Carlini's implementation of the standard
+        likelihood ratio test, measuring the ratio of probabilities the sample came
+        from the two distributions. That is, the (log) PDF of pr_in minus pr_out.
 
         Parameters
         ----------
@@ -249,51 +273,26 @@ class LIRAAttack(Attack):
             Labels that will be used to train the shadow model
         shadow_train_preds : np.ndarray
             Array of predictions produced by the target model on the shadow data
-
-        Returns
-        -------
-        mia_scores : np.ndarray
-            Attack probabilities of belonging to the training set or not
-        mia_labels : np.ndarray
-            True labels of belonging to the training set or not
-        mia_cls : DummyClassifier
-            A DummyClassifier that directly returns the scores for compatibility with code
-            in metrics.py
-
-        Examples
-        --------
-        >>> X, y = load_breast_cancer(return_X_y=True, as_frame=False)
-        >>> X_train, X_test, y_train, y_test = train_test_split(
-        >>>   X, y, test_size=0.5, stratify=y
-        >>> )
-        >>> rf = RandomForestClassifier(min_samples_leaf=1, min_samples_split=2)
-        >>> rf.fit(X_train, y_train)
-        >>> mia_test_probs, mia_test_labels, mia_clf = likelihood_scenario(
-        >>>     RandomForestClassifier(min_samples_leaf=1, min_samples_split=2, max_depth=10),
-        >>>     X_train,
-        >>>     y_train,
-        >>>     rf.predict_proba(X_train),
-        >>>     X_test,
-        >>>     y_test,
-        >>>     rf.predict_proba(X_test),
-        >>>     n_shadow_models=100
-        >>> )
         """
         logger = logging.getLogger("lr-scenario")
+        if self.shadow_models_fail_fast:
+            logger.warning("LiRA fail-fast functionality currently unsupported.")
 
         n_train_rows, _ = X_target_train.shape
         n_shadow_rows, _ = X_shadow_train.shape
-        indices = np.arange(0, n_train_rows + n_shadow_rows, 1)
+        n_combined = n_train_rows + n_shadow_rows
+        indices = np.arange(0, n_combined, 1)
 
         # Combine taregt and shadow train, from which to sample datasets
         combined_x_train = np.vstack((X_target_train, X_shadow_train))
         combined_y_train = np.hstack((y_target_train, y_shadow_train))
+        combined_target_preds = np.vstack((target_train_preds, shadow_train_preds))
 
-        train_row_to_confidence = {i: [] for i in range(n_train_rows)}
-        shadow_row_to_confidence = {i: [] for i in range(n_shadow_rows)}
+        out_confidences = {i: [] for i in range(n_combined)}
+        in_confidences = {i: [] for i in range(n_combined)}
 
-        # Train N_SHADOW_MODELS shadow models
         logger.info("Training shadow models")
+
         for model_idx in range(self.n_shadow_models):
             if model_idx % 10 == 0:
                 logger.info("Trained %d models", model_idx)
@@ -310,89 +309,133 @@ class LIRAAttack(Attack):
             # map a class to a column
             class_map = {c: i for i, c in enumerate(shadow_clf.classes_)}
 
-            # Get the predicted probabilities on the training data
-            confidences = shadow_clf.predict_proba(X_target_train)
-
+            # generate shadow confidences
+            shadow_confidences = shadow_clf.predict_proba(combined_x_train)
             these_idx = set(these_idx)
-            for i in range(n_train_rows):
+            for i, conf in enumerate(shadow_confidences):
+                # logit of the correct class
+                label = class_map.get(combined_y_train[i], -1)
+                # Occasionally, the random data split will result in classes being
+                # absent from the training set. In these cases label will be -1 and
+                # we include logit(0) instead of discarding
+                logit = _logit(0) if label < 0 else _logit(conf[label])
                 if i not in these_idx:
-                    # If i was _not_ used for training, incorporate the logit of its confidence of
-                    # being correct - TODO: should we just be taking max??
-                    cl_pos = class_map.get(y_target_train[i], -1)
-                    # Occasionally, the random data split will result in classes being
-                    # absent from the training set. In these cases cl_pos will be -1 and
-                    # we include logit(0) instead of discarding (also for the shadow data below)
-                    if cl_pos >= 0:
-                        train_row_to_confidence[i].append(
-                            _logit(confidences[i, cl_pos])
-                        )
-                    else:  # pragma: no cover
-                        # catch-all
-                        train_row_to_confidence[i].append(_logit(0))
-            # Same process for shadow data
-            shadow_confidences = shadow_clf.predict_proba(X_shadow_train)
-            for i in range(n_shadow_rows):
-                if i + n_train_rows not in these_idx:
-                    cl_pos = class_map.get(y_shadow_train[i], -1)
-                    if cl_pos >= 0:
-                        shadow_row_to_confidence[i].append(
-                            _logit(shadow_confidences[i, cl_pos])
-                        )
-                    else:  # pragma: no cover
-                        # catch-all
-                        shadow_row_to_confidence[i].append(_logit(0))
+                    out_confidences[i].append(logit)
+                else:
+                    in_confidences[i].append(logit)
 
-            # Compute number of confidences for each row
-            lengths_shadow_row_to_confidence = {
-                key: len(value) for key, value in shadow_row_to_confidence.items()
-            }
-            n_shadow_confidences = self.n_shadow_rows_confidences_min
-            # Stop training of shadow models when shadow_model_fail_fast is True
-            # and a minimum number of confidences specified by parameter
-            # (n_shadow_rows_confidences_min) are computed for each row
-            if (
-                not any(
-                    value < n_shadow_confidences
-                    for value in lengths_shadow_row_to_confidence.values()
-                )
-                and self.shadow_models_fail_fast
-            ):
-                break
-        self.attack_failfast_shadow_models_trained = model_idx + 1
-        # Do the test described in the paper in each case
+        logger.info("Computing scores")
+
         mia_scores = []
-        mia_labels = []
-        logger.info("Computing scores for train rows")
-        for i in range(n_train_rows):
-            true_score = _logit(target_train_preds[i, y_target_train[i]])
-            null_scores = np.array(train_row_to_confidence[i])
-            mean_null = 0.0
-            var_null = 0.0
-            if not np.isnan(null_scores).all():
-                mean_null = np.nanmean(null_scores)  # null_scores.mean()
-                var_null = np.nanvar(null_scores)  #
-            var_null = max(var_null, EPS)  # var can be zero in some cases
-            prob = norm.cdf(true_score, loc=mean_null, scale=np.sqrt(var_null))
-            mia_scores.append([1 - prob, prob])
-            mia_labels.append(1)
+        mia_labels = [1] * n_train_rows + [0] * n_shadow_rows
+        n_normal = 0
 
-        logger.info("Computing scores for shadow rows")
-        for i in range(n_shadow_rows):
-            true_score = _logit(shadow_train_preds[i, y_shadow_train[i]])
-            null_scores = np.array(shadow_row_to_confidence[i])
-            mean_null = null_scores.mean()
-            var_null = max(null_scores.var(), EPS)  # var can be zeros in some cases
-            prob = norm.cdf(true_score, loc=mean_null, scale=np.sqrt(var_null))
-            mia_scores.append([1 - prob, prob])
-            mia_labels.append(0)
+        if self.report_individual:
+            result = {}
+            result["score"] = []
+            result["label"] = []
+            result["target_logit"] = []
+            result["out_p_norm"] = []
+            result["out_prob"] = []
+            result["out_mean"] = []
+            result["out_std"] = []
+            if self.mode == "online_carlini":
+                result["in_prob"] = []
+                result["in_mean"] = []
+                result["in_std"] = []
 
+        if self.fix_variance:  # compute global standard deviations
+            # requires conversion from a dict of diff size proba lists
+            out_arrays = list(out_confidences.values())
+            out_combined = np.concatenate(out_arrays)
+            global_out_std = 0
+            if not np.isnan(out_combined).all():
+                global_out_std = np.nanstd(out_combined)
+            in_arrays = list(in_confidences.values())
+            in_combined = np.concatenate(in_arrays)
+            global_in_std = 0
+            if not np.isnan(in_combined).all():
+                global_in_std = np.nanstd(in_combined)
+
+        # scpre each record in the member and non-member sets
+        for i in range(n_combined):
+            # get the target model behaviour on the record
+            label = combined_y_train[i]
+            target_conf = combined_target_preds[i, label]
+            target_logit = _logit(target_conf)
+
+            # compare the target logit with behaviour observed as a non-member
+            out_scores = np.array(out_confidences[i])
+            out_mean = 0
+            out_std = 0
+            if not np.isnan(out_scores).all():
+                out_mean = np.nanmean(out_scores)
+                out_std = np.nanstd(out_scores)
+            if self.fix_variance:
+                out_std = global_out_std
+            out_prob = -norm.logpdf(target_logit, out_mean, out_std + EPS)
+
+            # test the non-member samples for normality
+            out_p_norm = np.NaN
+            if np.nanvar(out_scores) > EPS:
+                try:
+                    _, out_p_norm = shapiro(out_scores)
+                    if out_p_norm <= 0.05:
+                        n_normal += 1
+                except ValueError:  # pragma: no cover
+                    pass
+
+            if self.mode == "offline":
+                # probability of observing a confidence as high as the target model's
+                # under the null-hypothesis that the target point is a non-member
+                out_prob = norm.cdf(target_logit, loc=out_mean, scale=out_std + EPS)
+                mia_scores.append([1 - out_prob, out_prob])
+            elif self.mode == "online-carlini":
+                # compare the target logit with behaviour observed as a member
+                in_scores = np.array(in_confidences[i])
+                in_mean = 0
+                in_std = 0
+                if not np.isnan(in_scores).all():
+                    in_mean = np.nanmean(in_scores)
+                    in_std = np.nanstd(in_scores)
+                if self.fix_variance:
+                    in_std = global_in_std
+                in_prob = -norm.logpdf(target_logit, in_mean, in_std + EPS)
+                # compute the likelihood ratio
+                prob = in_prob - out_prob
+                mia_scores.append([prob, -prob])
+            elif self.mode == "offline-carlini":
+                # probability the record is not a non-member
+                prob = out_prob
+                mia_scores.append([-prob, prob])
+            else:
+                raise ValueError(f"Unsupported LiRA mode: {self.mode}")
+
+            if self.report_individual:
+                result["label"].append(label)
+                result["target_logit"].append(target_logit)
+                result["out_p_norm"].append(out_p_norm)
+                result["out_prob"].append(out_prob)
+                result["out_mean"].append(out_mean)
+                result["out_std"].append(out_std + EPS)
+                if self.mode == "online_carlini":
+                    result["in_prob"].append(in_prob)
+                    result["in_mean"].append(in_mean)
+                    result["in_std"].append(in_std + EPS)
+
+        # save metrics
         mia_clf = DummyClassifier()
-        logger.info("Finished scenario")
-
         mia_scores = np.array(mia_scores)
         mia_labels = np.array(mia_labels)
         y_pred_proba = mia_clf.predict_proba(mia_scores)
         self.attack_metrics = [metrics.get_metrics(y_pred_proba, mia_labels)]
+        self.attack_metrics[-1]["n_normal"] = n_normal / n_combined
+        if self.report_individual:
+            result["score"] = [score[1] for score in mia_scores]
+            result["member"] = mia_labels
+            self.attack_metrics[-1]["individual"] = result
+
+        logger.info("Finished scenario")
 
     def example(self) -> None:
         """Run an example attack using data from sklearn.

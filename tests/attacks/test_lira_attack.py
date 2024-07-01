@@ -91,12 +91,7 @@ def test_lira_attack(lira_classifier_setup):
         report_name="lira_example1_report",
     )
     attack_obj2.attack(target)
-    output2 = attack_obj2.make_report()
-    n_shadow_models_trained = output2["attack_experiment_logger"][
-        "attack_instance_logger"
-    ]["instance_0"]["n_shadow_models_trained"]
-    n_shadow_models = output2["metadata"]["experiment_details"]["n_shadow_models"]
-    assert n_shadow_models_trained == n_shadow_models
+    _ = attack_obj2.make_report()
 
 
 def test_check_and_update_dataset(lira_classifier_setup):
@@ -170,57 +165,3 @@ def test_check_and_update_dataset(lira_classifier_setup):
     ]
     with patch.object(sys, "argv", testargs):
         likelihood_attack.main()
-
-
-def test_lira_attack_failfast_example():
-    """Tests the lira code two ways."""
-    attack_obj = LIRAAttack(
-        n_shadow_models=N_SHADOW_MODELS,
-        output_dir="test_output_lira",
-        attack_config_json_file_name=LR_CONFIG,
-        shadow_models_fail_fast=True,
-        n_shadow_rows_confidences_min=10,
-    )
-    attack_obj.setup_example_data()
-    attack_obj.attack_from_config()
-    attack_obj.example()
-
-
-def test_lira_attack_failfast_from_scratch1(lira_classifier_setup):
-    """Test by training a model from scratch."""
-    target = lira_classifier_setup
-    attack_obj = LIRAAttack(
-        n_shadow_models=N_SHADOW_MODELS,
-        output_dir="test_output_lira",
-        report_name="lira_example2_failfast_report",
-        attack_config_json_file_name=LR_CONFIG,
-        shadow_models_fail_fast=True,
-        n_shadow_rows_confidences_min=10,
-    )
-    attack_obj.attack(target)
-    output = attack_obj.make_report()
-    n_shadow_models_trained = output["attack_experiment_logger"][
-        "attack_instance_logger"
-    ]["instance_0"]["n_shadow_models_trained"]
-    n_shadow_models = output["metadata"]["experiment_details"]["n_shadow_models"]
-    assert n_shadow_models_trained == n_shadow_models
-
-
-def test_lira_attack_failfast_from_scratch2(lira_classifier_setup):
-    """Test by training a model from scratch."""
-    target = lira_classifier_setup
-    attack_obj = LIRAAttack(
-        n_shadow_models=150,
-        output_dir="test_output_lira",
-        report_name="lira_example3_failfast_report",
-        attack_config_json_file_name=LR_CONFIG,
-        shadow_models_fail_fast=True,
-        n_shadow_rows_confidences_min=10,
-    )
-    attack_obj.attack(target)
-    output = attack_obj.make_report()
-    n_shadow_models_trained = output["attack_experiment_logger"][
-        "attack_instance_logger"
-    ]["instance_0"]["n_shadow_models_trained"]
-    n_shadow_models = output["metadata"]["experiment_details"]["n_shadow_models"]
-    assert n_shadow_models_trained < n_shadow_models
