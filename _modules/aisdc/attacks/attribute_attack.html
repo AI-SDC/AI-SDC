@@ -500,9 +500,7 @@
 <span class="sd">    For simplicity, assumes integer datatypes are categorical.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature_id</span><span class="p">][</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">encoding</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">encoding</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;onehot&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">encoding</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">encoding</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;onehot&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_attack_brute_force</span><span class="p">(</span>
@@ -589,16 +587,12 @@
     <span class="n">actual_probs</span> <span class="o">=</span> <span class="n">target_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">x_feat</span><span class="p">[</span><span class="n">lower_bound_index</span><span class="p">]</span>
     <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">x_feat</span><span class="p">[</span><span class="n">upper_bound_index</span><span class="p">]</span>
-    <span class="k">if</span> <span class="p">(</span>
+    <span class="k">return</span> <span class="p">(</span>
         <span class="n">peak</span> <span class="o">&gt;</span> <span class="n">c_min</span>
         <span class="ow">and</span> <span class="n">actual_probs</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">==</span> <span class="n">peak</span>
         <span class="ow">and</span> <span class="n">lower_bound</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">protection_limit</span><span class="p">)</span> <span class="o">*</span> <span class="n">actual_value</span>
         <span class="ow">and</span> <span class="n">upper_bound</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">protection_limit</span><span class="p">)</span> <span class="o">*</span> <span class="n">actual_value</span>
-    <span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-        <span class="c1"># has been tested and shown to work in examples notebooks</span>
-        <span class="c1"># but tests use simplistic nursery dataset</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_bounds_risk_for_feature</span><span class="p">(</span>
