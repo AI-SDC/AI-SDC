@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aisdc.attacks.likelihood_attack &mdash; AI-SDC 1.1.3 documentation</title>
+  <title>aisdc.attacks.likelihood_attack &mdash; AI-SDC 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=cb7bf70b"></script>
+        <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -80,33 +80,23 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">fpdf</span> <span class="kn">import</span> <span class="n">FPDF</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="kn">from</span> <span class="nn">aisdc</span> <span class="kn">import</span> <span class="n">metrics</span>
 <span class="kn">from</span> <span class="nn">aisdc.attacks</span> <span class="kn">import</span> <span class="n">report</span>
 <span class="kn">from</span> <span class="nn">aisdc.attacks.attack</span> <span class="kn">import</span> <span class="n">Attack</span>
-<span class="kn">from</span> <span class="nn">aisdc.attacks.attack_report_formatter</span> <span class="kn">import</span> <span class="n">GenerateJSONModule</span>
 <span class="kn">from</span> <span class="nn">aisdc.attacks.target</span> <span class="kn">import</span> <span class="n">Target</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">N_SHADOW_MODELS</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Number of shadow models that should be trained</span>
 <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-16</span>  <span class="c1"># Used to avoid numerical issues in logit function</span>
-<span class="n">P_THRESH</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># default significance threshold</span>
 
 
 <div class="viewcode-block" id="DummyClassifier">
@@ -160,84 +150,30 @@
 <span class="k">class</span> <span class="nc">LIRAAttack</span><span class="p">(</span><span class="n">Attack</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The main LiRA Attack class.&quot;&quot;&quot;</span>
 
-    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable = too-many-arguments</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;outputs&quot;</span><span class="p">,</span>
+        <span class="n">write_report</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">n_shadow_models</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
         <span class="n">p_thresh</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
-        <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;outputs_lira&quot;</span><span class="p">,</span>
-        <span class="n">report_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;report_lira&quot;</span><span class="p">,</span>
-        <span class="n">training_data_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">test_data_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">training_preds_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">test_preds_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">target_model</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">target_model_hyp</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">attack_config_json_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_shadow_rows_confidences_min</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="n">shadow_models_fail_fast</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">target_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct an object to execute a LiRA attack.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        n_shadow_models : int</span>
-<span class="sd">            number of shadow models to be trained</span>
-<span class="sd">        p_thresh : float</span>
-<span class="sd">            threshold to determine significance of things. For instance auc_p_value and pdif_vals</span>
 <span class="sd">        output_dir : str</span>
-<span class="sd">            name of the directory where outputs are stored</span>
-<span class="sd">        report_name : str</span>
-<span class="sd">            name of the pdf and json output reports</span>
-<span class="sd">        training_data_filename : str</span>
-<span class="sd">            name of the data file for the training data (in-sample)</span>
-<span class="sd">        test_data_filename : str</span>
-<span class="sd">            name of the file for the test data (out-of-sample)</span>
-<span class="sd">        training_preds_filename : str</span>
-<span class="sd">            name of the file to keep predictions of the training data (in-sample)</span>
-<span class="sd">        test_preds_filename : str</span>
-<span class="sd">            name of the file to keep predictions of the test data (out-of-sample)</span>
-<span class="sd">        target_model : list</span>
-<span class="sd">            name of the module (i.e. classification module name such as &#39;sklearn.ensemble&#39;) and</span>
-<span class="sd">            attack model name (i.e. classification model name such as &#39;RandomForestClassifier&#39;)</span>
-<span class="sd">        target_model_hyp : dict</span>
-<span class="sd">            dictionary of hyper parameters for the target_model</span>
-<span class="sd">            such as min_sample_split, min_samples_leaf etc</span>
-<span class="sd">        attack_config_json_file_name : str</span>
-<span class="sd">            name of the configuration file to load parameters</span>
-<span class="sd">        n_shadow_rows_confidences_min : int</span>
-<span class="sd">            number of minimum number of confidences calculated for</span>
-<span class="sd">            each row in test data (out-of-sample)</span>
-<span class="sd">        shadow_models_fail_fast : bool</span>
-<span class="sd">            If true it stops repetitions earlier based on the given minimum</span>
-<span class="sd">            number of confidences for each row in the test data</span>
-<span class="sd">        target_path : str</span>
-<span class="sd">            path to the saved trained target model and target data</span>
+<span class="sd">            Name of the directory where outputs are stored.</span>
+<span class="sd">        write_report : bool</span>
+<span class="sd">            Whether to generate a JSON and PDF report.</span>
+<span class="sd">        n_shadow_models : int</span>
+<span class="sd">            Number of shadow models to be trained.</span>
+<span class="sd">        p_thresh : float</span>
+<span class="sd">            Threshold to determine significance of things. For instance</span>
+<span class="sd">            auc_p_value and pdif_vals.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">write_report</span><span class="o">=</span><span class="n">write_report</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_shadow_models</span> <span class="o">=</span> <span class="n">n_shadow_models</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p_thresh</span> <span class="o">=</span> <span class="n">p_thresh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">report_name</span> <span class="o">=</span> <span class="n">report_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span> <span class="o">=</span> <span class="n">training_data_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_data_filename</span> <span class="o">=</span> <span class="n">test_data_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">training_preds_filename</span> <span class="o">=</span> <span class="n">training_preds_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span> <span class="o">=</span> <span class="n">test_preds_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span> <span class="o">=</span> <span class="n">target_model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_model_hyp</span> <span class="o">=</span> <span class="n">target_model_hyp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_config_json_file_name</span> <span class="o">=</span> <span class="n">attack_config_json_file_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span> <span class="o">=</span> <span class="n">n_shadow_rows_confidences_min</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_models_fail_fast</span> <span class="o">=</span> <span class="n">shadow_models_fail_fast</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_path</span> <span class="o">=</span> <span class="n">target_path</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_config_json_file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_params_from_config_file</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_failfast_shadow_models_trained</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the attack.&quot;&quot;&quot;</span>
@@ -245,7 +181,7 @@
 
 <div class="viewcode-block" id="LIRAAttack.attack">
 <a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack">[docs]</a>
-    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a LiRA attack from a Target object and a target model.</span>
 
 <span class="sd">        Needs to have X_train, X_test, y_train and y_test set.</span>
@@ -254,11 +190,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">        target : attacks.target.Target</span>
 <span class="sd">            target as an instance of the Target class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Attack report.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">shadow_clf</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
-
         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_and_update_dataset</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-
+        <span class="c1"># execute attack</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
             <span class="n">shadow_clf</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span>
@@ -267,7 +207,13 @@
             <span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span>
             <span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">X_test</span><span class="p">),</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="c1"># create the report</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_report</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="c1"># write the report</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="c1"># return the report</span>
+        <span class="k">return</span> <span class="n">output</span></div>
 
 
     <span class="k">def</span> <span class="nf">_check_and_update_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Target</span><span class="p">:</span>
@@ -279,7 +225,6 @@
 <span class="sd">        2. Removing from the test set any rows corresponding to classes that</span>
 <span class="sd">        are not in the training set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;_check_and_update_dataset&quot;</span><span class="p">)</span>
         <span class="n">y_train_new</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">classes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">y_train</span><span class="p">:</span>
@@ -319,7 +264,7 @@
         <span class="n">X_shadow_train</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">y_shadow_train</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">shadow_train_preds</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the likelihood test, using the &quot;offline&quot; version.</span>
 
 <span class="sd">        See p.6 (top of second column) for details.</span>
@@ -341,38 +286,7 @@
 <span class="sd">            Labels that will be used to train the shadow model</span>
 <span class="sd">        shadow_train_preds : np.ndarray</span>
 <span class="sd">            Array of predictions produced by the target model on the shadow data</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        mia_scores : np.ndarray</span>
-<span class="sd">            Attack probabilities of belonging to the training set or not</span>
-<span class="sd">        mia_labels : np.ndarray</span>
-<span class="sd">            True labels of belonging to the training set or not</span>
-<span class="sd">        mia_cls : DummyClassifier</span>
-<span class="sd">            A DummyClassifier that directly returns the scores for compatibility with code</span>
-<span class="sd">            in metrics.py</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; X, y = load_breast_cancer(return_X_y=True, as_frame=False)</span>
-<span class="sd">        &gt;&gt;&gt; X_train, X_test, y_train, y_test = train_test_split(</span>
-<span class="sd">        &gt;&gt;&gt;   X, y, test_size=0.5, stratify=y</span>
-<span class="sd">        &gt;&gt;&gt; )</span>
-<span class="sd">        &gt;&gt;&gt; rf = RandomForestClassifier(min_samples_leaf=1, min_samples_split=2)</span>
-<span class="sd">        &gt;&gt;&gt; rf.fit(X_train, y_train)</span>
-<span class="sd">        &gt;&gt;&gt; mia_test_probs, mia_test_labels, mia_clf = likelihood_scenario(</span>
-<span class="sd">        &gt;&gt;&gt;     RandomForestClassifier(min_samples_leaf=1, min_samples_split=2, max_depth=10),</span>
-<span class="sd">        &gt;&gt;&gt;     X_train,</span>
-<span class="sd">        &gt;&gt;&gt;     y_train,</span>
-<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(X_train),</span>
-<span class="sd">        &gt;&gt;&gt;     X_test,</span>
-<span class="sd">        &gt;&gt;&gt;     y_test,</span>
-<span class="sd">        &gt;&gt;&gt;     rf.predict_proba(X_test),</span>
-<span class="sd">        &gt;&gt;&gt;     n_shadow_models=100</span>
-<span class="sd">        &gt;&gt;&gt; )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;lr-scenario&quot;</span><span class="p">)</span>
-
         <span class="n">n_train_rows</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X_target_train</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">n_shadow_rows</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X_shadow_train</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_train_rows</span> <span class="o">+</span> <span class="n">n_shadow_rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -434,23 +348,6 @@
                         <span class="c1"># catch-all</span>
                         <span class="n">shadow_row_to_confidence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_logit</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 
-            <span class="c1"># Compute number of confidences for each row</span>
-            <span class="n">lengths_shadow_row_to_confidence</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">key</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">shadow_row_to_confidence</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="p">}</span>
-            <span class="n">n_shadow_confidences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span>
-            <span class="c1"># Stop training of shadow models when shadow_model_fail_fast is True</span>
-            <span class="c1"># and a minimum number of confidences specified by parameter</span>
-            <span class="c1"># (n_shadow_rows_confidences_min) are computed for each row</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
-                    <span class="n">value</span> <span class="o">&lt;</span> <span class="n">n_shadow_confidences</span>
-                    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">lengths_shadow_row_to_confidence</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                <span class="p">)</span>
-                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shadow_models_fail_fast</span>
-            <span class="p">):</span>
-                <span class="k">break</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attack_failfast_shadow_models_trained</span> <span class="o">=</span> <span class="n">model_idx</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="c1"># Do the test described in the paper in each case</span>
         <span class="n">mia_scores</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">mia_labels</span> <span class="o">=</span> <span class="p">[]</span>
@@ -487,37 +384,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">mia_labels</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="LIRAAttack.example">
-<a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.LIRAAttack.example">[docs]</a>
-    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run an example attack using data from sklearn.</span>
-
-<span class="sd">        Generates example data, trains a classifier and tuns the attack</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
-        <span class="p">)</span>
-        <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
-            <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">rf</span><span class="p">),</span>
-            <span class="n">X_train</span><span class="p">,</span>
-            <span class="n">y_train</span><span class="p">,</span>
-            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span>
-            <span class="n">X_test</span><span class="p">,</span>
-            <span class="n">y_test</span><span class="p">,</span>
-            <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span>
-        <span class="p">)</span></div>
-
-
     <span class="k">def</span> <span class="nf">_construct_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct the metadata object.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;experiment_details&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;global_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_construct_metadata</span><span class="p">()</span>
 
         <span class="n">pdif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;PDIF01&quot;</span><span class="p">])</span>
 
@@ -541,49 +410,9 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">auc_std</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="mf">0.5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">auc_std</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;attack&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-<div class="viewcode-block" id="LIRAAttack.make_report">
-<a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.LIRAAttack.make_report">[docs]</a>
-    <span class="k">def</span> <span class="nf">make_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the report.</span>
-
-<span class="sd">        Creates the output report. If self.args.report_name is not None, it</span>
-<span class="sd">        will also save the information in json and pdf formats.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        output : Dict</span>
-<span class="sd">            Dictionary containing all attack output</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;reporting&quot;</span><span class="p">)</span>
-        <span class="n">report_dest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report_name</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Starting reports, pdf report name = </span><span class="si">%s</span><span class="s2">, json report name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">,</span>
-            <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;log_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;log_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_construct_metadata</span><span class="p">()</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;attack_experiment_logger&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_attack_metrics_instances</span><span class="p">()</span>
-
-        <span class="n">json_attack_formatter</span> <span class="o">=</span> <span class="n">GenerateJSONModule</span><span class="p">(</span><span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
-        <span class="n">json_report</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">create_json_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-        <span class="n">json_attack_formatter</span><span class="o">.</span><span class="n">add_attack_output</span><span class="p">(</span><span class="n">json_report</span><span class="p">,</span> <span class="s2">&quot;LikelihoodAttack&quot;</span><span class="p">)</span>
-
-        <span class="n">pdf_report</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">create_lr_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-        <span class="n">report</span><span class="o">.</span><span class="n">add_output_to_pdf</span><span class="p">(</span><span class="n">report_dest</span><span class="p">,</span> <span class="n">pdf_report</span><span class="p">,</span> <span class="s2">&quot;LikelihoodAttack&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Wrote pdf report to </span><span class="si">%s</span><span class="s2"> and json report to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">,</span>
-            <span class="n">report_dest</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">output</span></div>
-
+    <span class="k">def</span> <span class="nf">_make_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FPDF</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create PDF report.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">create_lr_report</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_attack_metrics_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct the metadata object after attacks.&quot;&quot;&quot;</span>
@@ -591,289 +420,11 @@
         <span class="n">attack_metrics_instances</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">rep</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">[</span><span class="n">rep</span><span class="p">][</span><span class="s2">&quot;n_shadow_models_trained&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">attack_failfast_shadow_models_trained</span>
-            <span class="p">)</span>
             <span class="n">attack_metrics_instances</span><span class="p">[</span><span class="s2">&quot;instance_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rep</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack_metrics</span><span class="p">[</span><span class="n">rep</span><span class="p">]</span>
 
         <span class="n">attack_metrics_experiment</span><span class="p">[</span><span class="s2">&quot;attack_instance_logger&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attack_metrics_instances</span>
-        <span class="k">return</span> <span class="n">attack_metrics_experiment</span>
+        <span class="k">return</span> <span class="n">attack_metrics_experiment</span></div>
 
-<div class="viewcode-block" id="LIRAAttack.setup_example_data">
-<a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.LIRAAttack.setup_example_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_example_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create example data and save (including config).</span>
-
-<span class="sd">        Intended to allow users to see how they would need to setup their own</span>
-<span class="sd">        data. Generates train and test data .csv files, train and test</span>
-<span class="sd">        predictions .csv files and a config.json file that can be used to run</span>
-<span class="sd">        the attack from the command line.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
-        <span class="p">)</span>
-        <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;train_data.csv&quot;</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-        <span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;test_data.csv&quot;</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;train_preds.csv&quot;</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;test_preds.csv&quot;</span><span class="p">,</span> <span class="n">test_preds</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-
-        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;training_data_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;train_data.csv&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;test_data_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;test_data.csv&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;training_preds_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;train_preds.csv&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;test_preds_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;test_preds.csv&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;target_model&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sklearn.ensemble&quot;</span><span class="p">,</span> <span class="s2">&quot;RandomForestClassifier&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;target_model_hyp&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-        <span class="p">}</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="LIRAAttack.attack_from_config">
-<a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.LIRAAttack.attack_from_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">attack_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable = too-many-locals</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run an attack based on the args parsed from the command line.&quot;&quot;&quot;</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;run-attack&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading training data csv from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span><span class="p">)</span>
-        <span class="n">training_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_data_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">X_train</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">y_train</span> <span class="o">=</span> <span class="n">training_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading test data csv from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_data_filename</span><span class="p">)</span>
-        <span class="n">test_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_data_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="n">X_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">y_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading train predictions form </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_preds_filename</span><span class="p">)</span>
-        <span class="n">train_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_preds_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading test predictions form </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span><span class="p">)</span>
-        <span class="n">test_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_preds_filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Target model cannot be None&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model_hyp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Target model hyperparameters cannot be None&quot;</span><span class="p">)</span>
-        <span class="n">clf_module_name</span><span class="p">,</span> <span class="n">clf_class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span>
-        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clf_module_name</span><span class="p">)</span>
-        <span class="n">clf_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">clf_class_name</span><span class="p">)</span>
-        <span class="n">clf_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model_hyp</span>
-        <span class="n">clf</span> <span class="o">=</span> <span class="n">clf_class</span><span class="p">(</span><span class="o">**</span><span class="n">clf_params</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created model: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">clf</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_scenario_from_preds</span><span class="p">(</span>
-            <span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">train_preds</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">test_preds</span>
-        <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing metrics&quot;</span><span class="p">)</span></div>
-</div>
-
-
-
-<span class="c1"># Methods invoked by command line script</span>
-<span class="k">def</span> <span class="nf">_setup_example_data</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call the methods to setup some example data.&quot;&quot;&quot;</span>
-    <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
-        <span class="n">n_shadow_models</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_models</span><span class="p">,</span>
-        <span class="n">n_shadow_rows_confidences_min</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span><span class="p">,</span>
-        <span class="n">output_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
-        <span class="n">report_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="p">,</span>
-        <span class="n">p_thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span>
-        <span class="n">shadow_models_fail_fast</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">shadow_models_fail_fast</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">setup_example_data</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_example</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call the methods to run an example.&quot;&quot;&quot;</span>
-    <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
-        <span class="n">n_shadow_models</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_models</span><span class="p">,</span>
-        <span class="n">n_shadow_rows_confidences_min</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span><span class="p">,</span>
-        <span class="n">output_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
-        <span class="n">report_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="p">,</span>
-        <span class="n">p_thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span>
-        <span class="n">shadow_models_fail_fast</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">shadow_models_fail_fast</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">example</span><span class="p">()</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_run_attack</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command line attack based on saved files described in .json file.&quot;&quot;&quot;</span>
-    <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
-        <span class="n">n_shadow_models</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_models</span><span class="p">,</span>
-        <span class="n">n_shadow_rows_confidences_min</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">n_shadow_rows_confidences_min</span><span class="p">,</span>
-        <span class="n">p_thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">p_thresh</span><span class="p">,</span>
-        <span class="n">output_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
-        <span class="n">report_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">report_name</span><span class="p">,</span>
-        <span class="n">shadow_models_fail_fast</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">shadow_models_fail_fast</span><span class="p">,</span>
-        <span class="n">attack_config_json_file_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">attack_config_json_file_name</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack_from_config</span><span class="p">()</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_run_attack_from_configfile</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command line attack based on saved files described in .json file.&quot;&quot;&quot;</span>
-    <span class="n">attack_obj</span> <span class="o">=</span> <span class="n">LIRAAttack</span><span class="p">(</span>
-        <span class="n">attack_config_json_file_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">attack_config_json_file_name</span><span class="p">,</span>
-        <span class="n">target_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">target_path</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">attack_config_json_file_name</span><span class="p">)</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">Target</span><span class="p">()</span>
-    <span class="n">target</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">attack_obj</span><span class="o">.</span><span class="n">target_path</span><span class="p">)</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-    <span class="n">attack_obj</span><span class="o">.</span><span class="n">make_report</span><span class="p">()</span>
-
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../attacks/likelihood.html#aisdc.attacks.likelihood_attack.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse args and invoke relevant code.&quot;&quot;&quot;</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--n-shadow-models&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">N_SHADOW_MODELS</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_shadow_models&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The number of shadow models to train (default = </span><span class="si">%(default)d</span><span class="s2">)&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--n-shadow-rows-confidences-min&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;n_shadow_rows_confidences_min&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Number of confidences against rows in shadow data from the shadow models</span>
-<span class="sd">            and works when --shadow-models-fail-fast = True. Default = %(default)d&quot;&quot;&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--output-dir&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;output_dir&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;output_lira&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Directory name where output files are stored. Default = </span><span class="si">%(default)s</span><span class="s2">.&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--report-name&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;report_name&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;report_lira&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Filename for the pdf and json output reports. Default = %(default)s.</span>
-<span class="sd">            Code will append .pdf and .json&quot;&quot;&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--p-thresh&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;p_thresh&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">P_THRESH</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Significance threshold for p-value comparisons. Default = </span><span class="si">%(default)f</span><span class="s2">&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--shadow-models-fail-fast&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;shadow_models_fail_fast&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;To stop training shadow models early based on minimum number of</span>
-<span class="sd">            confidences across all rows (--n-shadow-rows-confidences-min)</span>
-<span class="sd">            in the shadow data. Default = %(default)s&quot;&quot;&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
-    <span class="n">example_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;run-example&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">parser</span><span class="p">])</span>
-    <span class="n">example_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_example</span><span class="p">)</span>
-
-    <span class="n">attack_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;run-attack&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">parser</span><span class="p">])</span>
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-j&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--attack-config-json-file-name&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;attack_config_json_file_name&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Name of the .json file containing details for the run. Default = </span><span class="si">%(default)s</span><span class="s2">&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">attack_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_run_attack</span><span class="p">)</span>
-
-    <span class="n">attack_parser_config</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;run-attack-from-configfile&quot;</span><span class="p">)</span>
-    <span class="n">attack_parser_config</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-j&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--attack-config-json-file-name&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;attack_config_json_file_name&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;config_lira_cmd.json&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Name of the .json file containing details for the run. Default = </span><span class="si">%(default)s</span><span class="s2">&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">attack_parser_config</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--attack-target-folder-path&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;target_path&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;lira_target&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Name of the target directory to load the trained target model and the target data.</span>
-<span class="sd">            Default = %(default)s&quot;&quot;&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">attack_parser_config</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_run_attack_from_configfile</span><span class="p">)</span>
-
-    <span class="n">example_data_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;setup-example-data&quot;</span><span class="p">)</span>
-    <span class="n">example_data_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_setup_example_data</span><span class="p">)</span>
-
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma:no cover</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid command. Try --help to get more details&quot;</span><span class="p">)</span></div>
-
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma:no cover</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
            </div>
