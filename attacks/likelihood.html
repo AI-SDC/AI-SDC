@@ -91,37 +91,8 @@
 <span id="lira-attack"></span><h1>LiRA Attack<a class="headerlink" href="#module-aisdc.attacks.likelihood_attack" title="Link to this heading"></a></h1>
 <p>Likelihood testing scenario from <a class="reference external" href="https://arxiv.org/pdf/2112.03570.pdf">https://arxiv.org/pdf/2112.03570.pdf</a>.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">DummyClassifier</span></span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier" title="Link to this definition"></a></dt>
-<dd><p>A Dummy Classifier to allow this code to work with get_metrics.</p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict" title="aisdc.attacks.likelihood_attack.DummyClassifier.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X_test)</p></td>
-<td><p>Return an array of 1/0 depending on value in second column.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba" title="aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code></a>(X_test)</p></td>
-<td><p>Simply return the X_test.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict" title="Link to this definition"></a></dt>
-<dd><p>Return an array of 1/0 depending on value in second column.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba">
-<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#DummyClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.DummyClassifier.predict_proba" title="Link to this definition"></a></dt>
-<dd><p>Simply return the X_test.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">LIRAAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'outputs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_shadow_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aisdc.attacks.likelihood_attack.</span></span><span class="sig-name descname"><span class="pre">LIRAAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'outputs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_shadow_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'offline'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_individual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack" title="Link to this definition"></a></dt>
 <dd><p>The main LiRA Attack class.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
@@ -129,19 +100,42 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="aisdc.attacks.likelihood_attack.LIRAAttack.attack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attack</span></code></a>(target)</p></td>
 <td><p>Run a LiRA attack from a Target object and a target model.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.get_params" title="aisdc.attacks.likelihood_attack.LIRAAttack.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>()</p></td>
 <td><p>Get parameters for this attack.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds" title="aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_scenario_from_preds</span></code></a>(shadow_clf, ...)</p></td>
-<td><p>Run the likelihood test, using the &quot;offline&quot; version.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
+<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'outputs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_shadow_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'offline'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_individual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.__init__" title="Link to this definition"></a></dt>
+<dd><p>Construct an object to execute a LiRA attack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>output_dir</strong><span class="classifier">str</span></dt><dd><p>Name of the directory where outputs are stored.</p>
+</dd>
+<dt><strong>write_report</strong><span class="classifier">bool</span></dt><dd><p>Whether to generate a JSON and PDF report.</p>
+</dd>
+<dt><strong>n_shadow_models</strong><span class="classifier">int</span></dt><dd><p>Number of shadow models to be trained.</p>
+</dd>
+<dt><strong>p_thresh</strong><span class="classifier">float</span></dt><dd><p>Threshold to determine significance of things. For instance
+auc_p_value and pdif_vals.</p>
+</dd>
+<dt><strong>mode</strong><span class="classifier">str</span></dt><dd><p>Attack mode: {“offline”, “offline-carlini”, “online-carlini”}</p>
+</dd>
+<dt><strong>fix_variance</strong><span class="classifier">bool</span></dt><dd><p>Whether to use the global standard deviation or per record.</p>
+</dd>
+<dt><strong>report_individual</strong><span class="classifier">bool</span></dt><dd><p>Whether to report metrics for each individual record.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.attack">
 <span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="target.html#aisdc.attacks.target.Target" title="aisdc.attacks.target.Target"><span class="pre">Target</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.attack" title="Link to this definition"></a></dt>
 <dd><p>Run a LiRA attack from a Target object and a target model.</p>
-<p>Needs to have X_train, X_test, y_train and y_test set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -159,27 +153,13 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds">
-<span class="sig-name descname"><span class="pre">run_scenario_from_preds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shadow_clf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseEstimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_target_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_target_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_shadow_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_shadow_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shadow_train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/aisdc/attacks/likelihood_attack.html#LIRAAttack.run_scenario_from_preds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.run_scenario_from_preds" title="Link to this definition"></a></dt>
-<dd><p>Run the likelihood test, using the “offline” version.</p>
-<p>See p.6 (top of second column) for details.</p>
+<dt class="sig sig-object py" id="aisdc.attacks.likelihood_attack.LIRAAttack.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#aisdc.attacks.likelihood_attack.LIRAAttack.get_params" title="Link to this definition"></a></dt>
+<dd><p>Get parameters for this attack.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>shadow_clf</strong><span class="classifier">sklearn.Model</span></dt><dd><p>An sklearn classifier that will be trained to form the shadow model.
-All hyper-parameters should have been set.</p>
-</dd>
-<dt><strong>X_target_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Data that was used to train the target model</p>
-</dd>
-<dt><strong>y_target_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Labels that were used to train the target model</p>
-</dd>
-<dt><strong>target_train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of predictions produced by the target model on the training data</p>
-</dd>
-<dt><strong>X_shadow_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Data that will be used to train the shadow models</p>
-</dd>
-<dt><strong>y_shadow_train</strong><span class="classifier">np.ndarray</span></dt><dd><p>Labels that will be used to train the shadow model</p>
-</dd>
-<dt><strong>shadow_train_preds</strong><span class="classifier">np.ndarray</span></dt><dd><p>Array of predictions produced by the target model on the shadow data</p>
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
 </dd>
 </dl>
 </dd>
